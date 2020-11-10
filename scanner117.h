@@ -3,7 +3,7 @@
 
 #define <stdio.h>
 
-#include "dynamic_string.h"
+#include "str.h"
 
 enum keyword
 {
