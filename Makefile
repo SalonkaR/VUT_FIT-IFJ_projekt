@@ -12,7 +12,7 @@ all:
 test_lex: test-lex
 
 #preklad
-test-lex: test-lex.o str.o #scanner.o
+test-lex: test-lex.o str.o scanner.o
 	$(CC) $(CFLAGS) -o $@ $^
 
 #--------------------------------------

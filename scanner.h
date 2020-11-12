@@ -51,7 +51,7 @@ enum t_type
 
 
 	//DATA_TYPES
-	T_TYPE_INTIGER, //intiger literal 
+	T_TYPE_INTEGER, //intiger literal 
 	T_TYPE_DOUBLE, //double literal
 	T_TYPE_STRING, //string	
 
@@ -102,7 +102,7 @@ struct token{
 	union t_attribute attribute; 
 };
 
-void set_content_file(FILE *f);
+void setSourceFile(FILE *f);
 
 void set_str(struct str_struct *string);
 

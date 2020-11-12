@@ -63,19 +63,19 @@ int get_token(struct token *token)
 {
 	if (source == NULL)
 	{
-		return ERR_INTER;
+		return ERROR_INTERNAL;
 	}
 
 	if (str == NULL)
 	{
-		return ERR_INTER;
+		return ERROR_INTERNAL;
 	}
 
     int state = STATE_START;
     int c;
     // vymazeme obsah atributu a v pripade identifikatoru
     // budeme postupne do nej vkladat jeho nazev
-    str_clear(token);
+    //CHYBA   //str_clear(token);
 	
 	while (true)
 	{
