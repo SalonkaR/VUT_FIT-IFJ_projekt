@@ -18,7 +18,7 @@ void str_clear(struct str_struct *s){
 
 
 bool str_init(struct str_struct *s){
-	s->str = (char *) malloc(STRING_LENGHT);
+	s->str = malloc(STRING_LENGHT);
     if (s->str == NULL){
 		return false;
 	}
@@ -88,7 +88,6 @@ bool str_copy(struct str_struct *src, struct str_struct *dst){
 		}
 		dst->alloc_size = new_length + 1;
 	}
-
 	strcpy(dst->str, src->str);
 	dst->length = new_length;
 

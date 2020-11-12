@@ -2,7 +2,8 @@
 #include <stdio.h>
 #include <ctype.h>
 #include "str.h"
-#include "scaner.h"
+#include "scanner.h"
+#include "error.h"
 
 #define STATE_START 100 //S
 #define STATE_EOL 101  //F1
