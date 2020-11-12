@@ -6,7 +6,8 @@
 #include "../scanner.h"
 #include "../str.h"
 
-#define FILE_COUNT_CORRECT 15
+#define FILE_COUNT_CORRECT 18
+#define FILE_COUNT_INCORRECT 1
 
 void reset () {
   printf("\033[0m");
@@ -219,10 +220,12 @@ void test_scanner(char *filename){
 }
 
 void kontrola_scanner(){
+    //TODO -> SUBORY NA KTORE SCANNER VYHODI CHYBU
     int test_count = 9;
 
-    // KONTROLA SUBOROV KTORE BY MALI BYT SPRAVNE ZAPSANE TOKENY
-    char *filenames[15] =  
+    // KONTROLA SUBOROV KTORE BY MALI MAT SPRAVNE ZAPSANE TOKENY
+    
+    char *filenames[FILE_COUNT_CORRECT] =  
                             {"tests/test_files_correct/token_compar.test",
                              "tests/test_files_correct/token_brackets.test",
                              "tests/test_files_correct/token_comma_semmicolon.test",
@@ -237,7 +240,12 @@ void kontrola_scanner(){
                              "tests/test_files_correct/token_not_equal.test",
                              "tests/test_files_correct/token_operations.test",
                              "tests/test_files_correct/token_string.test",
-                             "tests/test_files_correct/token_var_def.test"};
+                             "tests/test_files_correct/token_comment1.test",
+                             "tests/test_files_correct/token_comment2.test",
+                             "tests/test_files_correct/token_enumber.test",
+                             "tests/test_files_correct/token_escape_sek.test"};
+
+    
 
 
     for (int i = 0; i < FILE_COUNT_CORRECT; i++){
@@ -251,7 +259,23 @@ void kontrola_scanner(){
         test_count++;
     }
 
-    //TODO -> SUBORY NA KTORE SCANNER VYHODI CHYBU
+    // KONTROLA SUBOROV NA KTORYCH BY SA MAL SCANNER ZASAKNUT
+
+    char *filenames_incorrect[FILE_COUNT_INCORRECT] =  
+                            {"tests/test_files_incorrect/token_escape_sek.test",};
+
+    for (int i = 0; i < FILE_COUNT_INCORRECT; i++){
+        blue_color();
+        printf("\n[TEST%d]\n", test_count);
+        printf("Testovanie scanneru na subore: \"%s\"\n",filenames_incorrect[i]);
+        printf("~~~~~~~~~~~~~~~~~~~~\n");
+        reset();
+
+        test_scanner(filenames_incorrect[i]);
+        test_count++;
+    }
+
+    
 }
 
 
