@@ -198,6 +198,12 @@ void test_scanner(char *filename){
     int result;
     int no_token = 0;
     struct token test;
+    test.attribute.string = malloc(sizeof(struct str_struct));
+    if (test.attribute.string == NULL){
+        printf("Chyba pri alokovani pamate\n");
+        return;
+    }
+    str_init(test.attribute.string);
     FILE *f;
 
     f = fopen(filename, "r"); 

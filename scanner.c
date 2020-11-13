@@ -59,7 +59,11 @@ int cleaner(int exit_code, struct str_struct *s)
 //spracovanie stringu
 static int process_identifier(struct str_struct *str, struct token *token)
 {
-	if (!str_cmp_const_str(str, "package")) token->attribute.keyword = KWORD_PACKAGE;
+
+	
+	if (!str_cmp_const_str(str, "package")) {
+		token->attribute.keyword = KWORD_PACKAGE;
+	}
 	else if (!str_cmp_const_str(str, "func")) token->attribute.keyword = KWORD_FUNC;
 	else if (!str_cmp_const_str(str, "return")) token->attribute.keyword = KWORD_RETURN;
 	else if (!str_cmp_const_str(str, "float64")) token->attribute.keyword = KWORD_FLOAT64;
@@ -68,19 +72,20 @@ static int process_identifier(struct str_struct *str, struct token *token)
 	else if (!str_cmp_const_str(str, "if")) token->attribute.keyword = KWORD_IF;
 	else if (!str_cmp_const_str(str, "for")) token->attribute.keyword = KWORD_FOR;
 	else if (!str_cmp_const_str(str, "else")) token->attribute.keyword = KWORD_ELSE;
-	else token->type = T_TYPE_IDENTIFIER;
-	printf("proc ident. 1");
+	else {
+		
+		token->type = T_TYPE_IDENTIFIER;
+	}
 	if (token->type != T_TYPE_IDENTIFIER)
 	{
 		token->type = T_TYPE_KEYWORD;
 		return cleaner(LEX_TOKEN_OK, str);
 	}
-	printf("proc ident. 2");
 	if (!str_copy(str, token->attribute.string))
 	{
+		
 		return cleaner(ERROR_INTERNAL, str);
 	}
-	printf("proc ident. 3");
 	return cleaner(LEX_TOKEN_OK, str);
 }
 
@@ -454,6 +459,7 @@ int get_token(struct token *token)
 					state = STATE_START;
 					process_identifier(str, token);
 				}
+				break;
 				
 
 			case(STATE_DIVIDE_OR_COMMENTARY):
