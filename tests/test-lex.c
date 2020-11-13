@@ -186,6 +186,9 @@ void print_token(struct token *t, int ret_val, int no_token){
     else if (t->type == T_TYPE_IDENTIFIER){
         printf("%d token ->Atributy token: string= \"%s\"\n",no_token, t->attribute.string->str);
     }
+    else if (t->type == T_TYPE_STRING){
+        printf("%d token ->Atributy token: string= \"%s\"\n",no_token, t->attribute.string->str);
+    }
 
     printf("%d token ->Prijaty token vracia: \"%d\"\n",no_token, ret_val);
 }
