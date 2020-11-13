@@ -74,7 +74,7 @@ enum t_type
 
 
 
-union t_attribute
+struct t_attribute
 {
 	struct str_struct *string; 
 	int int_literal; 
@@ -85,7 +85,7 @@ union t_attribute
 
 struct token{
 	enum t_type type; 
-	union t_attribute attribute; 
+	struct t_attribute attribute; 
 };
 
 int cleaner(int exit_code, struct str_struct *s);

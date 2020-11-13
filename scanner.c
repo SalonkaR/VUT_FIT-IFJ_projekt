@@ -76,7 +76,6 @@ static int process_identifier(struct str_struct *str, struct token *token)
 	}
 	if (!str_copy(str, token->attribute.string))
 	{
-		
 		return cleaner(ERROR_INTERNAL, str);
 	}
 	return cleaner(LEX_TOKEN_OK, str);
@@ -114,7 +113,6 @@ static int process_decimal(struct str_struct *str, struct token *token)
 
 	token->attribute.double_literal= val;
 	token->type = T_TYPE_DOUBLE;
-
 	return cleaner(LEX_TOKEN_OK, str);
 }
 
@@ -275,6 +273,7 @@ int get_token(struct token *token)
 					token->type = T_TYPE_LESS;
 					return cleaner(LEX_TOKEN_OK, str);
 				}
+				break;
 
 			case(STATE_MORE_THAN):
 				if (c == '=')
@@ -288,6 +287,7 @@ int get_token(struct token *token)
 					token->type = T_TYPE_MORE;
 					return cleaner(LEX_TOKEN_OK, str);
 				}
+				break;
 
 			case(STATE_ASSIGNMENT):
 				if (c == '=')
@@ -301,6 +301,7 @@ int get_token(struct token *token)
 					token->type = T_TYPE_ASSIGN;
 					return cleaner(LEX_TOKEN_OK, str);
 				}
+				break;
 
 			case(STATE_SCREAMER):
 				if (c == '=')
@@ -312,6 +313,7 @@ int get_token(struct token *token)
 				{
 					return cleaner(LEX_ERR, str);
 				}
+				break;
 
 			case(STATE_COLON):
 				if (c == '=')
@@ -323,6 +325,7 @@ int get_token(struct token *token)
 				{
 					return cleaner(LEX_ERR, str);
 				}
+				break;
 
 			case(STATE_STRING):
 				if (c < 32 || c > 255)
@@ -344,6 +347,7 @@ int get_token(struct token *token)
 					str_add_char(str, c);
 					break;
 				}
+				break;
 
 			case(STATE_STRING_BACKSLASH):
 				if (c < 32 || c > 255)
@@ -352,7 +356,7 @@ int get_token(struct token *token)
 				}
 				else if (c == 'x')
 				{
-				//	c = '\x';
+					//c = '\x';
 					str_add_char(str, c);
 					state = STATE_STRING_HEXADECIMAL;
 					break;
@@ -388,7 +392,8 @@ int get_token(struct token *token)
 				else
 				{
 					return cleaner(LEX_ERR, str);
-				}				
+				}
+				break;			
 
 			case(STATE_STRING_HEXADECIMAL):
 				if (c < 32 || c > 255)
@@ -405,6 +410,7 @@ int get_token(struct token *token)
 				{
 					return cleaner(LEX_ERR, str);
 				}
+				break;
 
 			case(STATE_STRING_HEXADECIMAL_SECOND):
 				if (c < 32 || c > 255)
@@ -421,24 +427,110 @@ int get_token(struct token *token)
 				{
 					return cleaner(LEX_ERR, str);
 				}
+				break;
 
 			case(STATE_NUMBER):
+				if (c == 'e' || c == 'E')
+				{
+					state = STATE_NUMBER_E;
+					break;
+				}
+				else if (c == '.')
+				{
+					state = STATE_NUMBER_FLOAT;
+					break;
+				}
+				else if (isdigit(c))
+				{
+					str_add_char(str, c);
+					break;				
+				}
+				else
+				{
+					state = STATE_START;
+					process_integer(str, token);
+				}
 				break;
-
+				
 			case(STATE_NUMBER_E):
+				if (c == '+' || c == '-')
+				{
+					state = STATE_NUMBER_E_SIGN;
+					str_add_char(str, c);
+					break;
+				}
+				else if (isdigit(c))
+				{
+					state = STATE_NUMBER_E_END;
+					str_add_char(str, c);
+					break;
+				}
+				else
+				{
+					return cleaner(LEX_ERR, str);
+				}
 				break;
-
+			
 			case(STATE_NUMBER_E_SIGN):
+				if (isdigit(c))
+				{
+					state = STATE_NUMBER_E_END;
+					str_add_char(str, c);
+					break;
+				}
+				else
+				{
+					return cleaner(LEX_ERR, str);
+				}
 				break;
 
 			case(STATE_NUMBER_E_END):
+				if (isdigit(c))
+				{
+					state = STATE_NUMBER_E_END;
+					str_add_char(str, c);
+					break;
+				}
+				else
+				{
+					state = STATE_START;
+					process_decimal(str, token);
+				}
 				break;
 
 			case(STATE_NUMBER_FLOAT):
+				if (isdigit(c))
+				{
+					state = STATE_NUMBER_FLOAT_END;
+					str_add_char(str, c);
+					break;
+				}
+				else
+				{
+					return cleaner(LEX_ERR, str);
+				}
 				break;
+				
 
 			case(STATE_NUMBER_FLOAT_END):
+				if (isdigit(c))
+				{
+					str_add_char(str, c);
+					break;
+				}
+				else if (c == 'e' || c == 'E')
+				{
+					state = STATE_NUMBER_E;
+					str_add_char(str, c);
+					break;
+				}
+				else
+				{
+					state = STATE_START;
+					process_decimal(str, token);
+				}
 				break;
+				
 
 			case(STATE_ID):
 				if (isalpha(c) || isdigit(c) || c == '_')
