@@ -233,6 +233,7 @@ void test_scanner(char *filename){
     setSourceFile(f);
     result = get_token(&test);
     no_token++;
+    //natvrdo nastavim type na T_TYPE_EOL
     test.type = T_TYPE_EOL;
     while (test.type != T_TYPE_EOF && result == 0){
         result = get_token(&test);

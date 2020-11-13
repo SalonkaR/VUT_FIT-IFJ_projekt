@@ -1,7 +1,7 @@
 # // Makefile 
 
 CC=gcc
-CFLAGS= -std=c99 -pedantic -Wall -Wextra
+CFLAGS= -std=c11 -pedantic -Wall -Wextra
 
 #preklad hlavnych casti
 #--------------------------------------
@@ -13,7 +13,7 @@ test_lex: test-lex
 
 #preklad
 test-lex: test-lex.o str.o scanner.o
-	$(CC) $(CFLAGS) -O0 -g -o $@ $^
+	$(CC) $(CFLAGS) -o $@ $^
 
 #--------------------------------------
 #objektove subory
