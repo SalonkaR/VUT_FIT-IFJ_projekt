@@ -69,18 +69,18 @@ static int process_identifier(struct str_struct *str, struct token *token)
 	else if (!str_cmp_const_str(str, "for")) token->attribute.keyword = KWORD_FOR;
 	else if (!str_cmp_const_str(str, "else")) token->attribute.keyword = KWORD_ELSE;
 	else token->type = T_TYPE_IDENTIFIER;
-
+	printf("proc ident. 1");
 	if (token->type != T_TYPE_IDENTIFIER)
 	{
 		token->type = T_TYPE_KEYWORD;
 		return cleaner(LEX_TOKEN_OK, str);
 	}
-
+	printf("proc ident. 2");
 	if (!str_copy(str, token->attribute.string))
 	{
 		return cleaner(ERROR_INTERNAL, str);
 	}
-
+	printf("proc ident. 3");
 	return cleaner(LEX_TOKEN_OK, str);
 }
 
@@ -354,25 +354,38 @@ int get_token(struct token *token)
 				}
 				else if (c == 'x')
 				{
+				//	c = '\x';
+					str_add_char(str, c);
 					state = STATE_STRING_HEXADECIMAL;
 					break;
 				}
 				else if (c == '"')
 				{
+					c = '\"';
+					str_add_char(str, c);
 					state = STATE_STRING;
 					break;
 				}
 				else if (c == 't')
 				{
-					/* code */
+					c = '\t';
+					str_add_char(str, c);
+					state = STATE_STRING;
+					break;
 				}
 				else if (c == 'n')
 				{
-					/* code */
+					c = '\n';
+					str_add_char(str, c);
+					state = STATE_STRING;
+					break;
 				}
 				else if (c == '\'')
 				{
-					/* code */
+					c = '\\';
+					str_add_char(str, c);
+					state = STATE_STRING;
+					break;
 				}
 				else
 				{
@@ -380,13 +393,36 @@ int get_token(struct token *token)
 				}				
 
 			case(STATE_STRING_HEXADECIMAL):
-				break;
+				if (c < 32 || c > 255)
+				{
+					return cleaner(LEX_ERR, str);
+				}
+				else if (isdigit(c) || (c > 64 && c < 71) || (c > 96 && c < 103))
+				{
+					str_add_char(str, c);
+					state = STATE_STRING_HEXADECIMAL_SECOND;
+					break;
+				}
+				else
+				{
+					return cleaner(LEX_ERR, str);
+				}
 
 			case(STATE_STRING_HEXADECIMAL_SECOND):
-				break;
-
-			case(STATE_STRING_END):
-				break;
+				if (c < 32 || c > 255)
+				{
+					return cleaner(LEX_ERR, str);
+				}
+				else if (isdigit(c) || (c > 64 && c < 71) || (c > 96 && c < 103))
+				{
+					str_add_char(str, c);
+					state = STATE_STRING;
+					break;
+				}
+				else
+				{
+					return cleaner(LEX_ERR, str);
+				}
 
 			case(STATE_NUMBER):
 				break;
@@ -407,7 +443,18 @@ int get_token(struct token *token)
 				break;
 
 			case(STATE_ID):
-				break;
+				if (isalpha(c) || isdigit(c) || c == '_')
+				{
+					str_add_char(str, c);
+					state = STATE_ID;
+					break;
+				}
+				else
+				{
+					state = STATE_START;
+					process_identifier(str, token);
+				}
+				
 
 			case(STATE_DIVIDE_OR_COMMENTARY):
 				if (c != '/' || c != '*')
