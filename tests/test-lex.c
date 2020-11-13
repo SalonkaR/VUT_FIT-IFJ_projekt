@@ -211,18 +211,19 @@ void test_scanner(char *filename){
         return;
     }
 
-    FILE *f;
+    FILE *f_print;
     //subor vypis
-    f = fopen(filename, "r"); 
-    if (f == NULL) { 
+    f_print = fopen(filename, "r"); 
+    if (f_print == NULL) { 
         printf("Nepodarilo sa otvorit subor: \"%s\"\n", filename); 
         reset();
         return;
     }
-    print_file(f);
+    print_file(f_print);
     printf("Volam funkciu get_token az dokym mi nepride token \"T_TYPE_EOF\"\n");
-    fclose(f);
+    fclose(f_print);
     //koniec vypisu suboru
+    FILE *f;
     f = fopen(filename, "r"); 
     if (f == NULL) { 
         printf("Nepodarilo sa otvorit subor: \"%s\"\n", filename); 
@@ -232,14 +233,17 @@ void test_scanner(char *filename){
     setSourceFile(f);
     result = get_token(&test);
     no_token++;
-    //kontroly
-    if (result == ERROR_INTERNAL){
-        red_color();
-        printf("Interna chyba vo funkcii get_token\n");
-        reset();
-        return;
-    }
+    test.type = T_TYPE_EOL;
     while (test.type != T_TYPE_EOF && result == 0){
+        result = get_token(&test);
+        no_token++;
+        //kontroly
+        if (result == ERROR_INTERNAL){
+            red_color();
+            printf("Interna chyba vo funkcii get_token\n");
+            reset();
+            return;
+        }
         print_token(&test, result, no_token);
         str_free(test.attribute.string);
         free(test.attribute.string);
@@ -251,8 +255,8 @@ void test_scanner(char *filename){
             return;
         }
         //kontroly
-        bool init_result = str_init(test.attribute.string);
-        if (init_result == false){
+        bool init_result2 = str_init(test.attribute.string);
+        if (init_result2 == false){
             printf("Chyba pri inicializacii string struktury \n");
             return;
         }
@@ -268,7 +272,6 @@ void test_scanner(char *filename){
     print_token(&test, result, no_token);
     str_free(test.attribute.string);
     free(test.attribute.string);
-
     fclose(f);
 }
 

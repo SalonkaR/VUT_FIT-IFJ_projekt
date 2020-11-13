@@ -13,7 +13,7 @@ test_lex: test-lex
 
 #preklad
 test-lex: test-lex.o str.o scanner.o
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) -O0 -g -o $@ $^
 
 #--------------------------------------
 #objektove subory
