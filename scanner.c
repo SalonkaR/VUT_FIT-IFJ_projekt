@@ -24,24 +24,24 @@
 #define STATE_NOT_EQUAL 116 //F15
 #define STATE_COLON 117 //R2
 #define STATE_DECLARATION 118 //F16 
-#define STATE_LEFT_VINCULUM 119 //
-#define STATE_RIGHT_VINCULUM 120 //
-#define STATE_STRING 121 //
-#define STATE_STRING_BACKSLASH 122 //ocakavame bud x alebo ", n, t, "\"
-#define STATE_STRING_HEXADECIMAL 123 //
-#define STATE_STRING_HEXADECIMAL_SECOND 124
-#define STATE_STRING_END 125 //F20 ... to be continue
-#define STATE_NUMBER 126 //
-#define STATE_NUMBER_E 127 //
-#define STATE_NUMBER_E_SIGN 128 //
-#define STATE_NUMBER_E_END 129 //
-#define STATE_NUMBER_FLOAT 130 //
-#define STATE_NUMBER_FLOAT_END 131 //
-#define STATE_ID 132 //
-#define STATE_DIVIDE_OR_COMMENTARY 133 //
-#define STATE_COMMENTARY_LINE 134 //
-#define STATE_COMMENTARY_BLOCK_START 135 //
-#define STATE_COMMENTARY_BLOCK_END 136 //
+#define STATE_LEFT_VINCULUM 119 //F17
+#define STATE_RIGHT_VINCULUM 120 //F18
+#define STATE_STRING 121 //Q1
+#define STATE_STRING_BACKSLASH 122 //Q2    ocakavame bud x alebo ", n, t, "\"
+#define STATE_STRING_HEXADECIMAL 123 //Q3
+#define STATE_STRING_HEXADECIMAL_SECOND 124 //Q4
+#define STATE_STRING_END 125 //F20
+#define STATE_NUMBER 126 //F21
+#define STATE_NUMBER_E 127 //FQ5
+#define STATE_NUMBER_E_SIGN 128 //Q6
+#define STATE_NUMBER_E_END 129 //F23
+#define STATE_NUMBER_FLOAT 130 //Q7
+#define STATE_NUMBER_FLOAT_END 131 //F22
+#define STATE_ID 132 //F24
+#define STATE_DIVIDE_OR_COMMENTARY 133 //F25
+#define STATE_COMMENTARY_LINE 134 //P1
+#define STATE_COMMENTARY_BLOCK_START 135 //P2
+#define STATE_COMMENTARY_BLOCK_END 136 //P3
 
 // promenna pro ulozeni vstupniho souboru
 FILE *source;
@@ -49,7 +49,7 @@ struct str_struct *str;
 
 void setSourceFile(FILE *f)
 {
-  source = f;
+  	source = f;
 }
 
 int cleaner(int exit_code, struct str_struct *s)
@@ -63,19 +63,19 @@ int get_token(struct token *token)
 {
 	if (source == NULL)
 	{
-		return ERROR_INTERNAL;
+		return ERR_INTER;
 	}
 
 	if (str == NULL)
 	{
-		return ERROR_INTERNAL;
+		return ERR_INTER;
 	}
 
     int state = STATE_START;
     int c;
     // vymazeme obsah atributu a v pripade identifikatoru
     // budeme postupne do nej vkladat jeho nazev
-    //CHYBA   //str_clear(token);
+    str_clear(token);
 	
 	while (true)
 	{
