@@ -1,5 +1,7 @@
 // lexikalni analyzator
+
 #include <stdio.h>
+#include <stdlib.h>
 #include <ctype.h>
 #include "str.h"
 #include "scanner.h"
@@ -47,16 +49,84 @@
 FILE *source;
 struct str_struct *str;
 
-void setSourceFile(FILE *f)
-{
-	source = f;
-}
-
 int cleaner(int exit_code, struct str_struct *s)
 {
 	str_free(s);
 	return exit_code;
 }
+
+
+//spracovanie stringu
+static int process_identifier(struct str_struct *str, struct token *token)
+{
+	if (!str_cmp_const_str(str, "package")) token->attribute.keyword = KWORD_PACKAGE;
+	else if (!str_cmp_const_str(str, "func")) token->attribute.keyword = KWORD_FUNC;
+	else if (!str_cmp_const_str(str, "return")) token->attribute.keyword = KWORD_RETURN;
+	else if (!str_cmp_const_str(str, "float64")) token->attribute.keyword = KWORD_FLOAT64;
+	else if (!str_cmp_const_str(str, "int")) token->attribute.keyword = KWORD_INT;
+	else if (!str_cmp_const_str(str, "string")) token->attribute.keyword = KWORD_STRING;
+	else if (!str_cmp_const_str(str, "if")) token->attribute.keyword = KWORD_IF;
+	else if (!str_cmp_const_str(str, "for")) token->attribute.keyword = KWORD_FOR;
+	else if (!str_cmp_const_str(str, "else")) token->attribute.keyword = KWORD_ELSE;
+	else token->type = T_TYPE_IDENTIFIER;
+
+	if (token->type != T_TYPE_IDENTIFIER)
+	{
+		token->type = T_TYPE_KEYWORD;
+		return cleaner(LEX_TOKEN_OK, str);
+	}
+
+	if (!str_copy(str, token->attribute.string))
+	{
+		return cleaner(ERROR_INTERNAL, str);
+	}
+
+	return cleaner(LEX_TOKEN_OK, str);
+}
+
+
+
+static int process_integer(struct str_struct *str, struct token *token)
+{
+	char *endptr;
+
+	int val = (int) strtol(str->str, &endptr, 10);
+	if (*endptr)
+	{
+		return cleaner(ERROR_INTERNAL, str);
+	}
+
+	token->attribute.int_literal = val;
+	token->type = T_TYPE_INTEGER;
+
+	return cleaner(LEX_TOKEN_OK, str);
+}
+
+
+//spracovanie integeru
+static int process_decimal(struct str_struct *str, struct token *token)
+{
+	char *endptr;
+
+	double val = strtod(str->str, &endptr);
+	if (*endptr)
+	{
+		return cleaner(ERROR_INTERNAL, str);
+	}
+
+	token->attribute.double_literal= val;
+	token->type = T_TYPE_DOUBLE;
+
+	return cleaner(LEX_TOKEN_OK, str);
+}
+
+
+void setSourceFile(FILE *f)
+{
+	source = f;
+}
+
+
 
 int get_token(struct token *token)
 // hlavni funkce lexikalniho analyzatoru

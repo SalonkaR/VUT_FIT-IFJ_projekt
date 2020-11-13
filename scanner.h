@@ -11,35 +11,21 @@
 enum keyword
 {
 	//NECESSARY
-	KWORD_FUNC,
-	KWORD_MAIN,
-	KWORD_PACKAGE,
-	KWORD_RETURN,
+	KWORD_FUNC,				//, cislo = 0
+	KWORD_PACKAGE,			//, cislo = 1
+	KWORD_RETURN,			//, cislo = 2
 
 	
 	//DATA_TYPES
-	KWORD_FLOAT64,
-	KWORD_INT,
-	KWORD_STRING,
+	KWORD_FLOAT64,			//, cislo = 3
+	KWORD_INT,				//, cislo = 4
+	KWORD_STRING,			//, cislo = 5
 
 
 	//COMMANDS
-	KWORD_IF,
-	KWORD_ELSE,
-	KWORD_FOR,
-
-
-	//BUILT-IN_FUNCTIONS
-	KWORD_FUNC_INPUTS,
-	KWORD_FUNC_INPUTI,
-	KWORD_FUNC_INPUTF,
-	KWORD_FUNC_PRINT,
-	KWORD_FUNC_INT2FLOAT,
-	KWORD_FUNC_FLOAT2INT,
-	KWORD_FUNC_LEN,
-	KWORD_FUNC_SUBSTR,
-	KWORD_FUNC_ORD,
-	KWORD_FUNC_CHR,	
+	KWORD_IF,				//, cislo = 6
+	KWORD_ELSE,				//, cislo = 7
+	KWORD_FOR,				//, cislo = 8
 };
 
 enum t_type
@@ -93,7 +79,7 @@ union t_attribute
 	struct str_struct *string; 
 	int int_literal; 
 	enum keyword keyword; 
-	double dec_literal; 
+	double double_literal; 
 };
 
 
@@ -102,9 +88,9 @@ struct token{
 	union t_attribute attribute; 
 };
 
-void setSourceFile(FILE *f);
+int cleaner(int exit_code, struct str_struct *s);
 
-void set_str(struct str_struct *string);
+void setSourceFile(FILE *f);
 
 int get_token(struct token *token);
 

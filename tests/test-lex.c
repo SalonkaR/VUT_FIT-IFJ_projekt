@@ -177,6 +177,16 @@ void print_file(FILE *f){
 
 void print_token(struct token *t, int ret_val, int no_token){
     printf("%d token ->Prijaty token je typu: \"%d\"\n",no_token, t->type);
+    if (t->type == T_TYPE_INTEGER){
+        printf("%d token ->Atributy token: int= \"%d\"\n",no_token, t->attribute.int_literal);
+    }
+    else if (t->type == T_TYPE_DOUBLE){
+        printf("%d token ->Atributy token: double= \"%lf\"\n",no_token, t->attribute.double_literal);
+    }
+    else if (t->type == T_TYPE_IDENTIFIER){
+        printf("%d token ->Atributy token: string= \"%s\"\n",no_token, t->attribute.string->str);
+    }
+
     printf("%d token ->Prijaty token vracia: \"%d\"\n",no_token, ret_val);
 }
 
