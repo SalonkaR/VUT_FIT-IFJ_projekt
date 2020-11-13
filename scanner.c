@@ -231,10 +231,12 @@ int get_token(struct token *token)
 				}
 				else if (isdigit(c))
 				{
+					str_add_char(str, c);
 					state = STATE_NUMBER;
 				}
 				else if (isalpha(c) || c == '_')
 				{
+					str_add_char(str, c);
 					state = STATE_ID;
 				}
 				else if (c == '/')
@@ -448,11 +450,12 @@ int get_token(struct token *token)
 				else
 				{
 					state = STATE_START;
-					process_integer(str, token);
+					return process_integer(str, token);
 				}
 				break;
 				
 			case(STATE_NUMBER_E):
+			
 				if (c == '+' || c == '-')
 				{
 					state = STATE_NUMBER_E_SIGN;
@@ -467,6 +470,7 @@ int get_token(struct token *token)
 				}
 				else
 				{
+					
 					return cleaner(LEX_ERR, str);
 				}
 				break;
@@ -480,6 +484,7 @@ int get_token(struct token *token)
 				}
 				else
 				{
+					ungetc(c, source);
 					return cleaner(LEX_ERR, str);
 				}
 				break;
@@ -493,8 +498,8 @@ int get_token(struct token *token)
 				}
 				else
 				{
-					state = STATE_START;
-					process_decimal(str, token);
+					ungetc(c, source);
+					return process_decimal(str, token);
 				}
 				break;
 
@@ -527,7 +532,7 @@ int get_token(struct token *token)
 				else
 				{
 					state = STATE_START;
-					process_decimal(str, token);
+					return process_decimal(str, token);
 				}
 				break;
 				
@@ -542,7 +547,8 @@ int get_token(struct token *token)
 				else
 				{
 					state = STATE_START;
-					process_identifier(str, token);
+					ungetc(c, source);
+					return process_identifier(str, token);
 				}
 				break;
 				

@@ -199,18 +199,20 @@ void test_scanner(char *filename){
     int no_token = 0;
     struct token test;
     test.attribute.string = malloc(sizeof(struct str_struct));
+    //kontroly
     if (test.attribute.string == NULL){
         printf("Chyba pri alokovani pamate\n");
         return;
     }
     bool init_result = str_init(test.attribute.string);
+    //kontroly
     if (init_result == false){
         printf("Chyba pri inicializacii string struktury \n");
         return;
     }
 
     FILE *f;
-
+    //subor vypis
     f = fopen(filename, "r"); 
     if (f == NULL) { 
         printf("Nepodarilo sa otvorit subor: \"%s\"\n", filename); 
@@ -220,6 +222,7 @@ void test_scanner(char *filename){
     print_file(f);
     printf("Volam funkciu get_token az dokym mi nepride token \"T_TYPE_EOF\"\n");
     fclose(f);
+    //koniec vypisu suboru
     f = fopen(filename, "r"); 
     if (f == NULL) { 
         printf("Nepodarilo sa otvorit subor: \"%s\"\n", filename); 
@@ -227,9 +230,9 @@ void test_scanner(char *filename){
         return;
     }
     setSourceFile(f);
-
     result = get_token(&test);
     no_token++;
+    //kontroly
     if (result == ERROR_INTERNAL){
         red_color();
         printf("Interna chyba vo funkcii get_token\n");
@@ -238,8 +241,23 @@ void test_scanner(char *filename){
     }
     while (test.type != T_TYPE_EOF && result == 0){
         print_token(&test, result, no_token);
+        str_free(test.attribute.string);
+        free(test.attribute.string);
         no_token++;
+        test.attribute.string = malloc(sizeof(struct str_struct));
+        //kontroly
+        if (test.attribute.string == NULL){
+            printf("Chyba pri alokovani pamate\n");
+            return;
+        }
+        //kontroly
+        bool init_result = str_init(test.attribute.string);
+        if (init_result == false){
+            printf("Chyba pri inicializacii string struktury \n");
+            return;
+        }
         result = get_token(&test);
+        //kontroly
         if (result == ERROR_INTERNAL){
             red_color();
             printf("Interna chyba vo funkcii get_token\n");
@@ -248,6 +266,9 @@ void test_scanner(char *filename){
         }
     }
     print_token(&test, result, no_token);
+    str_free(test.attribute.string);
+    free(test.attribute.string);
+
     fclose(f);
 }
 
