@@ -203,7 +203,12 @@ void test_scanner(char *filename){
         printf("Chyba pri alokovani pamate\n");
         return;
     }
-    str_init(test.attribute.string);
+    bool init_result = str_init(test.attribute.string);
+    if (init_result == false){
+        printf("Chyba pri inicializacii string struktury \n");
+        return;
+    }
+
     FILE *f;
 
     f = fopen(filename, "r"); 
