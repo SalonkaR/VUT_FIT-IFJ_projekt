@@ -204,7 +204,7 @@ void test_scanner(char *filename){
         reset();
         return;
     }
-    while (test.type != T_TYPE_EOF || result == 0){
+    while (test.type != T_TYPE_EOF && result == 0){
         print_token(&test, result, no_token);
         no_token++;
         result = get_token(&test);

@@ -49,7 +49,7 @@ struct str_struct *str;
 
 void setSourceFile(FILE *f)
 {
-  source = f;
+	source = f;
 }
 
 int cleaner(int exit_code, struct str_struct *s)
@@ -61,11 +61,13 @@ int cleaner(int exit_code, struct str_struct *s)
 int get_token(struct token *token)
 // hlavni funkce lexikalniho analyzatoru
 {
+	struct str_struct tmp;
+	str = &tmp;
+	str_init(str);
 	if (source == NULL)
 	{
 		return ERROR_INTERNAL;
 	}
-
 	if (str == NULL)
 	{
 		return ERROR_INTERNAL;
