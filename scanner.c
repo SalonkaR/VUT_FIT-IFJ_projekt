@@ -334,14 +334,50 @@ int get_token(struct token *token)
 				else if (c == '\'')
 				{
 					state = STATE_STRING_BACKSLASH;
+					break;
 				}
 				else if (c == '"')
 				{
-					
+					token->type = T_TYPE_STRING;
+					return cleaner(LEX_TOKEN_OK, str);
+				}
+				else
+				{
+					str_add_char(str, c);
+					break;
 				}
 
 			case(STATE_STRING_BACKSLASH):
-				break;
+				if (c < 32 || c > 255)
+				{
+					return cleaner(LEX_ERR, str);
+				}
+				else if (c == 'x')
+				{
+					state = STATE_STRING_HEXADECIMAL;
+					break;
+				}
+				else if (c == '"')
+				{
+					state = STATE_STRING;
+					break;
+				}
+				else if (c == 't')
+				{
+					/* code */
+				}
+				else if (c == 'n')
+				{
+					/* code */
+				}
+				else if (c == '\'')
+				{
+					/* code */
+				}
+				else
+				{
+					return cleaner(LEX_ERR, str);
+				}				
 
 			case(STATE_STRING_HEXADECIMAL):
 				break;
