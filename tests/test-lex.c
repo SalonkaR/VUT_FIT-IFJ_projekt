@@ -195,7 +195,15 @@ void test_scanner(char *filename){
     }
     print_file(f);
     printf("Volam funkciu get_token az dokym mi nepride token \"T_TYPE_EOF\"\n");
+    fclose(f);
+    f = fopen(filename, "r"); 
+    if (f == NULL) { 
+        printf("Nepodarilo sa otvorit subor: \"%s\"\n", filename); 
+        reset();
+        return;
+    }
     setSourceFile(f);
+
     result = get_token(&test);
     no_token++;
     if (result == ERROR_INTERNAL){

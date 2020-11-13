@@ -44,46 +44,46 @@ enum keyword
 
 enum t_type
 {
-	T_TYPE_EOF, //end of file
-	T_TYPE_EOL, //end of line	 
-	T_TYPE_IDENTIFIER, //identifier
-	T_TYPE_KEYWORD, //keyword
+	T_TYPE_EOF, //end of file			 , cislo = 0
+	T_TYPE_EOL, //end of line	 		 , cislo = 1
+	T_TYPE_IDENTIFIER, //identifier		 , cislo = 2
+	T_TYPE_KEYWORD, //keyword		 	, cislo = 3
 
 
 	//DATA_TYPES
-	T_TYPE_INTEGER, //intiger literal 
-	T_TYPE_DOUBLE, //double literal
-	T_TYPE_STRING, //string	
+	T_TYPE_INTEGER, //intiger literal 	, cislo = 4
+	T_TYPE_DOUBLE, //double literal	 	, cislo = 5
+	T_TYPE_STRING, //string			 	, cislo = 6
 
 
 	//COMPARISONS AND DEFINITION
-	T_TYPE_VARIABLE_DEFINITION, //:=	
-	T_TYPE_COMPARISON, //==
-	T_TYPE_NOT_EQUAL, //!=
-	T_TYPE_LESS_EQUAL, //<= 
-	T_TYPE_LESS, //<
-	T_TYPE_MORE_EQUAL, //>=
-	T_TYPE_MORE, //>
+	T_TYPE_VARIABLE_DEFINITION, //:=, cislo = 7
+	T_TYPE_COMPARISON, //==		 	, cislo = 8
+	T_TYPE_NOT_EQUAL, //!=		 	, cislo = 9
+	T_TYPE_LESS_EQUAL, //<= 		, cislo = 10
+	T_TYPE_LESS, //<		 		, cislo = 11
+	T_TYPE_MORE_EQUAL, //>=		 	, cislo = 12
+	T_TYPE_MORE, //>		 		, cislo = 13
 
 
 	//OPERATORS
-	T_TYPE_ASSIGN, //=
-	T_TYPE_PLUS, //+
-	T_TYPE_MINUS, //-
-	T_TYPE_MUL, //*
-	T_TYPE_DIV, ///
+	T_TYPE_ASSIGN, //=				, cislo = 14
+	T_TYPE_PLUS, //+		 		, cislo = 15
+	T_TYPE_MINUS, //-		 		, cislo = 16
+	T_TYPE_MUL, //*		 			, cislo = 17
+	T_TYPE_DIV, ///		 			, cislo = 18
 
 
 	//BRACKETS
-	T_TYPE_LEFT_BRACKET, //(
-	T_TYPE_RIGHT_BRACKET, //)
-	T_TYPE_LEFT_VINCULUM, //{
-	T_TYPE_RIGHT_VINCULUM, //}
+	T_TYPE_LEFT_BRACKET, //(		 , cislo = 19
+	T_TYPE_RIGHT_BRACKET, //)		 , cislo = 20
+	T_TYPE_LEFT_VINCULUM, //{		 , cislo = 21
+	T_TYPE_RIGHT_VINCULUM, //}		 , cislo = 22
 
 
 	//SEPARATOR
-	T_TYPE_COMMA, //,
-	T_TYPE_SEMICOLON, //;	
+	T_TYPE_COMMA, //,		 		 , cislo = 23
+	T_TYPE_SEMICOLON, //;			 , cislo = 24
 };
 
 
