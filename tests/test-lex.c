@@ -208,6 +208,7 @@ void test_scanner(char *filename){
     //kontroly
     if (init_result == false){
         printf("Chyba pri inicializacii string struktury \n");
+        free(test.attribute.string);
         return;
     }
 
@@ -217,6 +218,9 @@ void test_scanner(char *filename){
     if (f_print == NULL) { 
         printf("Nepodarilo sa otvorit subor: \"%s\"\n", filename); 
         reset();
+        str_free(test.attribute.string);
+        free(test.attribute.string);
+        fclose(f_print);
         return;
     }
     print_file(f_print);
@@ -228,6 +232,9 @@ void test_scanner(char *filename){
     if (f == NULL) { 
         printf("Nepodarilo sa otvorit subor: \"%s\"\n", filename); 
         reset();
+        str_free(test.attribute.string);
+        free(test.attribute.string);
+        fclose(f);
         return;
     }
     setSourceFile(f);
@@ -235,16 +242,8 @@ void test_scanner(char *filename){
     no_token++;
     //natvrdo nastavim type na T_TYPE_EOL
     test.type = T_TYPE_EOL;
+    
     while (test.type != T_TYPE_EOF && result == 0){
-        result = get_token(&test);
-        no_token++;
-        //kontroly
-        if (result == ERROR_INTERNAL){
-            red_color();
-            printf("Interna chyba vo funkcii get_token\n");
-            reset();
-            return;
-        }
         print_token(&test, result, no_token);
         str_free(test.attribute.string);
         free(test.attribute.string);
@@ -253,12 +252,16 @@ void test_scanner(char *filename){
         //kontroly
         if (test.attribute.string == NULL){
             printf("Chyba pri alokovani pamate\n");
+            fclose(f);
             return;
         }
         //kontroly
         bool init_result2 = str_init(test.attribute.string);
         if (init_result2 == false){
             printf("Chyba pri inicializacii string struktury \n");
+            str_free(test.attribute.string);
+            free(test.attribute.string);
+            fclose(f);
             return;
         }
         result = get_token(&test);
@@ -267,6 +270,9 @@ void test_scanner(char *filename){
             red_color();
             printf("Interna chyba vo funkcii get_token\n");
             reset();
+            str_free(test.attribute.string);
+            free(test.attribute.string);
+            fclose(f);
             return;
         }
     }
