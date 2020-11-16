@@ -52,6 +52,7 @@ struct str_struct *str;
 int cleaner(int exit_code, struct str_struct *s)
 {
 	str_free(s);
+	printf("EXIT CODE JE ----> %d \n", exit_code);
 	return exit_code;
 }
 
@@ -144,7 +145,7 @@ int get_token(struct token *token)
     // vymazeme obsah atributu a v pripade identifikatoru
     // budeme postupne do nej vkladat jeho nazev
     //CHYBA   //str_clear(token);
-	
+
 	while (true)
 	{
 		c = getc(source);
@@ -341,11 +342,13 @@ int get_token(struct token *token)
 				}
 				else if (c == '"')
 				{
+					
 					token->type = T_TYPE_STRING;
 					return cleaner(LEX_TOKEN_OK, str);
 				}
 				else
 				{
+					//printf("POMOCNY PRINT SOM NA PISMENE ---------------> %c \n", c);
 					str_add_char(str, c);
 					break;
 				}
@@ -434,12 +437,14 @@ int get_token(struct token *token)
 			case(STATE_NUMBER):
 				if (c == 'e' || c == 'E')
 				{
+					str_add_char(str, c);
 					state = STATE_NUMBER_E;
 					break;
 				}
 				else if (c == '.')
 				{
 					state = STATE_NUMBER_FLOAT;
+					str_add_char(str, c);
 					break;
 				}
 				else if (isdigit(c))
@@ -450,12 +455,12 @@ int get_token(struct token *token)
 				else
 				{
 					state = STATE_START;
+					ungetc(c, source);
 					return process_integer(str, token);
 				}
 				break;
 				
 			case(STATE_NUMBER_E):
-			
 				if (c == '+' || c == '-')
 				{
 					state = STATE_NUMBER_E_SIGN;
@@ -470,7 +475,6 @@ int get_token(struct token *token)
 				}
 				else
 				{
-					
 					return cleaner(LEX_ERR, str);
 				}
 				break;
@@ -532,6 +536,7 @@ int get_token(struct token *token)
 				else
 				{
 					state = STATE_START;
+					ungetc(c, source);
 					return process_decimal(str, token);
 				}
 				break;
@@ -554,18 +559,20 @@ int get_token(struct token *token)
 				
 
 			case(STATE_DIVIDE_OR_COMMENTARY):
-				if (c != '/' || c != '*')
-				{
-					token->type = T_TYPE_DIV;
-					return cleaner(LEX_TOKEN_OK, str);
-				}
-				else if (c == '/')
+				if (c == '/')
 				{
 					state = STATE_COMMENTARY_LINE;
 				}
 				else if (c == '*')
 				{
-					state = STATE_COMMENTARY_BLOCK_START;
+					printf("POMOCNY PRINT BLOK KOMENTAROV ZACINA --------------- \n");
+					state = STATE_COMMENTARY_BLOCK_START;					
+				}
+				else if (c  != '*' || c  != '/')
+				{
+					token->type = T_TYPE_DIV;
+					ungetc(c, source);
+					return cleaner(LEX_TOKEN_OK, str);
 				}
 				break;
 
@@ -587,6 +594,7 @@ int get_token(struct token *token)
 			case(STATE_COMMENTARY_BLOCK_END):
 				if (c == '/')
 				{
+					printf("POMOCNY PRINT BLOK KOMENTAROV KONCI --------------- \n");
 					state = STATE_START;
 				}
 				else if (c != '*')
