@@ -238,10 +238,20 @@ void test_scanner(char *filename){
         return;
     }
     setSourceFile(f);
-    result = get_token(&test);
     no_token++;
     //natvrdo nastavim type na T_TYPE_EOL
     test.type = T_TYPE_EOL;
+
+    result = get_token(&test);
+    if (result == ERROR_INTERNAL){
+            red_color();
+            printf("Interna chyba vo funkcii get_token\n");
+            reset();
+            str_free(test.attribute.string);
+            free(test.attribute.string);
+            fclose(f);
+            return;
+        }
     
     while (test.type != T_TYPE_EOF && result == 0){
         print_token(&test, result, no_token);
