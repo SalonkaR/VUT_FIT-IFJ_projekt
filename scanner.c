@@ -52,7 +52,7 @@ struct str_struct *str;
 int cleaner(int exit_code, struct str_struct *s)
 {
 	str_free(s);
-	printf("EXIT CODE JE ----> %d \n", exit_code);
+	//printf("EXIT CODE JE ----> %d \n", exit_code);
 	return exit_code;
 }
 
@@ -565,7 +565,7 @@ int get_token(struct token *token)
 				}
 				else if (c == '*')
 				{
-					printf("POMOCNY PRINT BLOK KOMENTAROV ZACINA --------------- \n");
+					//printf("POMOCNY PRINT BLOK KOMENTAROV ZACINA --------------- \n");
 					state = STATE_COMMENTARY_BLOCK_START;					
 				}
 				else if (c  != '*' || c  != '/')
@@ -594,7 +594,7 @@ int get_token(struct token *token)
 			case(STATE_COMMENTARY_BLOCK_END):
 				if (c == '/')
 				{
-					printf("POMOCNY PRINT BLOK KOMENTAROV KONCI --------------- \n");
+					//printf("POMOCNY PRINT BLOK KOMENTAROV KONCI --------------- \n");
 					state = STATE_START;
 				}
 				else if (c != '*')
