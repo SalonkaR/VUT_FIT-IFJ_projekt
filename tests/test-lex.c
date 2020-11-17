@@ -2,12 +2,14 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
+
 #include "../error.h"
 #include "../scanner.h"
 #include "../str.h"
 
 #define FILE_COUNT_CORRECT 18
-#define FILE_COUNT_INCORRECT 1
+#define FILE_COUNT_INCORRECT 18
 
 void reset () {
   printf("\033[0m");
@@ -216,11 +218,12 @@ void test_scanner(char *filename){
     //subor vypis
     f_print = fopen(filename, "r"); 
     if (f_print == NULL) { 
+        red_color();
         printf("Nepodarilo sa otvorit subor: \"%s\"\n", filename); 
         reset();
+        printf("errno: %d\n",errno);
         str_free(test.attribute.string);
         free(test.attribute.string);
-        fclose(f_print);
         return;
     }
     print_file(f_print);
@@ -230,11 +233,11 @@ void test_scanner(char *filename){
     FILE *f;
     f = fopen(filename, "r"); 
     if (f == NULL) { 
+        red_color();
         printf("Nepodarilo sa otvorit subor: \"%s\"\n", filename); 
         reset();
         str_free(test.attribute.string);
         free(test.attribute.string);
-        fclose(f);
         return;
     }
     setSourceFile(f);
@@ -335,8 +338,26 @@ void kontrola_scanner(){
     // KONTROLA SUBOROV NA KTORYCH BY SA MAL SCANNER ZASAKNUT
 
     char *filenames_incorrect[FILE_COUNT_INCORRECT] =  
-                            {"tests/test_files_incorrect/token_escape_sek.test",};
-
+                            {"tests/test_files_incorrect/token_dvojbodka1.test",
+                             "tests/test_files_incorrect/token_dvojbodka2.test",
+                             "tests/test_files_incorrect/token_escape_sek2.test",
+                             "tests/test_files_incorrect/token_escape_sek3.test",
+                             "tests/test_files_incorrect/token_escape_sek.test",
+                             "tests/test_files_incorrect/token_escape_string1.test",
+                             "tests/test_files_incorrect/token_escape_string2.test",
+                             "tests/test_files_incorrect/token_escape_string3.test",
+                             "tests/test_files_incorrect/token_escape_string4.test",
+                             "tests/test_files_incorrect/token_escape_string5.test",
+                             "tests/test_files_incorrect/token_escape_string6.test",
+                             "tests/test_files_incorrect/token_escape_string7.test",
+                             "tests/test_files_incorrect/token_mark1.test",
+                             "tests/test_files_incorrect/token_mark2.test",
+                             "tests/test_files_incorrect/token_mark3.test",
+                             "tests/test_files_incorrect/token_numbers1.test",
+                             "tests/test_files_incorrect/token_numbers2.test",
+                             "tests/test_files_incorrect/token_numbers3.test",};
+    
+    printf("\n\n TESTY NA SUBOROCH KTORE BY MALI VRACAT LEX_ERROR(1)\n");
     for (int i = 0; i < FILE_COUNT_INCORRECT; i++){
         blue_color();
         printf("\n[TEST%d]\n", test_count);
