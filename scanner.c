@@ -337,7 +337,7 @@ int get_token(struct token *token)
 				break;
 
 			case(STATE_STRING):
-				token->type = T_TYPE_STRING;
+				
 				if (c == '\'')
 				{
 					state = STATE_STRING_BACKSLASH;
@@ -345,14 +345,16 @@ int get_token(struct token *token)
 				}
 				else if (c == '"')
 				{
-					ungetc(c, source);
-					printf("--------UTNEM SA => %s-----------\n",str->str);
+					//ungetc(c, source);
+					//printf("--------UTNEM SA => %s-----------\n",str->str);
+					token->type = T_TYPE_STRING;
+					str_copy(str, token->attribute.string);
 					return cleaner(LEX_TOKEN_OK, str);
 				}
 				else if (c >= 32 && c <= 255)
 				{
 					str_add_char(str, c);
-					printf("--------%s-----------\n",str->str);
+					//printf("--------%s-----------\n",str->str);
 				}
 				else
 				{
