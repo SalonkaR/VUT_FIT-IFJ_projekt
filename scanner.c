@@ -60,6 +60,7 @@ int cleaner(int exit_code, struct str_struct *s)
 //spracovanie stringu
 static int process_identifier(struct str_struct *str, struct token *token)
 {
+
 	if (!str_cmp_const_str(str, "package")) token->attribute.keyword = KWORD_PACKAGE;
 	else if (!str_cmp_const_str(str, "func")) token->attribute.keyword = KWORD_FUNC;
 	else if (!str_cmp_const_str(str, "return")) token->attribute.keyword = KWORD_RETURN;
@@ -70,6 +71,8 @@ static int process_identifier(struct str_struct *str, struct token *token)
 	else if (!str_cmp_const_str(str, "for")) token->attribute.keyword = KWORD_FOR;
 	else if (!str_cmp_const_str(str, "else")) token->attribute.keyword = KWORD_ELSE;
 	else token->type = T_TYPE_IDENTIFIER;
+
+	
 	if (token->type != T_TYPE_IDENTIFIER)
 	{
 		token->type = T_TYPE_KEYWORD;
@@ -139,6 +142,8 @@ int get_token(struct token *token)
 	{
 		return ERROR_INTERNAL;
 	}
+
+	token->type = T_TYPE_EMPTY;
 
     int state = STATE_START;
     int c;

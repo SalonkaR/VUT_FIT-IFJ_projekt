@@ -70,6 +70,7 @@ enum t_type
 	//SEPARATOR
 	T_TYPE_COMMA, //,		 		 , cislo = 23
 	T_TYPE_SEMICOLON, //;			 , cislo = 24
+	T_TYPE_EMPTY //prazdnota         , cislo = 25
 };
 
 
