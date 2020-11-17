@@ -8,7 +8,7 @@
 #include "error.h"
 
 #define STATE_START 100 //S
-#define STATE_EOL 101  //F1
+//#define STATE_EOL 101  //F1
 #define STATE_SEMICOLON 102 //F2
 #define STATE_COMMA 103 //F3
 #define STATE_MULTIPLY 104 //F4
@@ -154,17 +154,18 @@ int get_token(struct token *token)
 	while (true)
 	{
 		c = getc(source);
-		
 		switch (state)
 		{
 			case (STATE_START):
-				if (isspace(c))
+				if (c == '\n' )
+				{
+					token->type = T_TYPE_EOL;
+					return cleaner(LEX_TOKEN_OK, str);
+					
+				}
+				else if (isspace(c))
 				{
 					state = STATE_START;
-				}
-				else if (c == '\n')
-				{
-					state = STATE_EOL;
 				}
 				else if (c == ';')
 				{
@@ -260,14 +261,14 @@ int get_token(struct token *token)
 				}
 				break;
 
-			case(STATE_EOL):
+/*			case(STATE_EOL):
 				if (isspace(c))
 				{
 					break;
 				}
 				ungetc(c, source);
 				token->type = T_TYPE_EOL;
-				return cleaner(LEX_TOKEN_OK, str);
+				return cleaner(LEX_TOKEN_OK, str);  	*/
 
 			case(STATE_LESS_THAN):
 				if (c == '=')
@@ -336,25 +337,26 @@ int get_token(struct token *token)
 				break;
 
 			case(STATE_STRING):
-				if (c < 32 || c > 255)
-				{
-					return cleaner(LEX_ERR, str);
-				}
-				else if (c == '\'')
+				token->type = T_TYPE_STRING;
+				if (c == '\'')
 				{
 					state = STATE_STRING_BACKSLASH;
 					break;
 				}
 				else if (c == '"')
 				{
-					
-					token->type = T_TYPE_STRING;
+					ungetc(c, source);
+					printf("--------UTNEM SA => %s-----------\n",str->str);
 					return cleaner(LEX_TOKEN_OK, str);
+				}
+				else if (c >= 32 && c <= 255)
+				{
+					str_add_char(str, c);
+					printf("--------%s-----------\n",str->str);
 				}
 				else
 				{
-					//printf("POMOCNY PRINT SOM NA PISMENE ---------------> %c \n", c);
-					str_add_char(str, c);
+					return cleaner(LEX_ERR, str);
 					break;
 				}
 				break;
@@ -390,7 +392,7 @@ int get_token(struct token *token)
 					c = '\n';
 					str_add_char(str, c);
 					state = STATE_STRING;
-					break;
+					return cleaner(LEX_TOKEN_OK, str);
 				}
 				else if (c == '\'')
 				{
@@ -570,7 +572,6 @@ int get_token(struct token *token)
 				}
 				else if (c == '*')
 				{
-					//printf("POMOCNY PRINT BLOK KOMENTAROV ZACINA --------------- \n");
 					state = STATE_COMMENTARY_BLOCK_START;					
 				}
 				else if (c  != '*' || c  != '/')
@@ -599,7 +600,6 @@ int get_token(struct token *token)
 			case(STATE_COMMENTARY_BLOCK_END):
 				if (c == '/')
 				{
-					//printf("POMOCNY PRINT BLOK KOMENTAROV KONCI --------------- \n");
 					state = STATE_START;
 				}
 				else if (c != '*')
