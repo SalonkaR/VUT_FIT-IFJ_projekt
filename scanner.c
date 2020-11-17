@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <string.h>
+
 #include "str.h"
 #include "scanner.h"
 #include "error.h"
@@ -55,6 +57,51 @@ int cleaner(int exit_code, struct str_struct *s)
 	//printf("EXIT CODE JE ----> %d \n", exit_code);
 	return exit_code;
 }
+
+static int hexadecimalToDecimal(char hexVal[]) 
+{    
+    int len = 2;
+      
+    // Initializing base value to 1, i.e 16^0 
+    int base = 1; 
+      
+    int dec_val = 0; 
+      
+    // Extracting characters as digits from last character 
+    for (int i=len-1; i>=0; i--) 
+    {    
+        // if character lies in '0'-'9', converting  
+        // it to integral 0-9 by subtracting 48 from 
+        // ASCII value. 
+        if (hexVal[i]>='0' && hexVal[i]<='9') 
+        { 
+            dec_val += (hexVal[i] - 48)*base; 
+                  
+            // incrementing base by power 
+            base = base * 16; 
+        } 
+  
+        // if character lies in 'A'-'F' , converting  
+        // it to integral 10 - 15 by subtracting 55  
+        // from ASCII value 
+        else if (hexVal[i]>='A' && hexVal[i]<='F') 
+        { 
+            dec_val += (hexVal[i] - 55)*base; 
+          
+            // incrementing base by power 
+            base = base*16; 
+        }
+		else if (hexVal[i]>='a' && hexVal[i]<='f') 
+        { 
+            dec_val += (hexVal[i] - 87)*base; 
+          
+            // incrementing base by power 
+            base = base*16; 
+        } 
+    } 
+      
+    return dec_val; 
+} 
 
 
 //spracovanie stringu
@@ -147,6 +194,9 @@ int get_token(struct token *token)
 
     int state = STATE_START;
     int c;
+	//tu zapiseme hodnotu hexvalu
+	char hexVal[3] = { 0 };
+	hexVal[2] = '\0';
     // vymazeme obsah atributu a v pripade identifikatoru
     // budeme postupne do nej vkladat jeho nazev
     //CHYBA   //str_clear(token);
@@ -338,7 +388,7 @@ int get_token(struct token *token)
 
 			case(STATE_STRING):
 				
-				if (c == '\'')
+				if (c == '\\')
 				{
 					state = STATE_STRING_BACKSLASH;
 					break;
@@ -354,7 +404,6 @@ int get_token(struct token *token)
 				else if (c >= 32 && c <= 255)
 				{
 					str_add_char(str, c);
-					printf("--------%s-----------\n",str->str);
 				}
 				else
 				{
@@ -368,16 +417,16 @@ int get_token(struct token *token)
 				{
 					return cleaner(LEX_ERR, str);
 				}
-				else if (c == 'x')
+				else if (c == 'n')
 				{
-					//c = '\x';
+					c = '\n';
 					str_add_char(str, c);
-					state = STATE_STRING_HEXADECIMAL;
+					state = STATE_STRING;
 					break;
 				}
 				else if (c == '"')
 				{
-					c = '\"';
+					c = '"';
 					str_add_char(str, c);
 					state = STATE_STRING;
 					break;
@@ -389,20 +438,18 @@ int get_token(struct token *token)
 					state = STATE_STRING;
 					break;
 				}
-				else if (c == 'n')
-				{
-					c = '\n';
-					str_add_char(str, c);
-					state = STATE_STRING;
-					return cleaner(LEX_TOKEN_OK, str);
-				}
-				else if (c == '\'')
+				else if (c == '\\')
 				{
 					c = '\\';
 					str_add_char(str, c);
 					state = STATE_STRING;
 					break;
 				}
+				else if (c == 'x')
+				{
+					state = STATE_STRING_HEXADECIMAL;
+				}
+				
 				else
 				{
 					return cleaner(LEX_ERR, str);
@@ -411,12 +458,12 @@ int get_token(struct token *token)
 
 			case(STATE_STRING_HEXADECIMAL):
 				if (c < 32 || c > 255)
+					{
+						return cleaner(LEX_ERR, str);
+					}
+				if (isdigit(c) || (c > 64 && c < 71) || (c > 96 && c < 103))
 				{
-					return cleaner(LEX_ERR, str);
-				}
-				else if (isdigit(c) || (c > 64 && c < 71) || (c > 96 && c < 103))
-				{
-					str_add_char(str, c);
+					hexVal[0] = c;
 					state = STATE_STRING_HEXADECIMAL_SECOND;
 					break;
 				}
@@ -433,7 +480,10 @@ int get_token(struct token *token)
 				}
 				else if (isdigit(c) || (c > 64 && c < 71) || (c > 96 && c < 103))
 				{
-					str_add_char(str, c);
+					hexVal[1] = c;
+					int decimal = hexadecimalToDecimal(hexVal);
+					printf("decimal = %d, hexVAl = %s\n", decimal, hexVal);
+					str_add_char(str, (char) decimal);
 					state = STATE_STRING;
 					break;
 				}
