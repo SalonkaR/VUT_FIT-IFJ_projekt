@@ -338,7 +338,7 @@ int get_token(struct token *token)
 
 			case(STATE_STRING):
 				token->type = T_TYPE_STRING;
-				if (c == '\\')
+				if (c == '\'')
 				{
 					state = STATE_STRING_BACKSLASH;
 					break;
@@ -352,7 +352,7 @@ int get_token(struct token *token)
 				else if (c >= 32 && c <= 255)
 				{
 					str_add_char(str, c);
-					//printf("--------%s-----------\n",str->str);
+					printf("--------%s-----------\n",str->str);
 				}
 				else
 				{
