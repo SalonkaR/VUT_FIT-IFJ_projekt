@@ -14,7 +14,7 @@ void check_token(struct parser_data *data)
 {
     if ((result = get_token(&data->token)) != LEX_TOKEN_OK)
     {
-        return LEX_ERR;
+    	return LEX_ERR;
     }
     return result;
 }
@@ -58,12 +58,14 @@ int start(struct parser_data *data)
     { 
       return SYN_ERR;
     }
+    check_token(data);
     if (prog(data) != SYN_OK)
     {
       return SYN_ERR;
     }
-    
-    
+    check_token(data);
+    check_type(data, T_TYPE_EOF);
+    return SYN_OK;
   }
   return SYN_ERR;
 }
@@ -77,7 +79,7 @@ int eol()
 
   
   // pokud aktualni token je jiny nez vyse uvedene, jedna se o syntaktickou chybu
-  return SYN_ERR;
+  return SYNTAX_ERROR;
 }
 
 /*
@@ -328,9 +330,6 @@ int value()
   // pokud aktualni token je jiny nez vyse uvedene, jedna se o syntaktickou chybu
   return SYNTAX_ERROR;
 }
-*/
-
-/*
 bool init_variables(struct parser_data* data)
 {
 	sym_table_init(&data->global_table);
@@ -405,6 +404,10 @@ void free_variables(struct parser_data* data){
       sym_table_free(&data->local_table);
 }
 
+
+
+
+
 int parse()
 {
   int result;
@@ -437,4 +440,5 @@ int parse()
   free_variables(&data);
   return result;
 } */
+//} 
 

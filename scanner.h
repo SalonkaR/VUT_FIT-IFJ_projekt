@@ -13,7 +13,7 @@ enum keyword
 	//NECESSARY
 	KWORD_FUNC,				//, cislo = 0
 	KWORD_PACKAGE,			//, cislo = 1
-	KWORD_MAIN,				//,	cislo = 2
+	KWORD_MAIN,				//, cislo = 2
 	KWORD_RETURN,			//, cislo = 3
 
 	
