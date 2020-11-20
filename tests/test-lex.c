@@ -163,6 +163,7 @@ void kontrola_str(){
     free(str_test);
     free(str_test2);
 }
+
 void print_file(FILE *f){
     int c = fgetc(f); 
     printf("zaciatok suboru\n");
@@ -367,9 +368,7 @@ void kontrola_scanner(){
 
         test_scanner(filenames_incorrect[i]);
         test_count++;
-    }
-
-    
+    }   
 }
 
 

@@ -11,6 +11,7 @@ all:
 #--------------------------------------
 test_lex: test-lex
 test_symtable: test-symtable
+test_parser: test-parser
 
 #preklad testovacich programov
 test-lex: test-lex.o str.o scanner.o
@@ -19,6 +20,8 @@ test-lex: test-lex.o str.o scanner.o
 test-symtable: test-symtable.o symtable.o str.o scanner.o
 	$(CC) $(CFLAGS) -g -o $@ $^
 
+test-parser: test-parser.o parser.o symtable.o str.o scanner.o 
+	$(CC) $(CFLAGS) -g -o $@ $^
 #--------------------------------------
 #objektove subory
 
@@ -37,6 +40,12 @@ symtable.o: symtable.c symtable.h str.h
 test-symtable.o: tests/test-symtable.c symtable.h str.h error.h scanner.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
+parser.o: parser.c parser.h symtable.h str.h error.h scanner.h
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+test-parser.o: tests/test-parser.c parser.h symtable.h str.h error.h scanner.h
+	$(CC) $(CFLAGS) -o $@ -c $<
+
 #ostatne prikazy
 .PHONY: clean clean-all
 
@@ -44,4 +53,4 @@ clean:
 	rm -f *.o
 
 clean-all:
-	rm -f *.o test-lex test-symtable
+	rm -f *.o test-lex test-symtable test-parser

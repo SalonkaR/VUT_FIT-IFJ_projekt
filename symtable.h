@@ -31,7 +31,7 @@ enum data_types
 typedef struct data
 {
     enum data_types type;
-    hKey_t identifier;
+    hKey_t identifier;	 
 	bool defined;
 	bool global;
     struct data *nextptr;
