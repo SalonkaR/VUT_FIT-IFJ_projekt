@@ -13,19 +13,20 @@ enum keyword
 	//NECESSARY
 	KWORD_FUNC,				//, cislo = 0
 	KWORD_PACKAGE,			//, cislo = 1
-	KWORD_RETURN,			//, cislo = 2
+	KWORD_MAIN,				//, cislo = 2
+	KWORD_RETURN,			//, cislo = 3
 
 	
 	//DATA_TYPES
-	KWORD_FLOAT64,			//, cislo = 3
-	KWORD_INT,				//, cislo = 4
-	KWORD_STRING,			//, cislo = 5
+	KWORD_FLOAT64,			//, cislo = 4
+	KWORD_INT,				//, cislo = 5
+	KWORD_STRING,			//, cislo = 6
 
 
 	//COMMANDS
-	KWORD_IF,				//, cislo = 6
-	KWORD_ELSE,				//, cislo = 7
-	KWORD_FOR,				//, cislo = 8
+	KWORD_IF,				//, cislo = 7
+	KWORD_ELSE,				//, cislo = 8
+	KWORD_FOR,				//, cislo = 9
 };
 
 enum t_type
