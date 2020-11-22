@@ -1,4 +1,5 @@
 //testovacie skripty pre lexikalny analyzator 
+//Matej Hornik, xhorni20
 
 #include <stdio.h>
 #include <stdlib.h>

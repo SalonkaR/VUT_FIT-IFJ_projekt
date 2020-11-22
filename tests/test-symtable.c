@@ -1,4 +1,5 @@
 //testy pre binarny strom
+//Matej Hornik, xhorni20
 
 #include <stdio.h>
 #include <string.h>

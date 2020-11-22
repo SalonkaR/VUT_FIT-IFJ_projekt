@@ -1,5 +1,8 @@
-//str.h
+/*
+//IFJ20 - projekt(varianta I.)
 //hlavickovy subor pre pracu so stringami
+//Matej Hornik, xhorni20
+*/
 
 
 #ifndef _STR_H

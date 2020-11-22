@@ -1,4 +1,8 @@
+/*
+//IFJ20 - projekt(varianta I.)
 //str.c
+//Matej Hornik, xhorni20
+*/
 
 
 #include <stdlib.h>
