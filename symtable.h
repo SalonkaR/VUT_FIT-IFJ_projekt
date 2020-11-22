@@ -1,7 +1,8 @@
-//hlavickovy subor pre tabulku symbolov
-
-//hashovacia tabulka
-
+/*
+//IFJ20 - projekt(varianta I.)
+//hlavickovy subor pre pracu s binarnym strom
+//Matej Hornik, xhorni20
+*/
 
 #include <stdbool.h>
 #include <string.h>

@@ -1,4 +1,8 @@
-//hlavickovy subor pre chyby
+/*
+//IFJ20 - projekt(varianta I.)
+//definicia chyb
+//Matej Hornik, xhorni20
+*/
 
 #ifndef ERROR_H
 #define ERROR_H
@@ -14,7 +18,7 @@
 #define SEM_ERR_NO_PARAMS			6 // Semantic error - Zly pocet navratoch/ vstupnych hodnot
 #define SEM_ERR_OTHER               7 // Ostattne semanticke chyby
 #define SEM_ERR_ZERO_DIV            9 // Semanticka chyba - delenie nulou
-#define ERROR_INTERNAL				99 /// Interna chyba programu
+#define ERROR_INTERNAL				99 // Interna chyba programu
 
 
 #endif

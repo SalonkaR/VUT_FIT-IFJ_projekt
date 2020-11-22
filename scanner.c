@@ -1,4 +1,9 @@
-// lexikalni analyzator
+/*
+//IFJ20 - projekt(varianta I.)
+//scanner.c - lexikalny analyzator
+//Matej Hornik, xhorni20
+*/
+
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -1,3 +1,7 @@
+/*//IFJ20 - projekt(varianta I.)
+//symtable.c
+//Matej Hornik, xhorni20*/
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

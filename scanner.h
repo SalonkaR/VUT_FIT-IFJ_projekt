@@ -1,5 +1,9 @@
-//scanner.h
+/*
+//IFJ20 - projekt(varianta I.)
 //hlavickovy subor pre pracu so scannerom
+//Matej Hornik, xhorni20
+*/
+
 
 #ifndef _SCANNER_H
 #define _SCANNER_H

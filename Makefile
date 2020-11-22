@@ -1,4 +1,9 @@
-# // Makefile 
+# /*
+# // IFJ20 - projekt(varianta I.)
+# // Makefile
+# // Matej Hornik, xhorni20
+# */
+
 
 CC=gcc
 CFLAGS= -std=c11 -pedantic -Wall -Wextra
