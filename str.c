@@ -80,9 +80,11 @@ int str_cmp_const_str(struct str_struct *str, const char *const_string){
 
 
 bool str_copy(struct str_struct *src, struct str_struct *dst){
+	
 	unsigned int new_length = src->length;
 	if (new_length >= dst->alloc_size){
-        dst->str = (char *) realloc(dst->str, new_length + 1);
+        
+		dst->str = (char *) realloc(dst->str, new_length + 1);
 		if (dst->str == NULL){
 			return false;
 		}

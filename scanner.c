@@ -126,10 +126,13 @@ static int process_identifier(struct str_struct *str, struct token *token)
 		token->type = T_TYPE_KEYWORD;
 		return cleaner(LEX_TOKEN_OK, str);
 	}
+	//printf("tu som uz pici %s\n", str->str);		////!!!!! tu sa to jebe
 	if (!str_copy(str, token->attribute.string))
 	{
+		
 		return cleaner(ERROR_INTERNAL, str);
 	}
+	
 	return cleaner(LEX_TOKEN_OK, str);
 }
 
@@ -174,14 +177,14 @@ void setSourceFile(FILE *f)
 	source = f;
 }
 
-
-
 int get_token(struct token *token)
 // hlavni funkce lexikalniho analyzatoru
 {
+	
 	struct str_struct tmp;
 	str = &tmp;
 	str_init(str);
+	
 	if (source == NULL)
 	{
 		return ERROR_INTERNAL;
@@ -190,7 +193,7 @@ int get_token(struct token *token)
 	{
 		return ERROR_INTERNAL;
 	}
-
+	
 	token->type = T_TYPE_EMPTY;
 
     int state = STATE_START;
@@ -205,6 +208,7 @@ int get_token(struct token *token)
 	while (true)
 	{
 		c = getc(source);
+		//printf("%c", c);
 		switch (state)
 		{
 			case (STATE_START):
@@ -308,6 +312,7 @@ int get_token(struct token *token)
 				}
 				else
 				{
+					
 					return cleaner(LEX_ERR, str);
 				}
 				break;
@@ -605,6 +610,7 @@ int get_token(struct token *token)
 			case(STATE_ID):
 				if (isalpha(c) || isdigit(c) || c == '_')
 				{
+					
 					str_add_char(str, c);
 					state = STATE_ID;
 					break;

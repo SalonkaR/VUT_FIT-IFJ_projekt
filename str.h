@@ -16,7 +16,6 @@ struct str_struct
 	unsigned int alloc_size; //pocet znakov allokovanych pre string
 };
 
-
 //inicializacia stringu
 bool str_init(struct str_struct *s);
 

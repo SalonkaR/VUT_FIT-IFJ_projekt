@@ -477,6 +477,7 @@ static void delete_rec(tBT *bt_ptr, tNode *parent_ptr, tNode *RootPtr, size_t ha
 bool BT_dispose (tBT *bt_ptr){
     //skontrolujem ci je definovany binarny strom
     if (bt_ptr->definded != true){
+        printf("TU SA NEDA HLADAAAAT????\n");
         printf("V nedefinovanom strome sa neda hladat(symtable.c/BT_dispose)\n");
         return false;
     }

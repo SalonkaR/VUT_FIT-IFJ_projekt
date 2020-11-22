@@ -8,8 +8,8 @@
 #include "../error.h"
 #include "../parser.h"
 
-#define FILE_COUNT_CORRECT 1
-#define FILE_COUNT_INCORRECT 0
+#define FILE_COUNT_CORRECT 2
+#define FILE_COUNT_INCORRECT 2
 
 void reset () {
   printf("\033[0m");
@@ -37,19 +37,73 @@ void print_file(FILE *f){
     
 }
 
+void print_token(struct token *t, int ret_val, int no_token){
+    printf("%d token ->Prijaty token je typu: \"%d\"\n",no_token, t->type);
+    if (t->type == T_TYPE_INTEGER){
+        printf("%d token ->Atributy token: int= \"%d\"\n",no_token, t->attribute.int_literal);
+    }
+    else if (t->type == T_TYPE_DOUBLE){
+        printf("%d token ->Atributy token: double= \"%lf\"\n",no_token, t->attribute.double_literal);
+    }
+    else if (t->type == T_TYPE_IDENTIFIER){
+        printf("%d token ->Atributy token: string= \"%s\"\n",no_token, t->attribute.string->str);
+    }
+    else if (t->type == T_TYPE_STRING){
+        printf("%d token ->Atributy token: string= \"%s\"\n",no_token, t->attribute.string->str);
+    }
+
+    printf("%d token ->Prijaty token vracia: \"%d\"\n",no_token, ret_val);
+}
+
 void test_parser(char *filename){
+    //pomocne premmene
+    //int result;
+    //int no_token = 0;
     
-    parse();
+    //subor vypis
+    FILE *f_print;
+    f_print = fopen(filename, "r"); 
+    if (f_print == NULL) { 
+        red_color();
+        printf("Nepodarilo sa otvorit subor: \"%s\"\n", filename); 
+        reset();
+        printf("errno: %d\n",errno);
+        
+        return;
+    }
+    print_file(f_print);
+    fclose(f_print);
+
+    FILE *f;
+    f = fopen(filename, "r"); 
+    if (f == NULL) { 
+        red_color();
+        printf("Nepodarilo sa otvorit subor: \"%s\"\n", filename); 
+        reset();
+        printf("errno: %d\n",errno);
+        
+        return;
+    }
+    setSourceFile(f);
+    int tmp = parse();
+    
+    printf("EXIT CODE JE : %d\n", tmp);
+    if (tmp == 0)
+    {
+        
+    }
+    fclose(f);
 }
 
 void kontrola_parser(){
-    //TODO -> SUBORY NA KTORE SCANNER VYHODI CHYBU
-    int test_count = 0;
+    //TODO -> SUBORY NA KTORE PARSER VYHODI CHYBU
+    int test_count = 2;
 
     // KONTROLA SUBOROV KTORE BY MALI MAT SPRAVNE ZAPSANE TOKENY
     
     char *filenames[FILE_COUNT_CORRECT] =  
-                            {"tests/test_files_parser/parser_package_main.test"};
+                            {"tests/test_files_parser/parser_package_main.test",
+                             "tests/test_files_parser/parser_func_main.test"};
 
     for (int i = 0; i < FILE_COUNT_CORRECT; i++){
         blue_color();
@@ -65,7 +119,8 @@ void kontrola_parser(){
     // KONTROLA SUBOROV NA KTORYCH BY SA MAL SCANNER ZASAKNUT
 
     char *filenames_incorrect[FILE_COUNT_INCORRECT] =  
-                            {};
+                            {"tests/test_files_parser/parser_package_main_incorrect.test",
+                             "tests/test_files_parser/parser_func_main_incorrect.test"};
     
     printf("\n\n TESTY NA SUBOROCH KTORE BY MALI VRACAT SYN_ERR\n");
     for (int i = 0; i < FILE_COUNT_INCORRECT; i++){
