@@ -11,8 +11,7 @@
 #include "parser.h"
 
 
-typedef enum
-{
+typedef enum{
 	E_EQ_E,		    // E -> E == E
 	E_NEQ_E,		// E -> E != E
 	E_LEQ_E,		// E -> E <= E
@@ -30,8 +29,7 @@ typedef enum
 
 
 
-typedef enum
-{
+typedef enum{
 	PLUS,			// +
 	MINUS,			// -
 	MUL,			// *
@@ -54,7 +52,7 @@ typedef enum
 } Prec_table_symbol;
 
 
-int expression(PData* data);
+int expression(struct parser_data* data);
 
 
 #endif

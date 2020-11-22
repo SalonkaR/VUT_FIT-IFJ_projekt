@@ -17,16 +17,14 @@
 
 tStack stack; //globalna premena pre zasobnik
 
-typedef enum
-{
+typedef enum{
 	S,      //  <  SHIFT
 	E,      //  =  EQUAL
 	R,      //  >  REDUCE
 	N       // ' ' ERROR
 } Prec_table_sign;
 
-typedef enum
-{
+typedef enum{
 	I_PLUS_MINUS,		// 0 +-
 	I_MUL_DIV,			// 1 */
 	I_REL_OP,			// 2 relacne operatory
@@ -37,8 +35,7 @@ typedef enum
 } Prec_table_index;
 
 //precedencna tabulka
-int prec_table[TABLE_SIZE][TABLE_SIZE] =
-{
+int prec_table[TABLE_SIZE][TABLE_SIZE] = {
 //	|+- | */| R | ( | ) | i | $ |
 	{ R , S , R , S , R , S , R }, // +-
 	{ R , R , R , S , R , S , R }, // */
@@ -54,14 +51,7 @@ static void free_resources(){
 }
 
 
-
-
-
-
-
-
-
-int expression(PData* data){
+int expression(struct parser_data* data){
 
     int result = SYN_ERR;
 
@@ -76,6 +66,6 @@ int expression(PData* data){
 	Prec_table_symbol actual_symbol;
 
 	bool success = false;
-    
+
 
 }
