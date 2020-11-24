@@ -115,7 +115,7 @@ static int process_identifier(struct str_struct *str, struct token *token)
 {
 
 	if (!str_cmp_const_str(str, "package")) token->attribute.keyword = KWORD_PACKAGE;
-	else if (!str_cmp_const_str(str, "main")) token->attribute.keyword = KWORD_MAIN;
+	//else if (!str_cmp_const_str(str, "main")) token->attribute.keyword = KWORD_MAIN;
 	else if (!str_cmp_const_str(str, "func")) token->attribute.keyword = KWORD_FUNC;
 	else if (!str_cmp_const_str(str, "return")) token->attribute.keyword = KWORD_RETURN;
 	else if (!str_cmp_const_str(str, "float64")) token->attribute.keyword = KWORD_FLOAT64;

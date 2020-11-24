@@ -1,10 +1,9 @@
 /*
 //IFJ20 - projekt(varianta I.)
-//subor pre pracu s parserom
-//Filip Brna, xbrnaf00
+//parser.c
+//Matus Tvarozny, xtvaro00
+//Filip Brna, dopis si login autik
 */
-
-
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,10 +13,9 @@
 #include "parser.h"
 #include "error.h"
 
-//int token;              // globalni promenna, ve ktere bude ulozen aktualni token
-struct str_struct str;
-
 struct parser_data data;
+
+bool internal_error = false;
 
 int counterVar = 1;
 int result;
@@ -42,7 +40,6 @@ int check_type(enum t_type param)
     {
         return SYN_ERR;
     }
-    //printf("type ok\n");
     return SYN_OK;
 }
 
@@ -66,69 +63,90 @@ int check_keyword(enum keyword kword)
     return SYN_OK;
 }
 
+void Print_tree2(tNode *TempTree, char* sufix, char fromdir){   
+     if (TempTree != NULL)
+     {
+        char* suf2 = (char*) malloc(strlen(sufix) + 4);
+        strcpy(suf2, sufix);
+        if (fromdir == 'L')
+	    {
+            suf2 = strcat(suf2, "  |");
+            printf("%s\n", suf2);
+	    }
+	    else
+	        suf2 = strcat(suf2, "   ");
+	    Print_tree2(TempTree->RPtr, suf2, 'R');
+        //LL -> vypisovanie linked listu
+        //printf("%s  +-[%c,%d]\n", sufix,  TempTree->hashKey, 9);
+        printf("%s  +-[%lu; ", sufix, TempTree->hashKey);
+        Data_t *tmp = TempTree->data;
+        while (tmp != NULL){
+            printf("'%s',", tmp->identifier);
+            tmp = tmp->nextptr;
+        }
+        printf("]\n");
 
+
+	    strcpy(suf2, sufix);
+        if (fromdir == 'R')
+	        suf2 = strcat(suf2, "  |");	
+	    else
+	        suf2 = strcat(suf2, "   ");
+	    Print_tree2(TempTree->LPtr, suf2, 'L');
+	    if (fromdir == 'R') printf("%s\n", suf2);
+	    free(suf2);
+    }
+}
+
+void Print_tree(tNode *TempTree)
+{
+  printf("Struktura binarniho stromu:\n");
+  printf("\n");
+  if (TempTree != NULL)
+     Print_tree2(TempTree, "", 'X');
+  else
+     printf("strom je prazdny\n");
+  printf("\n");
+  printf("=================================================\n");
+}
 
 int start()
 {
   // pravidlo <start> -> package main EOL <eol> <prog> EOF
-
-  result = 0;
-  if (data.token.type == T_TYPE_KEYWORD && data.token.attribute.keyword == KWORD_PACKAGE)
-  {
-    if (check_token() == LEX_ERR){
-    	return LEX_ERR;                   //vypytam si dalsi token, ocakavam main
-    } 
-    if (check_keyword(KWORD_MAIN) == SYN_ERR ){
-      return SYN_ERR;
-    }
-    if (check_token() == LEX_ERR){
-    	return LEX_ERR;
-    }
-    if (check_type(T_TYPE_EOL) == SYN_ERR ){
-      return SYN_ERR;
-    }
-
-    if (eol() == SYN_ERR)
-    { 
-      return SYN_ERR;
-    }
-    //if (check_token() == LEX_ERR){
-    // 	return LEX_ERR;
-    //}
-    
-    if (prog() == SYN_ERR)
+    if (data.token.type == T_TYPE_KEYWORD && data.token.attribute.keyword == KWORD_PACKAGE)
     {
-      return SYN_ERR;
+        if (check_token() == LEX_ERR) return LEX_ERR;
+        
+        // za keywordom package, musi pokracovat keyword main, je ale kontrolovany rucne, kvoli identifikatoru jednej z funkcii,
+        // ktora musim byt main, ale typ daneho tokenu musi byt identifier nie keyword
+        if (str_cmp_const_str(&data.token.attribute.string->str, "main")) return SYN_ERR;
+        if (check_token() == LEX_ERR) return LEX_ERR;
+        if (check_type(T_TYPE_EOL) == SYN_ERR ) return SYN_ERR;
+        if (eol() == SYN_ERR) return SYN_ERR;
+        if (prog() == SYN_ERR) return SYN_ERR;
+        if (check_token() == LEX_ERR) return LEX_ERR;
+        if (check_type(T_TYPE_EOF) == SYN_ERR ) return SYN_ERR;
+        
+        return SYN_OK;
     }
-    if (check_token() == LEX_ERR){
-    	return LEX_ERR;
-    }
-    
-    if (check_type(T_TYPE_EOF) == SYN_ERR ){
-      return SYN_ERR;
-    }
-    return SYN_OK;
-  }
-  return SYN_ERR;
+    return SYN_ERR;
 }
 
 int eol()
 {
-  // pravidlo <eol> -> EOL <eol>
-  //hlavickovy subor pre tabulku symbolov
-  //printf("-------------------------------1. TOKEN EOL MAM IF-TYPE = %d -------------\n",data.token.type);
-  if ( check_type(T_TYPE_EOL) != SYN_ERR ){  //vypytam si dalsi token, ocakavam EOL
-    if (check_token() == LEX_ERR){
-  	  return LEX_ERR;
+    // pravidlo <eol> -> EOL <eol>
+    printf("----------------1. TOKEN EOL MAM IF-TYPE = %d -------------\n",data.token.type);
+    if (check_type(T_TYPE_EOL) != SYN_ERR)
+    {  
+        if (check_token() == LEX_ERR) return LEX_ERR;
+        eol();
     }
-    eol();
+    // pravidlo <eol> -> epsilon
+    else
+    {  
+        return SYN_OK;
+    }
   }
-  else{   // pravidlo <eol> -> epsilon
-    return SYN_OK;
-  }
-}
-
-
 
 int prog()
 {
@@ -288,8 +306,12 @@ int body()
           if (check_type(T_TYPE_EOL) == SYN_ERR ){
             return SYN_ERR;
           }
-          if (check_token(data) == LEX_ERR){
-            return LEX_ERR;
+          //printf("----------------4.5 TOKEN body MAM IF if-TYPE = %d -------------\n",data.token.type);
+          //printf("----------------5. TOKEN body MAM IF if-TYPE = %d -------------\n",data.token.type);
+          if (check_type(T_TYPE_RIGHT_VINCULUM) == SYN_ERR ){
+            if (check_token(data) == LEX_ERR){
+              return LEX_ERR;
+            }
           }
           //printf("----------------4. TOKEN body MAM IF if-TYPE = %d -------------\n",data.token.type);
           if (check_type(T_TYPE_RIGHT_VINCULUM) == SYN_ERR ){
@@ -1111,6 +1133,8 @@ int expression()
 
 bool init_variables()
 {
+    data.BT_global.definded = false;  //som retard a musim to spravit
+    data.BT_local.definded = false;   //tu tiez to iste
     if(BT_init(&data.BT_global) == false) return false;
     if(BT_init(&data.BT_local) == false) return false;
     data.token.attribute.string = malloc(sizeof(struct str_struct));
@@ -1131,50 +1155,24 @@ void free_variables()
 
 int parse()
 {
-    //struct str_struct str;
-    //init_variables();
     if(init_variables() == false)
     {
-        //str_free(&data.token.attribute.string);
         free_variables();
         return ERROR_INTERNAL;
     }
 
-    //if (str_init(&str) == false){
-    //    return ERROR_INTERNAL;
-    //}
-
-    //data.BT_global.definded = false;  //som retard a musim to spravit
-    //data.BT_local.definded = false;   //tu tiez to iste  
-    //data.token.attribute.string = malloc(sizeof(struct str_struct));
-    //if(data.token.attribute.string == NULL){
-    //   return ERROR_INTERNAL;
-    //}
-
-    //if (str_init(&data.token.attribute.string) == false){
-    //    str_free(&data.token.attribute.string);
-    //    return ERROR_INTERNAL;
-    //}
-
     if((result = get_token(&data.token)) == LEX_TOKEN_OK)
     {
-        /*
-        if(code_generator() == NULL){
-            str_free(&str);
-            free_variables(&data);
-            return ERROR_INTERNAL;
-        }
-        */
         result = start(&data);
+        Print_tree(data.BT_global.root_ptr);
+
+        //funkcia s ID main musi byt obsiahnuta 
+        if(BT_search(&data.BT_global, "main", &internal_error) == NULL) result = SYN_ERR;
         
     }
-
-    //str_free(&data.token.attribute.string);
-    //free(&data.token.attribute.string);
-    //str_free(&str);
-    //free_variables(&data);
+    //uvolnenie pamate 
     free_variables();
-    
+    //vratenie exit code
     return result;
 } 
 

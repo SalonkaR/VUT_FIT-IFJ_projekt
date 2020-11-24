@@ -55,6 +55,8 @@ void print_token(struct token *t, int ret_val, int no_token){
     printf("%d token ->Prijaty token vracia: \"%d\"\n",no_token, ret_val);
 }
 
+ 
+
 void test_parser(char *filename){
     //pomocne premmene
     //int result;
@@ -86,7 +88,8 @@ void test_parser(char *filename){
     }
     setSourceFile(f);
     int tmp = parse();
-    
+
+
     printf("EXIT CODE JE : %d\n", tmp);
     if (tmp == 0)
     {

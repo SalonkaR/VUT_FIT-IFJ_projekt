@@ -1,0 +1,9 @@
+package main
+funkalunka kotlebik () {
+    for ;a; {
+        if b {
+        } else {
+            return  
+        }
+    }
+}
