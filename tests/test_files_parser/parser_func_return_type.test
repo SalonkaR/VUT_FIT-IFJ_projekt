@@ -1,0 +1,9 @@
+package main
+func mak () (float64) {
+    
+}
+
+func brasko () (int,string) {
+    
+}
+

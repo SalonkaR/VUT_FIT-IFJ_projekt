@@ -1,0 +1,12 @@
+package main
+func mak () {
+    for a := 3 ;s; {
+        for ;s;s = 1 {
+            for a := 3 ;s; as = 1 {
+                for ;s; {
+        
+                }
+            }
+        }
+    }
+}

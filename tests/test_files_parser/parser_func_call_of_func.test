@@ -1,0 +1,11 @@
+package main
+func mak () {
+    ferovi(3)
+
+    kuruje(4,7,4,3)
+
+    na(idcko)
+
+    hlavu()
+
+}

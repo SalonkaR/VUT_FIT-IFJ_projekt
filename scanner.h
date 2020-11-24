@@ -2,6 +2,7 @@
 //IFJ20 - projekt(varianta I.)
 //hlavickovy subor pre pracu so scannerom
 //Matej Hornik, xhorni20
+//Filip Brna, xbrnaf00
 */
 
 
