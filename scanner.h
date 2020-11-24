@@ -18,27 +18,26 @@ enum keyword
 	//NECESSARY
 	KWORD_FUNC,				//, cislo = 0
 	KWORD_PACKAGE,			//, cislo = 1
-	//KWORD_MAIN,				//, cislo = 2
-	KWORD_RETURN,			//, cislo = 3
+	KWORD_RETURN,			//, cislo = 2
 
 	
 	//DATA_TYPES
-	KWORD_FLOAT64,			//, cislo = 4
-	KWORD_INT,				//, cislo = 5
-	KWORD_STRING,			//, cislo = 6
+	KWORD_FLOAT64,			//, cislo = 3
+	KWORD_INT,				//, cislo = 4
+	KWORD_STRING,			//, cislo = 5
 
 
 	//COMMANDS
-	KWORD_IF,				//, cislo = 7
-	KWORD_ELSE,				//, cislo = 8
-	KWORD_FOR,				//, cislo = 9
+	KWORD_IF,				//, cislo = 6
+	KWORD_ELSE,				//, cislo = 7
+	KWORD_FOR,				//, cislo = 8
 };
 
 enum t_type
 {
-	T_TYPE_EOF, //end of file			 , cislo = 0
-	T_TYPE_EOL, //end of line	 		 , cislo = 1
-	T_TYPE_IDENTIFIER, //identifier		 , cislo = 2
+	T_TYPE_EOF, //end of file			, cislo = 0
+	T_TYPE_EOL, //end of line	 		, cislo = 1
+	T_TYPE_IDENTIFIER, //identifier		, cislo = 2
 	T_TYPE_KEYWORD, //keyword		 	, cislo = 3
 
 
@@ -49,13 +48,13 @@ enum t_type
 
 
 	//COMPARISONS AND DEFINITION
-	T_TYPE_VARIABLE_DEFINITION, //:=, cislo = 7
-	T_TYPE_COMPARISON, //==		 	, cislo = 8
-	T_TYPE_NOT_EQUAL, //!=		 	, cislo = 9
-	T_TYPE_LESS_EQUAL, //<= 		, cislo = 10
-	T_TYPE_LESS, //<		 		, cislo = 11
-	T_TYPE_MORE_EQUAL, //>=		 	, cislo = 12
-	T_TYPE_MORE, //>		 		, cislo = 13
+	T_TYPE_VARIABLE_DEFINITION, //:=	, cislo = 7
+	T_TYPE_COMPARISON, //==		 		, cislo = 8
+	T_TYPE_NOT_EQUAL, //!=		 		, cislo = 9
+	T_TYPE_LESS_EQUAL, //<= 			, cislo = 10
+	T_TYPE_LESS, //<		 			, cislo = 11
+	T_TYPE_MORE_EQUAL, //>=		 		, cislo = 12
+	T_TYPE_MORE, //>		 			, cislo = 13
 
 
 	//OPERATORS

@@ -119,7 +119,7 @@ int start()
         
         // za keywordom package, musi pokracovat keyword main, je ale kontrolovany rucne, kvoli identifikatoru jednej z funkcii,
         // ktora musim byt main, ale typ daneho tokenu musi byt identifier nie keyword
-        if (str_cmp_const_str(&data.token.attribute.string->str, "main")) return SYN_ERR;
+        if (str_cmp_const_str(data.token.attribute.string, "main")) return SYN_ERR;
         if (check_token() == LEX_ERR) return LEX_ERR;
         if (check_type(T_TYPE_EOL) == SYN_ERR ) return SYN_ERR;
         if (eol() == SYN_ERR) return SYN_ERR;
@@ -164,12 +164,10 @@ int prog()
       }
       //printf("----------------2. TOKEN PROG MAM IF-TYPE = %d -------------\n",data.token.type);
       //printf("----------------2. TOKEN PROG MAM IF-TYPE = %d -------------\n",check_type(T_TYPE_IDENTIFIER));
+      if (check_type(T_TYPE_IDENTIFIER) == SYN_ERR) return SYN_ERR;
+      BT_insert(&data.BT_global, data.token.attribute.string->str, &internal_error);
+      if (internal_error == true) return ERROR_INTERNAL;
       
-      if (check_type(T_TYPE_IDENTIFIER) == SYN_ERR && check_keyword(KWORD_MAIN) == SYN_ERR ){
-        //printf("----------------2.5 TOKEN PROG MAM IF-TYPE = %d -------------\n",data.token.type);
-        return SYN_ERR;
-      }
-
       //bool internal_error;
       ///BT_insert(&data.BT_global, data.token.attribute.string->str, &internal_error);
       //int tmp = BT_search(&data.BT_global, data.token.attribute.string->str, &internal_error);
