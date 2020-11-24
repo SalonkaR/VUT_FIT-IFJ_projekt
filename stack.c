@@ -11,17 +11,24 @@
 #include "stack.h"
 
 
-void stack_init(Symbol_stack* stack){
+void stack_init(tStack* stack){
 	stack->top = NULL;
+	return;
 }
 
 
-bool stack_push(Symbol_stack* stack, Prec_table_symbol symbol, enum data_types type){
+tStack_item* stack_top(tStack* stack){
+	return stack->top;
+}
 
-	Symbol_stack_item* new_item = malloc(sizeof(struct stack_item));
 
-	if (new_item == NULL)
+bool stack_push(tStack* stack, Prec_table_symbol symbol, enum data_types type){
+
+	tStack_item* new_item = malloc(sizeof(struct stack_item));
+
+	if (new_item == NULL){
 		return false;
+	}
 
 	new_item->symbol = symbol;
 	new_item->data_type = type;
@@ -33,10 +40,10 @@ bool stack_push(Symbol_stack* stack, Prec_table_symbol symbol, enum data_types t
 }
 
 
-bool stack_pop(Symbol_stack* stack){
+bool stack_pop(tStack* stack){
 	
     if (stack->top != NULL){
-		Symbol_stack_item* tmp = stack->top;
+		tStack_item* tmp = stack->top;
 		stack->top = tmp->next;
 		free(tmp);
 
@@ -48,52 +55,51 @@ bool stack_pop(Symbol_stack* stack){
 
 
 
-Symbol_stack_item* stack_top_terminal(Symbol_stack* stack){
+tStack_item* stack_top_term(tStack* stack){
 
-	for (Symbol_stack_item* tmp = stack->top; tmp != NULL; tmp = tmp->next){
-		if (tmp->symbol < STOP)
+	for (tStack_item* tmp = stack->top; tmp != NULL; tmp = tmp->next){
+		if (tmp->symbol < STOP){
 			return tmp;
+		}
 	}
 
 	return NULL;
 }
 
 
-bool stack_insert_after_top_terminal(Symbol_stack* stack, Prec_table_symbol symbol, enum data_types type){
-	Symbol_stack_item* prev = NULL;
+bool stack_push_after_top_term(tStack* stack, Prec_table_symbol symbol, enum data_types type){
+	tStack_item* tmp1 = NULL;
 
-	for (Symbol_stack_item* tmp = stack->top; tmp != NULL; tmp = tmp->next){
+	for (tStack_item* tmp = stack->top; tmp != NULL; tmp = tmp->next){
 		if (tmp->symbol < STOP){
-			Symbol_stack_item* new_item = malloc(sizeof(struct stack_item));
+			tStack_item* new_item = malloc(sizeof(struct stack_item));
 
-			if (new_item == NULL)
+			if (new_item == NULL){
 				return false;
+			}
 
 			new_item->symbol = symbol;
 			new_item->data_type = type;
 
-			if (prev == NULL){
+			if (tmp1 == NULL){
 				new_item->next = stack->top;
 				stack->top = new_item;
 			}
 			else {
-				new_item->next = prev->next;
-				prev->next = new_item;
+				new_item->next = tmp1->next;
+				tmp1->next = new_item;
 			}
 
 			return true;
 		}
-		prev = tmp;
+		tmp1 = tmp;
 	}
 
 	return false;
 }
 
 
-Symbol_stack_item* stack_top(Symbol_stack* stack){
-	return stack->top;
-}
-
-void stack_free(Symbol_stack* stack){
-	while (symbol_stack_pop(stack));
+void stack_free(tStack* stack){
+	while (stack_pop(stack));
+	return;
 }

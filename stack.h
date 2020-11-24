@@ -31,6 +31,8 @@ typedef struct stack
 
 void stack_init(tStack* stack);
 
+tStack_item* stack_top(tStack* stack);
+
 bool stack_push(tStack* stack, Prec_table_symbol symbol, enum data_types type);
 
 bool stack_pop(tStack* stack);
@@ -38,8 +40,6 @@ bool stack_pop(tStack* stack);
 tStack_item* stack_top_term(tStack* stack);
 
 bool stack_push_after_top_term(tStack* stack, Prec_table_symbol symbol, enum data_types type);
-
-tStack_item* stack_top(tStack* stack);
 
 void stack_free(tStack* stack);
 

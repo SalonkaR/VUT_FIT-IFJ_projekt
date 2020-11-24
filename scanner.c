@@ -289,7 +289,7 @@ int get_token(struct token *token)
 				}
 				else if (c == '}')
 				{
-					token->type = T_TYPE_RIGHT_BRACKET;
+					token->type = T_TYPE_RIGHT_VINCULUM;
 					return cleaner(LEX_TOKEN_OK, str);
 				}
 				else if (c == '"')

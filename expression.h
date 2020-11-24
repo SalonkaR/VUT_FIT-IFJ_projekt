@@ -20,7 +20,7 @@ typedef enum{
 	E_M_E,		    // E -> E > E
 	E_PLUS_E,		// E -> E + E
 	E_MINUS_E,	    // E -> E - E
-	NT_MUL_E,		// E -> E * E
+	E_MUL_E,		// E -> E * E
 	E_DIV_E,		// E -> E / E
 	E_BRACKETS,		// E -> (E)
 	OPERAND,		// E -> i
@@ -47,7 +47,7 @@ typedef enum{
 	DOUBLE_NUMBER,	// double
 	STRING,			// string
 	DOLLAR,			// $
-	STOP,			// symbol ktory pouzijem pri redukcii
+	STOP,			// symbol ktory pouzijem pri redukcii( < )
 	NON_TERM		// neterminal(E)
 } Prec_table_symbol;
 

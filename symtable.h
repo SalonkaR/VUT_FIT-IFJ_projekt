@@ -21,10 +21,10 @@ typedef char * hKey_t;
 // TIETO DATA ESTE MOZU BYT INAK
 enum data_types
 {
-	TYPE_UNDEFINED,	/// Data type undefined //cislo=1
-	TYPE_INT,		/// Integer data type   //cislo=2
-	TYPE_DOUBLE,	/// Double data type    //cislo=3
-	TYPE_STRING,	/// String data type    //cislo=4
+	TYPE_UNDEFINED,	/// Data type undefined //cislo=0
+	TYPE_INT,		/// Integer data type   //cislo=1
+	TYPE_DOUBLE,	/// Double data type    //cislo=2
+	TYPE_STRING,	/// String data type    //cislo=3
     //este mozno funkcia tu nvm
 };
 

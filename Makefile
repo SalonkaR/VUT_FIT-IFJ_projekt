@@ -30,6 +30,12 @@ test-parser: test-parser.o parser.o symtable.o str.o scanner.o
 #--------------------------------------
 #objektove subory
 
+expression.o: expression.c expression.h error.h scanner.h stack.h symtable.h parser.h
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+stack.o: stack.c stack.h expression.h symtable.h
+	$(CC) $(CFLAGS) -o $@ -c $<
+
 scanner.o: scanner.c scanner.h str.h error.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
