@@ -1,0 +1,12 @@
+package main
+func kotlebik () {
+
+
+
+    for ;a; {
+        if b {} else {
+            return 
+            
+        }
+    }
+}

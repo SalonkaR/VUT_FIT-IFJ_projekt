@@ -8,7 +8,10 @@ struct parser_data
     tBT BT_global;
     tBT BT_local;
     struct token token;
+    bool in_if_for;
 };
+
+//implicitna deklarakia funkcii
 
 int eol();
 int prog();
@@ -31,4 +34,4 @@ int value();
 
 int parse();
 
-//int parse(tSymbolTable *ST, tListOfInstr *instrList)
+

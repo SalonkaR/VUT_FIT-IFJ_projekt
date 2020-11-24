@@ -2,3 +2,4 @@
 *.o
 test-lex
 test-symtable
+test-parser
