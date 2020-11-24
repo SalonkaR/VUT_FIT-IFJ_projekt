@@ -16,10 +16,6 @@ struct parser_data
     tBT BT_global;
     tBT BT_local;
     struct token token;
-<<<<<<< HEAD
-
-=======
->>>>>>> tmp-branch
     bool in_if_for;
 };
 

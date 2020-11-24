@@ -1168,7 +1168,6 @@ int parse()
 
         //funkcia s ID main musi byt obsiahnuta 
         if(BT_search(&data.BT_global, "main", &internal_error) == NULL) result = SYN_ERR;
-        
     }
     //uvolnenie pamate 
     free_variables();
