@@ -2,6 +2,7 @@
 //IFJ20 - projekt(varianta I.)
 //scanner.c - lexikalny analyzator
 //Matej Hornik, xhorni20
+//Filip Brna, xbrnaf00
 */
 
 

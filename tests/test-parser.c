@@ -8,7 +8,7 @@
 #include "../error.h"
 #include "../parser.h"
 
-#define FILE_COUNT_CORRECT 2
+#define FILE_COUNT_CORRECT 8
 #define FILE_COUNT_INCORRECT 2
 
 void reset () {
@@ -97,13 +97,19 @@ void test_parser(char *filename){
 
 void kontrola_parser(){
     //TODO -> SUBORY NA KTORE PARSER VYHODI CHYBU
-    int test_count = 2;
+    int test_count = 1;
 
     // KONTROLA SUBOROV KTORE BY MALI MAT SPRAVNE ZAPSANE TOKENY
     
     char *filenames[FILE_COUNT_CORRECT] =  
                             {"tests/test_files_parser/parser_package_main.test",
-                             "tests/test_files_parser/parser_func_main.test"};
+                             "tests/test_files_parser/parser_func_main.test",
+                             "tests/test_files_parser/parser_func_returns.test",
+                             "tests/test_files_parser/parser_func_for.test",
+                             "tests/test_files_parser/parser_func_if.test",
+                             "tests/test_files_parser/parser_func_return_type.test",
+                             "tests/test_files_parser/parser_func_call_of_func.test",
+                             "tests/test_files_parser/parser_func_:=.test",};
 
     for (int i = 0; i < FILE_COUNT_CORRECT; i++){
         blue_color();

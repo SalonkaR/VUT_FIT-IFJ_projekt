@@ -1,3 +1,11 @@
+/*
+//IFJ20 - projekt(varianta I.)
+//hlavickovy subor pre pracu s parserom
+//Filip Brna, xbrnaf00
+*/
+
+
+
 #include <stdbool.h>
 
 #include "symtable.h"
@@ -30,6 +38,7 @@ int type();
 int argument();
 int argument_n();
 int value();
+int expression();
 
 int parse();
 

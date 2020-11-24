@@ -1,0 +1,16 @@
+package main
+func mak () {
+    if a {
+        if a {
+
+        } else{
+            if a {
+
+            } else{
+                
+            }
+        }
+    } else{
+
+    }
+}

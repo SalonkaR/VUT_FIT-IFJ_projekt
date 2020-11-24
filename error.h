@@ -2,6 +2,7 @@
 //IFJ20 - projekt(varianta I.)
 //definicia chyb
 //Matej Hornik, xhorni20
+//Filip Brna, xbrnaf00
 */
 
 #ifndef ERROR_H
