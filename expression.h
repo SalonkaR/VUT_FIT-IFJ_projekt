@@ -31,25 +31,25 @@ typedef enum{
 
 
 typedef enum{
-	PLUS,			// +
-	MINUS,			// -
-	MUL,			// *
-    DIV,            // /
-	EQ,				// ==
-	NEQ,			// !=
-	LEQ,			// <=
-	L,			    // <
-	MEQ,			// >=
-	M,			    // >
-	LEFT_BRACKET,	// (
-	RIGHT_BRACKET,	// )
-	IDENTIFIER,		// ID
-	INT_NUMBER,		// int
-	DOUBLE_NUMBER,	// double
-	STRING,			// string
-	DOLLAR,			// $
-	STOP,			// symbol ktory pouzijem pri redukcii( < )
-	NON_TERM		// neterminal(E)
+	PLUS,			// +                                                c = 0
+	MINUS,			// -                                                c = 1
+	MUL,			// *                                                c = 2
+    DIV,            // /                                                c = 3
+	EQ,				// ==                                               c = 4
+	NEQ,			// !=                                               c = 5
+	LEQ,			// <=                                               c = 6
+	L,			    // <                                                c = 7
+	MEQ,			// >=                                               c = 8
+	M,			    // >                                                c = 9
+	LEFT_BRACKET,	// (                                                c = 10
+	RIGHT_BRACKET,	// )                                                c = 11
+	IDENTIFIER,		// ID                                               c = 12
+	INT_NUMBER,		// int                                              c = 13
+	DOUBLE_NUMBER,	// double                                           c = 14
+	STRING,			// string                                           c = 15
+	DOLLAR,			// $                                                c = 16
+	STOP,			// symbol ktory pouzijem pri redukcii( < )          c = 17
+	NON_TERM		// neterminal(E)                                    c = 18
 } Prec_table_symbol;
 
 

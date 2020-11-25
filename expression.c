@@ -236,17 +236,28 @@ static int check_sem(Prec_rules rule, tStack_item* op1, tStack_item* op2, tStack
     return SYN_OK;
 }
 
+static void print_stack(){
+    tStack_item *tmp = stack_top(&stack);
+    printf("TOP->");
+    while (tmp != NULL) {
+        printf(" %d,",tmp->symbol);
+        tmp = tmp->next;
+    }
+    printf("\n");
+
+}
+
 static int reduce(){
 	int result;
 
 	tStack_item* op1 = NULL;
 	tStack_item* op2 = NULL;
 	tStack_item* op3 = NULL;
-	enum data_types type_after_reduce;
+	enum data_types type_after_reduce = TYPE_INT; //ZMENIT NA NEDEFINOIVANE //TODO
 	Prec_rules rule;
 	bool found = false;
 
-    int count;
+    int count = 0;
 
     //spocitam pocet symbolom az po stop
     tStack_item *i = stack_top(&stack);
@@ -257,8 +268,8 @@ static int reduce(){
         }
         count++;
     }
-
-
+    printf("STACK BEFORE REDUCE\n");
+    print_stack();
 
 	if (count == 1 && found){
 		op1 = stack.top;
@@ -271,17 +282,19 @@ static int reduce(){
 		rule = test_rule(count, op1, op2, op3);
 	}
 	else{
+        printf("TU SOM V EXPRESSION4\n");
 		return SYN_ERR;
     }
 
 	if (rule == NOT_A_RULE){
+        printf("TU SOM V EXPRESSION5\n");
 		return SYN_ERR;
 	}
 	else{
-        //skontrolujem semantiku vyrazu
-		if ((result = check_sem(rule, op1, op2, op3, &type_after_reduce))){
-			return result;
-        }
+        // //skontrolujem semantiku vyrazu
+		// if ((result = check_sem(rule, op1, op2, op3, &type_after_reduce))){
+		// 	return result;
+        // }
 
 		if (rule == E_PLUS_E && type_after_reduce == TYPE_STRING){
 			//GENERATE_CODE(generate_concat_stack_strings);
@@ -296,6 +309,9 @@ static int reduce(){
         }
 		stack_push(&stack, NON_TERM, type_after_reduce);
 	}
+
+    printf("STACK AFTER REDUCE\n");
+    print_stack();
 
 	return SYN_OK;
 }
@@ -368,6 +384,7 @@ int expression(struct parser_data* data){
                 }
                 else{
                     free_resources();
+                    printf("TU SOM V EXPRESSION1\n");
                     return SYN_ERR;
                 }
                 break;
@@ -377,11 +394,13 @@ int expression(struct parser_data* data){
     tStack_item *expression_result= stack_top(&stack);
 	if (expression_result == NULL){
         free_resources();
+        printf("TU SOM V EXPRESSION2\n");
         return SYN_ERR;
     }
     //na vrchole sa musi nachadzat vysledok vyrazu(posledny nonterm(E))
 	if (expression_result->symbol != NON_TERM){
         free_resources();
+        printf("TU SOM V EXPRESSION3\n");
         return SYN_ERR;
     }
 

@@ -109,13 +109,13 @@ void kontrola_parser(){
     char *filenames[FILE_COUNT_CORRECT] =  
                             {"tests/test_files_parser/parser_package_main.test",
                              "tests/test_files_parser/parser_func_main.test",
-                             "tests/test_files_parser/parser_func_returns.test",
                              "tests/test_files_parser/parser_func_for.test",
                              "tests/test_files_parser/parser_func_if.test",
                              "tests/test_files_parser/parser_func_return_type.test",
                              "tests/test_files_parser/parser_func_call_of_func.test",
                              "tests/test_files_parser/parser_func_:=.test",
-                             "tests/test_files_parser/parser_func_ids.test",};
+                             "tests/test_files_parser/parser_func_ids.test",
+                             "tests/test_files_parser/parser_func_returns.test",};
 
     for (int i = 0; i < FILE_COUNT_CORRECT; i++){
         blue_color();

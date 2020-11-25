@@ -921,7 +921,9 @@ int values()
   if( check_type(T_TYPE_EOL) != SYN_ERR ) {
       return SYN_OK;
   }
-  if( expression(&data) != SYN_ERR ){
+  int result_exp = expression(&data);
+  printf("VYSLEDOK EXPRESSION VO <VALUES> = %d\n", result_exp);
+  if( result_exp != SYN_ERR ){
     if (check_token() == LEX_ERR){
       return LEX_ERR;
     }
@@ -950,7 +952,9 @@ int values_n()
         return LEX_ERR;
       }
       //printf("----------------1 VALUES NEXT TYPE = %d -------------\n",data.token.type);
-      if( expression(&data) == SYN_ERR ){
+      int result_exp = expression(&data);
+      printf("VYSLEDOK EXPRESSION VO <VALUES_N> = %d\n", result_exp);
+      if( result_exp == SYN_ERR ){
         return SYN_ERR;
       }
       if (check_token() == LEX_ERR){

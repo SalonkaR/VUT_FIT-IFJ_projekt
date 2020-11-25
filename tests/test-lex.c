@@ -10,7 +10,7 @@
 #include "../str.h"
 
 #define FILE_COUNT_CORRECT 18
-#define FILE_COUNT_INCORRECT 18
+#define FILE_COUNT_INCORRECT 22
 
 void reset () {
   printf("\033[0m");
@@ -357,7 +357,11 @@ void kontrola_scanner(){
                              "tests/test_files_incorrect/token_mark3.test",
                              "tests/test_files_incorrect/token_numbers1.test",
                              "tests/test_files_incorrect/token_numbers2.test",
-                             "tests/test_files_incorrect/token_numbers3.test",};
+                             "tests/test_files_incorrect/token_numbers3.test",
+                             "tests/test_files_incorrect/token_twozeros1.test",
+                             "tests/test_files_incorrect/token_twozeros2.test",
+                             "tests/test_files_incorrect/token_twozeros3.test",
+                             "tests/test_files_incorrect/token_twozeros4.test",};
     
     printf("\n\n TESTY NA SUBOROCH KTORE BY MALI VRACAT LEX_ERROR(1)\n");
     for (int i = 0; i < FILE_COUNT_INCORRECT; i++){
