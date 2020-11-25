@@ -1,4 +1,4 @@
 package main
 func mak () {
-    return (1 / debil *(-13-2)), 69 + 420, 1*9
+    return (1 / debil *(13-2-9*9)), 69 + 420, 1*9
 } 

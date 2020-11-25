@@ -268,8 +268,8 @@ static int reduce(){
         }
         count++;
     }
-    printf("STACK BEFORE REDUCE\n");
-    print_stack();
+    // printf("STACK BEFORE REDUCE\n");
+    // print_stack();
 
 	if (count == 1 && found){
 		op1 = stack.top;
@@ -282,12 +282,12 @@ static int reduce(){
 		rule = test_rule(count, op1, op2, op3);
 	}
 	else{
-        printf("TU SOM V EXPRESSION4\n");
+        //printf("TU SOM V EXPRESSION4\n");
 		return SYN_ERR;
     }
 
 	if (rule == NOT_A_RULE){
-        printf("TU SOM V EXPRESSION5\n");
+        //printf("TU SOM V EXPRESSION5\n");
 		return SYN_ERR;
 	}
 	else{
@@ -310,8 +310,8 @@ static int reduce(){
 		stack_push(&stack, NON_TERM, type_after_reduce);
 	}
 
-    printf("STACK AFTER REDUCE\n");
-    print_stack();
+    // printf("STACK AFTER REDUCE\n");
+    // print_stack();
 
 	return SYN_OK;
 }
@@ -381,7 +381,7 @@ int expression(struct parser_data* data){
                 }
                 else{
                     free_resources();
-                    printf("TU SOM V EXPRESSION1\n");
+                    //printf("TU SOM V EXPRESSION1\n");
                     return SYN_ERR;
                 }
                 break;
@@ -391,13 +391,13 @@ int expression(struct parser_data* data){
     tStack_item *expression_result= stack_top(&stack);
 	if (expression_result == NULL){
         free_resources();
-        printf("TU SOM V EXPRESSION2\n");
+        //printf("TU SOM V EXPRESSION2\n");
         return SYN_ERR;
     }
     //na vrchole sa musi nachadzat vysledok vyrazu(posledny nonterm(E))
 	if (expression_result->symbol != NON_TERM){
         free_resources();
-        printf("TU SOM V EXPRESSION3\n");
+        //printf("TU SOM V EXPRESSION3\n");
         return SYN_ERR;
     }
 
