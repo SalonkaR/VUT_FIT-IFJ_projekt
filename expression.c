@@ -11,6 +11,7 @@
 #include "expression.h"
 #include "stack.h"
 #include "error.h"
+#include "parser.h"
 
 
 #define TABLE_SIZE 17

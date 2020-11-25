@@ -25,12 +25,12 @@ test-lex: test-lex.o str.o scanner.o
 test-symtable: test-symtable.o symtable.o str.o scanner.o
 	$(CC) $(CFLAGS) -g -o $@ $^
 
-test-parser: test-parser.o parser.o symtable.o str.o scanner.o expression.o stack.o
+test-parser: test-parser.o parser.o str.o scanner.o expression.o symtable.o stack.o
 	$(CC) $(CFLAGS) -g -o $@ $^
 #--------------------------------------
 #objektove subory
 
-expression.o: expression.c expression.h error.h scanner.h stack.h symtable.h parser.h
+expression.o: expression.c parser.h expression.h error.h scanner.h stack.h symtable.h 
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 stack.o: stack.c stack.h expression.h symtable.h
@@ -51,7 +51,7 @@ symtable.o: symtable.c symtable.h str.h
 test-symtable.o: tests/test-symtable.c symtable.h str.h error.h scanner.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-parser.o: parser.c parser.h symtable.h str.h error.h scanner.h
+parser.o: parser.c parser.h expression.h symtable.h str.h error.h scanner.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 test-parser.o: tests/test-parser.c parser.h symtable.h str.h error.h scanner.h

@@ -2,11 +2,13 @@
 #include <stdlib.h>
 #include <errno.h>
 
-#include "../symtable.h"
+#include "../parser.h"
 #include "../scanner.h"
+#include "../symtable.h"
 #include "../str.h"
 #include "../error.h"
-#include "../parser.h"
+#include "../expression.h"
+
 
 #define FILE_COUNT_CORRECT 9
 #define FILE_COUNT_INCORRECT 2

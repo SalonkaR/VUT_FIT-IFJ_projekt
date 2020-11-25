@@ -11,7 +11,6 @@
 
 #include "symtable.h"
 #include "scanner.h"
-#include "expression.h"
 
 struct parser_data
 {

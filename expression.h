@@ -7,8 +7,9 @@
 #ifndef EXPRESSION_H
 #define EXPRESSION_H
 
-#include "symtable.h"
 #include "parser.h"
+#include "symtable.h"
+
 
 
 typedef enum{
