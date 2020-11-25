@@ -1,6 +1,7 @@
 /*
 //IFJ20 - projekt(varianta I.)
 //scanner.c - lexikalny analyzator
+//Matus Tvarozny, xtvaro00
 //Matej Hornik, xhorni20
 //Filip Brna, xbrnaf00
 */
@@ -42,16 +43,17 @@
 #define STATE_STRING_HEXADECIMAL_SECOND 124
 #define STATE_STRING_END 125 //F20 ... to be continue
 #define STATE_NUMBER 126 //
-#define STATE_NUMBER_E 127 //
-#define STATE_NUMBER_E_SIGN 128 //
-#define STATE_NUMBER_E_END 129 //
-#define STATE_NUMBER_FLOAT 130 //
-#define STATE_NUMBER_FLOAT_END 131 //
-#define STATE_ID 132 //
-#define STATE_DIVIDE_OR_COMMENTARY 133 //
-#define STATE_COMMENTARY_LINE 134 //
-#define STATE_COMMENTARY_BLOCK_START 135 //
-#define STATE_COMMENTARY_BLOCK_END 136 //
+#define STATE_NUMBER_ZERO 127 //
+#define STATE_NUMBER_E 128 //
+#define STATE_NUMBER_E_SIGN 129 //
+#define STATE_NUMBER_E_END 130 //
+#define STATE_NUMBER_FLOAT 131 //
+#define STATE_NUMBER_FLOAT_END 132 //
+#define STATE_ID 133 //
+#define STATE_DIVIDE_OR_COMMENTARY 134 //
+#define STATE_COMMENTARY_LINE 135 //
+#define STATE_COMMENTARY_BLOCK_START 136 //
+#define STATE_COMMENTARY_BLOCK_END 137 //
 
 // promenna pro ulozeni vstupniho souboru
 FILE *source;
@@ -296,6 +298,11 @@ int get_token(struct token *token)
 				{
 					state = STATE_STRING;
 				}
+				else if (c == '0')
+				{
+					str_add_char(str, c);
+					state = STATE_NUMBER_ZERO;
+				}
 				else if (isdigit(c))
 				{
 					str_add_char(str, c);
@@ -501,6 +508,32 @@ int get_token(struct token *token)
 				else
 				{
 					return cleaner(LEX_ERR, str);
+				}
+				break;
+
+			case(STATE_NUMBER_ZERO):
+				if (c == 'e' || c == 'E')
+				{
+					str_add_char(str, c);
+					state = STATE_NUMBER_E;
+					break;
+				}
+				else if (c == '.')
+				{
+					state = STATE_NUMBER_FLOAT;
+					str_add_char(str, c);
+					break;
+				}
+				else if (isdigit(c) || isalpha(c))
+				{
+					state = STATE_START;
+					return cleaner(LEX_ERR, str);
+				}
+				else
+				{
+					state = STATE_START;
+					ungetc(c, source);
+					return process_integer(str, token);
 				}
 				break;
 

@@ -9,7 +9,7 @@
 #include "../scanner.h"
 #include "../str.h"
 
-#define FILE_COUNT_CORRECT 18
+#define FILE_COUNT_CORRECT 30
 #define FILE_COUNT_INCORRECT 22
 
 void reset () {
@@ -321,7 +321,19 @@ void kontrola_scanner(){
                              "tests/test_files_correct/token_comment1.test",
                              "tests/test_files_correct/token_comment2.test",
                              "tests/test_files_correct/token_enumber.test",
-                             "tests/test_files_correct/token_escape_sek.test"};
+                             "tests/test_files_correct/token_escape_sek.test", 
+                             "tests/test_files_correct/token_number.test",
+                             "tests/test_files_correct/token_number2.test",
+                             "tests/test_files_correct/token_number3.test",
+                             "tests/test_files_correct/token_number4.test",
+                             "tests/test_files_correct/token_number5.test",
+                             "tests/test_files_correct/token_number6.test",
+                             "tests/test_files_correct/token_number7.test",
+                             "tests/test_files_correct/token_number8.test",
+                             "tests/test_files_correct/token_number9.test",
+                             "tests/test_files_correct/token_number10.test",
+                             "tests/test_files_correct/token_number11.test",
+                             "tests/test_files_correct/token_number12.test",};
 
     
 

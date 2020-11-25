@@ -1,6 +1,7 @@
 /*
 //IFJ20 - projekt(varianta I.)
 //hlavickovy subor pre pracu s parserom
+//Matus Tvarozny, xtvaro00
 //Filip Brna, xbrnaf00
 */
 #ifndef PARSER_H

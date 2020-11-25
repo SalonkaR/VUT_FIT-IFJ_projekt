@@ -316,9 +316,6 @@ static int reduce(){
 	return SYN_OK;
 }
 
-
-
-
 int expression(struct parser_data* data){
 
     int result = SYN_ERR;
