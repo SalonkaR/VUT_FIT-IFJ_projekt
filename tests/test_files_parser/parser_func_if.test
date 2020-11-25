@@ -1,10 +1,10 @@
 package main
 func mak () {
-    if a {
-        if a {
+    if a==0 {
+        if a==2 {
 
         } else{
-            if a {
+            if a==1 {
 
             } else{
                 

@@ -1,8 +1,8 @@
 package main
 func mak () {
-    return sa
+    return sa + pojeb
 
 
-    return s
-    return saK
+    return s 
+    return 
 } 

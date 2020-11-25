@@ -1,9 +1,9 @@
 package main
-func main () {
-    for a := 3 ;s; {
-        for ;s;s = 1 {
-            for a := 3 ;s; as = 1 {
-                for ;s; {
+func mak () {
+    for a := 3 ;s<5; {
+        for ;s>e;s = 1 {
+            for a := 3 ;s>e; as = 1 {
+                for ;s>e; {
         
                 }
             }

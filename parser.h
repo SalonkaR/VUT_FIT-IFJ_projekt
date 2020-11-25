@@ -3,13 +3,15 @@
 //hlavickovy subor pre pracu s parserom
 //Filip Brna, xbrnaf00
 */
-
+#ifndef PARSER_H
+#define PARSER_H
 
 
 #include <stdbool.h>
 
 #include "symtable.h"
 #include "scanner.h"
+#include "expression.h"
 
 struct parser_data
 {
@@ -19,28 +21,7 @@ struct parser_data
     bool in_if_for;
 };
 
-//implicitna deklarakia funkcii
-
-int eol();
-int prog();
-int body();
-int definition();
-int assignment();
-int ids();
-int id_n();
-int list_of_return_values();
-int values();
-int values_n();
-int params();
-int params_n();
-int return_value();
-int return_value_n();
-int type();
-int argument();
-int argument_n();
-int value();
-int expression();
-
 int parse();
 
-
+//int parse(tSymbolTable *ST, tListOfInstr *instrList)
+#endif
