@@ -8,7 +8,7 @@
 #include "../error.h"
 #include "../parser.h"
 
-#define FILE_COUNT_CORRECT 8
+#define FILE_COUNT_CORRECT 9
 #define FILE_COUNT_INCORRECT 2
 
 void reset () {
@@ -109,7 +109,8 @@ void kontrola_parser(){
                              "tests/test_files_parser/parser_func_if.test",
                              "tests/test_files_parser/parser_func_return_type.test",
                              "tests/test_files_parser/parser_func_call_of_func.test",
-                             "tests/test_files_parser/parser_func_:=.test",};
+                             "tests/test_files_parser/parser_func_:=.test",
+                             "tests/test_files_parser/parser_func_ids.test",};
 
     for (int i = 0; i < FILE_COUNT_CORRECT; i++){
         blue_color();

@@ -1,6 +1,5 @@
 package main
-func mak () {
-    skap := express
+func mak (sa int) {
+    skap := 3 + 1
 
-    zdenko := zidan
 }
