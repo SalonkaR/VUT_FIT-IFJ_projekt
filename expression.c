@@ -335,7 +335,7 @@ static int reduce(){
 	return SYN_OK;
 }
 
-int expression(struct parser_data* data){
+int expression(struct parser_data* data, bool *nondetermism){
 
     int result_exp = SYN_ERR;
 
@@ -348,6 +348,7 @@ int expression(struct parser_data* data){
 
     tStack_item* top_stack_terminal;
 	Prec_table_symbol actual_symbol;
+    bool resolved_d = false;
 
 	bool success = false;
 
@@ -371,8 +372,16 @@ int expression(struct parser_data* data){
                     free_resources();
                     return ERROR_INTERNAL;
                 }
-
+                //TU POSLAT INFO PARSERU 
                 result_exp = get_token(&data->token);
+                if ((*nondetermism == true) && (resolved_d == false)){
+                    if (data->token.type == T_TYPE_LEFT_BRACKET){
+                        *nondetermism = false;
+                        resolved_d = true;
+                        return SYN_OK;
+                    }
+                }
+                
                 if ((result_exp)){
                     free_resources();
                     return result_exp;

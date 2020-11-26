@@ -68,9 +68,9 @@ void test_parser(char *filename){
     FILE *f_print;
     f_print = fopen(filename, "r"); 
     if (f_print == NULL) { 
-        red_color();
+        //red_color();
         printf("Nepodarilo sa otvorit subor: \"%s\"\n", filename); 
-        reset();
+        //reset();
         printf("errno: %d\n",errno);
         
         return;
@@ -82,8 +82,8 @@ void test_parser(char *filename){
     f = fopen(filename, "r"); 
     if (f == NULL) { 
         red_color();
-        printf("Nepodarilo sa otvorit subor: \"%s\"\n", filename); 
-        reset();
+        //printf("Nepodarilo sa otvorit subor: \"%s\"\n", filename); 
+        //reset();
         printf("errno: %d\n",errno);
         
         return;
@@ -118,11 +118,11 @@ void kontrola_parser(){
                              "tests/test_files_parser/parser_func_returns.test",};
 
     for (int i = 0; i < FILE_COUNT_CORRECT; i++){
-        blue_color();
+        //blue_color();
         printf("\n[TEST%d]\n", test_count);
         printf("Testovanie parseru na subore: \"%s\"\n",filenames[i]);
         printf("~~~~~~~~~~~~~~~~~~~~\n");
-        reset();
+        //reset();
 
         test_parser(filenames[i]);
         test_count++;
@@ -258,11 +258,11 @@ void kontrola_parser(){
     
     printf("\n\n TESTY NA SUBOROCH KTORE BY MALI VRACAT SYN_ERR\n");
     for (int i = 0; i < FILE_COUNT_INCORRECT; i++){
-        blue_color();
+        //blue_color();
         printf("\n[TEST%d]\n", test_count);
         printf("Testovanie parseru na subore: \"%s\"\n",filenames_incorrect[i]);
         printf("~~~~~~~~~~~~~~~~~~~~\n");
-        reset();
+        //reset();
 
         test_parser(filenames_incorrect[i]);
         test_count++;

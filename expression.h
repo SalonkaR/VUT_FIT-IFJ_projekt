@@ -53,7 +53,7 @@ typedef enum{
 } Prec_table_symbol;
 
 
-int expression(struct parser_data* data);
+int expression(struct parser_data* data, bool *nondetermism);
 
 
 #endif
