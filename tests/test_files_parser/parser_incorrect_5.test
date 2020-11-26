@@ -1,0 +1,6 @@
+package main    
+
+func params_misstake (int) {
+    jozo := 3 + 1
+    return jozo
+}

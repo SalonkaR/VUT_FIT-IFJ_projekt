@@ -11,7 +11,7 @@
 
 
 #define FILE_COUNT_CORRECT 9
-#define FILE_COUNT_INCORRECT 2
+#define FILE_COUNT_INCORRECT 3
 
 void reset () {
   printf("\033[0m");
@@ -132,7 +132,8 @@ void kontrola_parser(){
 
     char *filenames_incorrect[FILE_COUNT_INCORRECT] =  
                             {"tests/test_files_parser/parser_package_main_incorrect.test",
-                             "tests/test_files_parser/parser_func_main_incorrect.test"};
+                             "tests/test_files_parser/parser_func_main_incorrect.test",
+                             "tests/test_files_parser/parser_incorrect_1.test"};
     
     printf("\n\n TESTY NA SUBOROCH KTORE BY MALI VRACAT SYN_ERR\n");
     for (int i = 0; i < FILE_COUNT_INCORRECT; i++){
