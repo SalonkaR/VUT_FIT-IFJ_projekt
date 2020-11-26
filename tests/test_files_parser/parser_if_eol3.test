@@ -2,7 +2,7 @@ package main
 
 
 
-func foo ()() {
+func foo () {
     if 1==1 {
 
     }

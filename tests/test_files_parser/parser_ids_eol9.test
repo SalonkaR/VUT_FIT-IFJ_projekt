@@ -1,6 +1,6 @@
 package main
 
 
-func foo ()() {
+func foo () {
     id1 = 1+1
 }

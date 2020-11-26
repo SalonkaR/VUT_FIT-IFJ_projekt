@@ -1,6 +1,6 @@
 package main    
 
-func params_misstake (a int, b float, ) {
+func params_misstake (a int, b float64, ) {
     jozo := 3 + 1
     return jozo
 }

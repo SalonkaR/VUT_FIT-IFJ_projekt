@@ -1,4 +1,4 @@
 package main    
 
-func foo ()() {
+func foo () {
     jozo := 3 + 1}
