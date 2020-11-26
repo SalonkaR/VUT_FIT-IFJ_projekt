@@ -9,7 +9,7 @@
 #include "../scanner.h"
 #include "../str.h"
 
-#define FILE_COUNT_CORRECT 30
+#define FILE_COUNT_CORRECT 31
 #define FILE_COUNT_INCORRECT 22
 
 void reset () {
@@ -333,7 +333,8 @@ void kontrola_scanner(){
                              "tests/test_files_correct/token_number9.test",
                              "tests/test_files_correct/token_number10.test",
                              "tests/test_files_correct/token_number11.test",
-                             "tests/test_files_correct/token_number12.test",};
+                             "tests/test_files_correct/token_number12.test",
+                             "tests/test_files_correct/token_test1.test",};
 
     
 

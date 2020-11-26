@@ -308,7 +308,9 @@ int body()
           if (check_token() == LEX_ERR){
             return LEX_ERR;
           }
-          if (expression(&data) != SYN_OK){ 
+          int result_exp_if = expression(&data);
+          printf("VYSLEDOK EXPRESSION VO <BODY> - IF = \"%d\"\n", result_exp_if);
+          if (result_exp_if != SYN_OK){ 
             return SYN_ERR;
           }
           if (check_token() == LEX_ERR){
@@ -438,7 +440,9 @@ int body()
           return LEX_ERR;
         }
         printf("----------------3 TOKEN BODY MAM IF FOR-TYPE = %d -------------\n",data.token.type);
-        if (expression(&data) != SYN_OK){ 
+        int result_exp_for = expression(&data);
+        printf("VYSLEDOK EXPRESSION VO <BODY> - FOR - EXPRESSION = \"%d\"\n", result_exp_for);
+        if (result_exp_for != SYN_OK){ 
           return SYN_ERR;
         }
         printf("----------------4 TOKEN BODY MAM IF FOR-TYPE = %d -------------\n",data.token.type);
@@ -840,7 +844,9 @@ int assignment()
       return LEX_ERR;
     }
     //printf("----------------2. TOKEN ASSIGNMENT TYPE = %d -------------\n",data.token.type);
-    if (expression(&data) != SYN_OK){ 
+    int result_assignment = expression(&data);
+    printf("VYSLEDOK EXPRESSION VO <ASSIGNMENT> = \"%d\"\n", result_assignment);
+    if (result_assignment != SYN_OK){ 
          return SYN_ERR;
     }
     //printf("----------------3. TOKEN ASSIGNMENT TYPE = %d -------------\n",data.token.type);

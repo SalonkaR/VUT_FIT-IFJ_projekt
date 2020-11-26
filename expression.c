@@ -48,6 +48,25 @@ int prec_table[TABLE_SIZE][TABLE_SIZE] = {
 	{ S , S , S , S ,  S ,  S ,  S,  S,  S,   S,  S,  N,  S,   S,  S,  S,  N}  // $
 };
 
+// //TODO VYMAZAT DO PICE
+// void print_token_exp(struct token *t, int ret_val, int no_token){
+//     printf("%d token ->Prijaty token je typu: \"%d\"\n",no_token, t->type);
+//     if (t->type == T_TYPE_INTEGER){
+//         printf("%d token ->Atributy token: int= \"%d\"\n",no_token, t->attribute.int_literal);
+//     }
+//     else if (t->type == T_TYPE_DOUBLE){
+//         printf("%d token ->Atributy token: double= \"%lf\"\n",no_token, t->attribute.double_literal);
+//     }
+//     else if (t->type == T_TYPE_IDENTIFIER){
+//         printf("%d token ->Atributy token: string= \"%s\"\n",no_token, t->attribute.string->str);
+//     }
+//     else if (t->type == T_TYPE_STRING){
+//         printf("%d token ->Atributy token: string= \"%s\"\n",no_token, t->attribute.string->str);
+//     }
+
+//     printf("%d token ->Prijaty token vracia: \"%d\"\n",no_token, ret_val);
+// }
+
 static void free_resources(){
     stack_free(&stack);
 }
@@ -236,16 +255,16 @@ static int check_sem(Prec_rules rule, tStack_item* op1, tStack_item* op2, tStack
     return SYN_OK;
 }
 
-static void print_stack(){
-    tStack_item *tmp = stack_top(&stack);
-    printf("TOP->");
-    while (tmp != NULL) {
-        printf(" %d,",tmp->symbol);
-        tmp = tmp->next;
-    }
-    printf("\n");
+// static void print_stack(){
+//     tStack_item *tmp = stack_top(&stack);
+//     printf("TOP->");
+//     while (tmp != NULL) {
+//         printf(" %d,",tmp->symbol);
+//         tmp = tmp->next;
+//     }
+//     printf("\n");
 
-}
+// }
 
 static int reduce(){
 	int result;
@@ -318,7 +337,7 @@ static int reduce(){
 
 int expression(struct parser_data* data){
 
-    int result = SYN_ERR;
+    int result_exp = SYN_ERR;
 
     stack_init(&stack);
 
@@ -353,25 +372,27 @@ int expression(struct parser_data* data){
                     return ERROR_INTERNAL;
                 }
 
-                if ((result = get_token(&data->token))){
+                result_exp = get_token(&data->token);
+                if ((result_exp)){
                     free_resources();
-                    return result;
+                    return result_exp;
                 }
                 break;
 
             case E:
                 stack_push(&stack, actual_symbol, get_data_type(data));
 
-                if ((result = get_token(&data->token))){
+                result_exp = get_token(&data->token);
+                if ((result_exp)){
                     free_resources();
-                    return result;
+                    return result_exp;
                 }
                 break;
 
             case R:
-                if ((result = reduce())){
+                if ((result_exp = reduce())){
                     free_resources();
-                    return result;
+                    return result_exp;
                 }
                 break;
 
@@ -381,7 +402,6 @@ int expression(struct parser_data* data){
                 }
                 else{
                     free_resources();
-                    //printf("TU SOM V EXPRESSION1\n");
                     return SYN_ERR;
                 }
                 break;
@@ -391,13 +411,11 @@ int expression(struct parser_data* data){
     tStack_item *expression_result= stack_top(&stack);
 	if (expression_result == NULL){
         free_resources();
-        //printf("TU SOM V EXPRESSION2\n");
         return SYN_ERR;
     }
     //na vrchole sa musi nachadzat vysledok vyrazu(posledny nonterm(E))
 	if (expression_result->symbol != NON_TERM){
         free_resources();
-        //printf("TU SOM V EXPRESSION3\n");
         return SYN_ERR;
     }
 
