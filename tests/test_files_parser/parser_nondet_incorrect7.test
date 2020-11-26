@@ -1,6 +1,6 @@
 package main
 
 func main (){
-    id,kkt, = 1+2
+    id,kkt, = a+2
     id1 = jozko()
 }
