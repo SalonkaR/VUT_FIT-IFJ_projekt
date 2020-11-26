@@ -12,6 +12,7 @@
 
 #define FILE_COUNT_CORRECT 9
 #define FILE_COUNT_INCORRECT 121
+#define FILE_COUNT_UJEBANE 68
 
 void reset() {
   printf("\033[0m");
@@ -39,38 +40,14 @@ void print_file(FILE *f){
     
 }
 
-void print_token(struct token *t, int ret_val, int no_token){
-    printf("%d token ->Prijaty token je typu: \"%d\"\n",no_token, t->type);
-    if (t->type == T_TYPE_INTEGER){
-        printf("%d token ->Atributy token: int= \"%d\"\n",no_token, t->attribute.int_literal);
-    }
-    else if (t->type == T_TYPE_DOUBLE){
-        printf("%d token ->Atributy token: double= \"%lf\"\n",no_token, t->attribute.double_literal);
-    }
-    else if (t->type == T_TYPE_IDENTIFIER){
-        printf("%d token ->Atributy token: string= \"%s\"\n",no_token, t->attribute.string->str);
-    }
-    else if (t->type == T_TYPE_STRING){
-        printf("%d token ->Atributy token: string= \"%s\"\n",no_token, t->attribute.string->str);
-    }
-
-    printf("%d token ->Prijaty token vracia: \"%d\"\n",no_token, ret_val);
-}
-
- 
-
 void test_parser(char *filename){
-    //pomocne premmene
-    //int result;
-    //int no_token = 0;
-    
     //subor vypis
     FILE *f_print;
     f_print = fopen(filename, "r"); 
     if (f_print == NULL) { 
-        red_color();
+        //red_color();
         printf("Nepodarilo sa otvorit subor: \"%s\"\n", filename); 
-        reset();
+        //reset();
         printf("errno: %d\n",errno);
         
         return;
@@ -81,9 +58,9 @@ void test_parser(char *filename){
     FILE *f;
     f = fopen(filename, "r"); 
     if (f == NULL) { 
-        red_color();
+        //red_color();
         printf("Nepodarilo sa otvorit subor: \"%s\"\n", filename); 
-        reset();
+        //reset();
         printf("errno: %d\n",errno);
         
         return;
@@ -91,20 +68,15 @@ void test_parser(char *filename){
     setSourceFile(f);
     int tmp = parse();
 
-
     printf("EXIT CODE JE : %d\n", tmp);
-    if (tmp == 0)
-    {
-        
-    }
+   
     fclose(f);
 }
 
 void kontrola_parser(){
-    //TODO -> SUBORY NA KTORE PARSER VYHODI CHYBU
     int test_count = 1;
 
-    // KONTROLA SUBOROV KTORE BY MALI MAT SPRAVNE ZAPSANE TOKENY
+    // CORRECT
     
     char *filenames[FILE_COUNT_CORRECT] =  
                             {"tests/test_files_parser/parser_package_main.test",
@@ -118,17 +90,16 @@ void kontrola_parser(){
                              "tests/test_files_parser/parser_func_returns.test",};
 
     for (int i = 0; i < FILE_COUNT_CORRECT; i++){
-        blue_color();
-        printf("\n[TEST%d]\n", test_count);
+        //blue_color();
+        printf("\n[TEST%d]\n", i+1);
         printf("Testovanie parseru na subore: \"%s\"\n",filenames[i]);
         printf("~~~~~~~~~~~~~~~~~~~~\n");
-        reset();
+        //reset();
 
         test_parser(filenames[i]);
-        test_count++;
     }
 
-    // KONTROLA SUBOROV NA KTORYCH BY SA MAL SCANNER ZASAKNUT
+    // INCORRECT
 
     char *filenames_incorrect[FILE_COUNT_INCORRECT] =  
                             {"tests/test_files_parser/parser_package_main_incorrect.test",
@@ -252,20 +223,99 @@ void kontrola_parser(){
                              "tests/test_files_parser/parser_return_eol2.test",
                              "tests/test_files_parser/parser_return_eol3.test",
                              "tests/test_files_parser/parser_return_eol4.test"};
-
-
-
     
     printf("\n\n TESTY NA SUBOROCH KTORE BY MALI VRACAT SYN_ERR\n");
     for (int i = 0; i < FILE_COUNT_INCORRECT; i++){
-        blue_color();
-        printf("\n[TEST%d]\n", test_count);
+        //blue_color();
+        printf("\n[TEST%d]\n", i+1);
         printf("Testovanie parseru na subore: \"%s\"\n",filenames_incorrect[i]);
         printf("~~~~~~~~~~~~~~~~~~~~\n");
-        reset();
+        //reset();
 
         test_parser(filenames_incorrect[i]);
-        test_count++;
+    }
+
+    // UJEBANE
+    
+    char *filenames[FILE_COUNT_UJEBANE] =  
+                            {"syn/function/bad_function_kw.go",
+                             "syn/function/double_function_id.go",
+                             "syn/function/empty_returns.go",
+                             "syn/function/eol_in_function_1.go",
+                             "syn/function/eol_in_function_2.go",
+                             "syn/function/function_missing_spaces.go",
+                             "syn/function/function_without_body.go",
+                             "syn/function/multiple_blocks.go",
+                             "syn/function/nested_functions.go",
+                             "syn/function/no_param_list.go",
+                             "syn/function/no_params_returns.go",
+                             "syn/function/params_returns.go",
+                             "syn/function/params_with_value.go",
+                             "syn/function/params_without_comma.go",
+                             "syn/function/params_without_id.go",
+                             "syn/function/params_without_type.go",
+                             "syn/function/params.go",
+                             "syn/function/returns_with_id.go",
+                             "syn/function/returns_without_comma.go",
+                             "syn/function/returns.go",
+                             "syn/function/switched_params_returns.go",
+                             "syn/function/unending_function.go",
+                             "syn/statement/assign_multiple.go",
+                             "syn/statement/assign_without_comma.go",
+                             "syn/statement/assign_without_expr.go",
+                             "syn/statement/assign_without_id.go",
+                             "syn/statement/assign.go",
+                             "syn/statement/bad_call_assign.go",
+                             "syn/statement/bad_call.go",
+                             "syn/statement/call_assign_multiple.go",
+                             "syn/statement/call_assign.go",
+                             "syn/statement/call_no_term.go",
+                             "syn/statement/call_params.go",
+                             "syn/statement/call_with_types.go",
+                             "syn/statement/call.go",
+                             "syn/statement/def_without_expr.go",
+                             "syn/statement/def_without_id.go",
+                             "syn/statement/def.go",
+                             "syn/statement/for_assign.go",
+                             "syn/statement/for_bad_assign.go",
+                             "syn/statement/for_bad_def.go",
+                             "syn/statement/for_def_assign.go",
+                             "syn/statement/for_def.go",
+                             "syn/statement/for_no_semicolons.go",
+                             "syn/statement/for_with_eol.go",
+                             "syn/statement/for_without_eol.go",
+                             "syn/statement/for_without_expr.go",
+                             "syn/statement/for.go",
+                             "syn/statement/if_else_with_expr.go",
+                             "syn/statement/if_with_eol.go",
+                             "syn/statement/if_without_else.go",
+                             "syn/statement/if_without_eol.go",
+                             "syn/statement/if_without_expr.go",
+                             "syn/statement/if_without_then.go",
+                             "syn/statement/if.go",
+                             "syn/statement/multiple_eols.go",
+                             "syn/statement/no_eols_statements.go",
+                             "syn/statement/return_value.go",
+                             "syn/statement/return.go",
+                             "syn/top/bad_header.go",
+                             "syn/top/case_sensitive_kw.go",
+                             "syn/top/ending_eol.go",
+                             "syn/top/functions.go",
+                             "syn/top/gloabl_variable.go",
+                             "syn/top/no_eol.go",
+                             "syn/top/no_function.go",
+                             "syn/top/no_header.go",
+                             "syn/top/starting_eol.go"};
+
+    printf("\n\n TESTY NA SUBOROCH KTORE SME UJEBALI A NEVIEME CO MAJU VRACAT\n");
+    for (int i = 0; i < FILE_COUNT_CORRECT; i++){
+        //blue_color();
+        printf("\n[TEST%d]\n", i+1);
+        printf("Testovanie parseru na subore: \"%s\"\n",filenames[i]);
+        printf("~~~~~~~~~~~~~~~~~~~~\n");
+        //reset();
+
+        test_parser(filenames[i]);
     }
 }
 
