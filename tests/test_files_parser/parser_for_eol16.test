@@ -1,0 +1,13 @@
+package main
+
+
+func foo ()() {
+    for a := 1; 1 < 3; a = 1{
+
+    }  
+
+    for a := 1; 1 < 3; a = 1
+    {
+
+    }  
+}
