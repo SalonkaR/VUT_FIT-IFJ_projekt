@@ -1,0 +1,6 @@
+package main    
+
+func return_value_misstake () (a) {
+    jozo := 3 + 1
+    return
+}
