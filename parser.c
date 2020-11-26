@@ -989,8 +989,8 @@ int list_of_return_values()
 {
   // pravidlo <list_of_return_values> -> <values>
   // printf("----------------LORV TYPE = %d -------------\n",data.token.type);
-  if( values() != SYN_ERR ){
-    return SYN_OK;
+  if( values() == SYN_ERR ){
+    return SYN_ERR;
   }
 
   // pravidlo <list_of_return_values> -> epsilon
@@ -1013,7 +1013,7 @@ int values()
 
     //printf("----------------1. VALUES TYPE = %d -------------\n",data.token.type);
     if (values_n() == SYN_ERR){ 
-      //printf("----------------1.5 VALUES TYPE = %d -------------\n",data.token.type);
+      printf("----------------1.5 VALUES TYPE = %d -------------\n",data.token.type);
       return SYN_ERR;
     }
     //printf("----------------exit VALUES TYPE = %d -------------\n",data.token.type);
@@ -1033,7 +1033,7 @@ int values_n()
       }
       //printf("----------------1 VALUES NEXT TYPE = %d -------------\n",data.token.type);
       int result_exp = expression(&data);
-      //printf("VYSLEDOK EXPRESSION VO <VALUES_N> = %d\n", result_exp);
+      printf("VYSLEDOK EXPRESSION VO <VALUES_N> = %d\n", result_exp);
       if( result_exp == SYN_ERR ){
         return SYN_ERR;
       }
