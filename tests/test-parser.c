@@ -259,7 +259,7 @@ void kontrola_parser(){
 
     // UJEBANE
     
-    char *filenames[FILE_COUNT_UJEBANE] =  
+    char *filenames_ujebane[FILE_COUNT_UJEBANE] =  
                             {"syn/function/bad_function_kw.go",
                              "syn/function/double_function_id.go",
                              "syn/function/empty_returns.go",
@@ -333,11 +333,11 @@ void kontrola_parser(){
     for (int i = 0; i < FILE_COUNT_CORRECT; i++){
         //blue_color();
         printf("\n[TEST%d]\n", i+1);
-        printf("Testovanie parseru na subore: \"%s\"\n",filenames[i]);
+        printf("Testovanie parseru na subore: \"%s\"\n",filenames_ujebane[i]);
         printf("~~~~~~~~~~~~~~~~~~~~\n");
         //reset();
 
-        test_parser(filenames[i]);
+        test_parser(filenames_ujebane[i]);
     }
 }
 
