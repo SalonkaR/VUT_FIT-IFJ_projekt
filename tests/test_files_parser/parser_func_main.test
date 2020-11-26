@@ -1,7 +1,8 @@
 package main
-func ma () {
+func main () {
 
 }
-func ak () {
 
+func ak () {
+    
 }

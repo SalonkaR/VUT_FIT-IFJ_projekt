@@ -1,16 +1,21 @@
 package main
 func mak () {
     if a==0 {
-        if a==2 {
-
+        if a==0 {
+            return a>a
         } else{
-            if a==1 {
 
-            } else{
-                
-            }
         }
+
+    } else{
+
+
+    }
+
+    if a==0 {
+
     } else{
 
     }
+
 }
