@@ -1,0 +1,8 @@
+package main    
+
+func foo ()(int
+) {
+    jozo := 3 + 1
+
+}
+

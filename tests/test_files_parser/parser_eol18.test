@@ -1,0 +1,3 @@
+package main    
+
+func foo ()() { } //chyba mi mala byt za } pretoze nasleduje hned EOF
