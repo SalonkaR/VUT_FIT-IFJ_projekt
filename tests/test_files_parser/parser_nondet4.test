@@ -1,0 +1,6 @@
+package main
+
+func main (){
+    id, id2, id3 = 1+3, 45, 99
+    id1 = jozko()
+}

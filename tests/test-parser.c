@@ -10,8 +10,8 @@
 #include "../expression.h"
 
 
-#define FILE_COUNT_CORRECT 9
-#define FILE_COUNT_INCORRECT 121
+#define FILE_COUNT_CORRECT 17
+#define FILE_COUNT_INCORRECT 135
 
 void reset() {
   printf("\033[0m");
@@ -107,7 +107,15 @@ void kontrola_parser(){
     // KONTROLA SUBOROV KTORE BY MALI MAT SPRAVNE ZAPSANE TOKENY
     
     char *filenames[FILE_COUNT_CORRECT] =  
-                            {"tests/test_files_parser/parser_package_main.test",
+                            {"tests/test_files_parser/parser_nondet1.test",
+                            "tests/test_files_parser/parser_nondet2.test",
+                            "tests/test_files_parser/parser_nondet3.test",
+                            "tests/test_files_parser/parser_nondet4.test",
+                            "tests/test_files_parser/parser_nondet5.test",
+                            "tests/test_files_parser/parser_nondet6.test",
+                            "tests/test_files_parser/parser_nondet7.test",
+                            "tests/test_files_parser/parser_nondet8.test",
+                            "tests/test_files_parser/parser_package_main.test",
                              "tests/test_files_parser/parser_func_main.test",
                              "tests/test_files_parser/parser_func_for.test",
                              "tests/test_files_parser/parser_func_if.test",
@@ -131,7 +139,21 @@ void kontrola_parser(){
     // KONTROLA SUBOROV NA KTORYCH BY SA MAL SCANNER ZASAKNUT
 
     char *filenames_incorrect[FILE_COUNT_INCORRECT] =  
-                            {"tests/test_files_parser/parser_package_main_incorrect.test",
+                            {"tests/test_files_parser/parser_nondet_incorrect1.test",
+                            "tests/test_files_parser/parser_nondet_incorrect2.test",
+                            "tests/test_files_parser/parser_nondet_incorrect3.test",
+                            "tests/test_files_parser/parser_nondet_incorrect4.test",
+                            "tests/test_files_parser/parser_nondet_incorrect5.test",
+                            "tests/test_files_parser/parser_nondet_incorrect6.test",
+                            "tests/test_files_parser/parser_nondet_incorrect7.test",
+                            "tests/test_files_parser/parser_nondet_incorrect8.test",
+                            "tests/test_files_parser/parser_nondet_incorrect9.test",
+                            "tests/test_files_parser/parser_nondet_incorrect10.test",
+                            "tests/test_files_parser/parser_nondet_incorrect11.test",
+                            "tests/test_files_parser/parser_nondet_incorrect12.test",
+                            "tests/test_files_parser/parser_nondet_incorrect13.test",
+                            "tests/test_files_parser/parser_nondet_incorrect14.test",
+                             "tests/test_files_parser/parser_package_main_incorrect.test",
                              "tests/test_files_parser/parser_func_main_incorrect.test",
                              "tests/test_files_parser/parser_func_for_if_incorrect_eol_1.test",
                              "tests/test_files_parser/parser_func_for_if_incorrect_eol_2.test",

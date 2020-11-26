@@ -378,6 +378,7 @@ int expression(struct parser_data* data, bool *nondetermism){
                     if (data->token.type == T_TYPE_LEFT_BRACKET){
                         *nondetermism = false;
                         resolved_d = true;
+                        free_resources();
                         return SYN_OK;
                     }
                 }
