@@ -12,7 +12,7 @@
 
 #define FILE_COUNT_CORRECT 17
 #define FILE_COUNT_INCORRECT 135
-#define FILE_COUNT_UJEBANE 68
+#define FILE_COUNT_UJEBANE 71
 
 void reset() {
   printf("\033[0m");
@@ -327,7 +327,10 @@ void kontrola_parser(){
                              "syn/top/no_eol.go",
                              "syn/top/no_function.go",
                              "syn/top/no_header.go",
-                             "syn/top/starting_eol.go"};
+                             "syn/top/starting_eol.go",
+                             "tests/test_files_parser/parser_bigger_program1.test",
+                             "tests/test_files_parser/parser_bigger_program2.test",
+                             "tests/test_files_parser/parser_bigger_program3.test"};
 
     printf("\n\n TESTY NA SUBOROCH KTORE SME UJEBALI A NEVIEME CO MAJU VRACAT\n");
     for (int i = 0; i < FILE_COUNT_UJEBANE; i++){
