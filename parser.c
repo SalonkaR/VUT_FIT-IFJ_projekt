@@ -180,7 +180,7 @@ int eol()
 
 int prog()
 {
-  // pravidlo <prog> -> func ID (<params>) <raturn_value> { EOL <eol> <body> } EOL <eol> <prog>
+  // pravidlo <prog> -> func ID (<params>) <raturn_value> { EOL <eol> <body> } ???EOF??? EOL <eol> <prog>
 
   //printf("----------------VSTUPUJEM DO PROGU-------------\n");
 
@@ -254,17 +254,26 @@ int prog()
             return exit_body;
           }
           //printf("---------------- 1.5 VOLAM BODY - TYPE = %d -------------\n",data.token.type);
-          if (check_token() == LEX_ERR){
-            return LEX_ERR;
-          }
-          if (check_type( T_TYPE_EOF) == SYN_OK){
-            return SYN_OK;
-          }
-          
-          //printf("---------------- 2 VOLAM BODY - TYPE = %d -------------\n",data.token.type);
+          if ( check_type( T_TYPE_RIGHT_VINCULUM) == SYN_OK ){
+            if (check_token() == LEX_ERR){
+              return LEX_ERR;
+            }
+            //printf("----------------EOF- TYPE = %d -------------\n",data.token.type);
+            if (check_type( T_TYPE_EOF) == SYN_OK){
+              return SYN_OK;
+            }
+          } 
+          else{          
+            if (check_token() == LEX_ERR){
+              return LEX_ERR;
+            }
+          }    
+          //printf("---------------- 2 VOLAM BODY - TYPE = %d -------------\n",data.token.type);        
           if (check_type( T_TYPE_EOL) == SYN_ERR){
             return SYN_ERR;
           }
+          //printf("---------------- 3 VOLAM BODY - TYPE = %d -------------\n",data.token.type);
+
           if ( check_type( T_TYPE_RIGHT_VINCULUM) == SYN_ERR ){
             if (check_token() == LEX_ERR){
               return LEX_ERR;
@@ -281,6 +290,7 @@ int prog()
             }
             return SYN_OK;
           }
+
           return SYN_ERR;
         }
       }
@@ -293,11 +303,6 @@ int prog()
     	  return LEX_ERR;
       }
       //printf("-------------------------------6. TOKEN PROG MAM IF-TYPE = %d -------------\n",data.token.type);
-      if (check_type( T_TYPE_EOF) == SYN_OK ){
-        return SYN_OK;
-      }
-
-
 
       if (check_type( T_TYPE_EOL) == SYN_ERR ){
         return SYN_ERR;
