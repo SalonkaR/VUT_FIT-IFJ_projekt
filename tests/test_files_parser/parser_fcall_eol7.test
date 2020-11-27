@@ -3,3 +3,4 @@ package main
 
 func foo () {
     madar(1, 2, 4)}
+    

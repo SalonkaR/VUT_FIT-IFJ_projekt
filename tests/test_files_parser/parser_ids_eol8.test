@@ -3,3 +3,4 @@ package main
 
 func foo () {
     id1 = 1+1 }
+    

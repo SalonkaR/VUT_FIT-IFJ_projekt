@@ -68,7 +68,7 @@ void test_parser(char *filename){
     setSourceFile(f);
     int tmp = parse();
 
-    printf("EXIT CODE JE : %d\n", tmp);
+    printf("EXIT CODE JE : --------------------------------------------------------------------%d\n", tmp);
    
     fclose(f);
 }
@@ -273,17 +273,17 @@ void kontrola_parser(){
                              "syn/function/no_params_returns.go",
                              "syn/function/params_returns.go",
                              "syn/function/params_with_value.go",
-                             "syn/function/params_without_comma.go",
+                             "syn/function/params_without_coma.go",
                              "syn/function/params_without_id.go",
                              "syn/function/params_without_type.go",
                              "syn/function/params.go",
                              "syn/function/returns_with_id.go",
-                             "syn/function/returns_without_comma.go",
+                             "syn/function/returns_without_coma.go",
                              "syn/function/returns.go",
                              "syn/function/switched_params_returns.go",
                              "syn/function/unending_function.go",
                              "syn/statement/assign_multiple.go",
-                             "syn/statement/assign_without_comma.go",
+                             "syn/statement/assign_without_coma.go",
                              "syn/statement/assign_without_expr.go",
                              "syn/statement/assign_without_id.go",
                              "syn/statement/assign.go",
@@ -330,7 +330,7 @@ void kontrola_parser(){
                              "syn/top/starting_eol.go"};
 
     printf("\n\n TESTY NA SUBOROCH KTORE SME UJEBALI A NEVIEME CO MAJU VRACAT\n");
-    for (int i = 0; i < FILE_COUNT_CORRECT; i++){
+    for (int i = 0; i < FILE_COUNT_UJEBANE; i++){
         //blue_color();
         printf("\n[TEST%d]\n", i+1);
         printf("Testovanie parseru na subore: \"%s\"\n",filenames_ujebane[i]);

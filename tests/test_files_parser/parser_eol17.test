@@ -2,3 +2,4 @@ package main
 
 func foo () {
     jozo := 3 + 1}
+    
