@@ -4,8 +4,8 @@ func jozko(a int, b string)(string){
     if 1 < 9 {
         return 2
     } else {
-        a:= "chod ddpc"
-        b = 1 +2 *(4+9/1)
+        a:= "chod ddpc" 
+        b = 1 +2 * (4+9/1)
     }
     for a := kkt; a < 190; a = 1{
         jebem = kkt("choddpc", kkt)
@@ -20,7 +20,7 @@ func main (){
 
 func foo (){
     a = jozko()
-    if a != (1*kkt){
+    if a != 1{
 
     }else {
         if 1 == 2{
