@@ -257,6 +257,9 @@ int prog()
           if (check_token() == LEX_ERR){
             return LEX_ERR;
           }
+          if (check_type( T_TYPE_EOF) == SYN_OK){
+            return SYN_OK;
+          }
           
           //printf("---------------- 2 VOLAM BODY - TYPE = %d -------------\n",data.token.type);
           if (check_type( T_TYPE_EOL) == SYN_ERR){
@@ -290,7 +293,12 @@ int prog()
     	  return LEX_ERR;
       }
       //printf("-------------------------------6. TOKEN PROG MAM IF-TYPE = %d -------------\n",data.token.type);
-      
+      if (check_type( T_TYPE_EOF) == SYN_OK ){
+        return SYN_OK;
+      }
+
+
+
       if (check_type( T_TYPE_EOL) == SYN_ERR ){
         return SYN_ERR;
       }

@@ -7,7 +7,7 @@ package main
 
 
 
-func kotlebovec (mazurek string, 88 int) {
+func kotlebovec (mazurek string, a int) {
     
     
     

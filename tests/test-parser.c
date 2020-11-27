@@ -98,7 +98,7 @@ void kontrola_parser(){
                              "tests/test_files_parser/parser_correct_2.test",
                              "tests/test_files_parser/parser_correct_3.test",
                              "tests/test_files_parser/parser_correct_4.test",
-                             "tests/test_files_parser/parser_correct_5.test",};
+                             "tests/test_files_parser/parser_correct_5.test"};
 
     for (int i = 0; i < FILE_COUNT_CORRECT; i++){
         //blue_color();
