@@ -150,8 +150,10 @@ int start()
         if (str_cmp_const_str(data.token.attribute.string, "main")) return SYN_ERR;
         if (check_token() == LEX_ERR) return LEX_ERR;
         if (check_type(T_TYPE_EOL) == SYN_ERR ) return SYN_ERR;
-        if (eol() == SYN_ERR) return SYN_ERR;
-        if (prog() == SYN_ERR) return SYN_ERR;
+        int exit_eol = eol();
+        if (exit_eol != SYN_OK) return exit_eol;
+        int exit_prog = prog();
+        if (exit_prog != SYN_OK) return exit_prog;
         if (check_token() == LEX_ERR) return LEX_ERR;
         if (check_type(T_TYPE_EOF) == SYN_ERR ) return SYN_ERR;
         return SYN_OK;
@@ -213,11 +215,11 @@ int prog()
 
     	if (check_type(T_TYPE_RIGHT_BRACKET) == SYN_ERR ){
         //printf("VOLAM PARAMS -----------\n");
-        if (params() != SYN_OK){ 
-          return SYN_ERR;
+        int exit_params = params();
+        if (exit_params != SYN_OK){ 
+          return exit_params;
         }
       }
-
 
       if (check_token() == LEX_ERR){
     	  return LEX_ERR;
@@ -225,8 +227,9 @@ int prog()
       //printf("----------------4.5. TOKEN PROG MAM IF-TYPE = %d -------------\n",data.token.type);
     	if (check_type(T_TYPE_LEFT_VINCULUM) == SYN_ERR ){
         //printf("----------------VOLAM RV-------------\n");
-        if (return_value() != SYN_OK){ 
-          return SYN_ERR;
+        int exit_return_value = return_value();
+        if (exit_return_value != SYN_OK){ 
+          return exit_return_value;
         }
       }
 
@@ -239,14 +242,16 @@ int prog()
       }      
     	if (check_type(T_TYPE_RIGHT_VINCULUM) == SYN_ERR ){
         //printf("----------------VOLAM EOl- TYPE = %d -------------\n",data.token.type);
-        if (eol() != SYN_OK){ 
-          return SYN_ERR;
+        int exit_eol = eol();
+        if (exit_eol != SYN_OK){ 
+          return exit_eol;
         }
         //printf("-------------------------------5.5. TOKEN PROG MAM IF-TYPE = %d -------------\n",data.token.type);
         if (check_type(T_TYPE_RIGHT_VINCULUM) == SYN_ERR ){
           //printf("---------------- 1 VOLAM BODY - TYPE = %d -------------\n",data.token.type);
-          if (body() != SYN_OK){ 
-            return SYN_ERR;
+          int exit_body = body();
+          if (exit_body != SYN_OK){ 
+            return exit_body;
           }
           //printf("---------------- 1.5 VOLAM BODY - TYPE = %d -------------\n",data.token.type);
           if (check_token() == LEX_ERR){
@@ -262,12 +267,14 @@ int prog()
               return LEX_ERR;
             }
             //printf("----------------VOLAM EOL- TYPE = %d -------------\n",data.token.type);
-            if (eol() != SYN_OK){ 
-                return SYN_ERR;
+            int exit_eol2 = eol();
+            if (exit_eol2 != SYN_OK){ 
+              return exit_eol2;
             }
             //printf("----------------VOLAM PROG- TYPE = %d -------------\n",data.token.type);
-            if (prog() != SYN_ERR){ 
-                return prog();
+            int exit_prog = prog();
+            if (exit_prog != SYN_OK){ 
+                return exit_prog;
             }
             return SYN_OK;
           }
@@ -291,12 +298,14 @@ int prog()
       if (check_token() == LEX_ERR){
     	  return LEX_ERR;
       }
-      if (eol() != SYN_OK){ 
-          return SYN_ERR;
+      int exit_eol3 = eol();
+      if (exit_eol3  != SYN_OK){ 
+          return exit_eol3 ;
       }
       //printf("----------------VOLAM PROG- TYPE = %d -------------\n",data.token.type);
-      if (prog() != SYN_ERR){ 
-          return prog();
+      int exit_prog2 = prog();
+      if (exit_prog2 != SYN_ERR){ 
+          return exit_prog2;
       }
   }
   //printf("----------------ELSE VETVA PROG- TYPE = %d ------------\n",data.token.type);
@@ -320,7 +329,7 @@ int body()
           int result_exp_if = expression(&data,&non_det);
           //printf("VYSLEDOK EXPRESSION VO <BODY> - IF = \"%d\"\n", result_exp_if);
           if (result_exp_if != SYN_OK){ 
-            return SYN_ERR;
+            return result_exp_if;
           }
 
           //printf("----------------2. TOKEN body MAM IF if-TYPE = %d -------------\n",data.token.type);
@@ -340,16 +349,18 @@ int body()
           }
 
           if (check_type(T_TYPE_EOL) == SYN_OK ){
-            if (eol() != SYN_OK){ 
-              return SYN_ERR;
+            int exit_eol = eol();
+            if (exit_eol != SYN_OK){ 
+              return exit_eol;
             }
           }
   
           //printf("----------------4. TOKEN body MAM IF if-TYPE = %d -------------\n",data.token.type);
           if (check_type(T_TYPE_RIGHT_VINCULUM) == SYN_ERR ){
             //printf("----------------VOLAM BODY po 4- TYPE = %d -------------\n",data.token.type);
-            if (body() != SYN_OK){ 
-              return SYN_ERR;
+            int exit_body = body();
+            if (exit_body != SYN_OK){ 
+              return exit_body;
             }
               
           }
@@ -394,15 +405,17 @@ int body()
           }
 
           if (check_type(T_TYPE_EOL) == SYN_OK ){
-            if (eol() != SYN_OK){ 
-              return SYN_ERR;
+            int exit_eol2 = eol();
+            if (exit_eol2 != SYN_OK){ 
+              return exit_eol2;
             }
           }       
           //printf("----------------8. TOKEN body MAM IF if-TYPE = %d -------------\n",data.token.type);
           if (check_type(T_TYPE_RIGHT_VINCULUM) == SYN_ERR ){
             //printf("----------------VOLAM BODY - TYPE = %d -------------\n",data.token.type);
-            if (body() != SYN_OK){ 
-              return SYN_ERR;
+            int exit_body2 = body();
+            if (exit_body2 != SYN_OK){ 
+              return exit_body2;
             }
           }
           //printf("----------------8.2 TOKEN body MAM IF if-TYPE = %d -------------\n",data.token.type);
@@ -430,12 +443,14 @@ int body()
           }
 
           if (check_type(T_TYPE_EOL) == SYN_OK ){
-            if (eol() != SYN_OK){ 
-              return SYN_ERR;
+            int exit_eol3 = eol();
+            if (exit_eol3 != SYN_OK){ 
+              return exit_eol3;
             }
           }
-          if (body() != SYN_OK){ 
-            return SYN_ERR;
+          int exit_body3 = body();
+          if (exit_body3 != SYN_OK){ 
+            return exit_body3;
           }
           //printf("-------------------------------VYS TYPE = %d -------------\n",data.token.type);                   
           return SYN_OK;
@@ -448,8 +463,9 @@ int body()
             return LEX_ERR;
           }
           //printf("----------------1 TOKEN BODY MAM IF FOR-TYPE = %d -------------\n",data.token.type);
-          if (definition() != SYN_OK){ 
-              return SYN_ERR;
+          int exit_definition = definition();
+          if (exit_definition != SYN_OK){ 
+              return exit_definition;
           }
           //printf("----------------1.5 TOKEN BODY MAM IF FOR-TYPE = %d -------------\n",data.token.type);
           if (check_type(T_TYPE_EOL) == SYN_OK ){
@@ -472,7 +488,7 @@ int body()
           int result_exp_for = expression(&data,&non_det);
           //printf("VYSLEDOK EXPRESSION VO <BODY> - FOR - EXPRESSION = \"%d\"\n", result_exp_for);
           if (result_exp_for != SYN_OK){ 
-            return SYN_ERR;
+            return result_exp_for;
           }
           //printf("----------------5 TOKEN BODY MAM IF FOR-TYPE = %d -------------\n",data.token.type);
           if (check_type(T_TYPE_SEMICOLON) == SYN_ERR ){
@@ -483,8 +499,9 @@ int body()
           }
           if (check_type(T_TYPE_LEFT_VINCULUM) == SYN_ERR ){
             //printf("----------------5.5 VOLAM BODY - TYPE = %d -------------\n",data.token.type);
-            if (assignment() != SYN_OK){ 
-              return SYN_ERR;
+            int result_assignment = assignment();
+            if (result_assignment != SYN_OK){ 
+              return result_assignment;
             }
           }       
           //printf("----------------6. TOKEN body MAM IF if-TYPE = %d -------------\n",data.token.type);
@@ -504,15 +521,17 @@ int body()
           }
 
           if (check_type(T_TYPE_EOL) == SYN_OK ){
-            if (eol() != SYN_OK){ 
-              return SYN_ERR;
+            int exit_eol = eol();
+            if (exit_eol != SYN_OK){ 
+              return exit_eol;
             }
           }       
           //printf("----------------8. TOKEN body MAM FOR if-TYPE = %d -------------\n",data.token.type);
           if (check_type(T_TYPE_RIGHT_VINCULUM) == SYN_ERR ){
             //printf("----------------VOLAM BODY - TYPE = %d -------------\n",data.token.type);
-            if (body() != SYN_OK){ 
-              return SYN_ERR;
+            int exit_body = body();
+            if (exit_body != SYN_OK){ 
+              return exit_body;
             }
           }
           //printf("----------------8.2 TOKEN body MAM FOR if-TYPE = %d -------------\n",data.token.type);
@@ -540,12 +559,14 @@ int body()
           }
 
           if (check_type(T_TYPE_EOL) == SYN_OK ){
-            if (eol() != SYN_OK){ 
-              return SYN_ERR;
+            int exit_eol2 = eol();
+            if (exit_eol2 != SYN_OK){ 
+              return exit_eol2;
             }
           }
-          if (body() != SYN_OK){ 
-            return SYN_ERR;
+          int exit_body2 = body();
+          if (exit_body2 != SYN_OK){ 
+            return exit_body2;
           }
           //printf("-------------------------------VYS TYPE = %d -------------\n",data.token.type);          
           return SYN_OK;
@@ -557,21 +578,24 @@ int body()
           return LEX_ERR;
         }
         //printf("----------------1. TOKEN body MAM IF if-TYPE = %d -------------\n",data.token.type);
-        if (list_of_return_values() == SYN_ERR){ 
-          return SYN_ERR;
+        int exit_list_of_return_values = list_of_return_values();
+        if (exit_list_of_return_values != SYN_OK){ 
+          return exit_list_of_return_values;
         } 
         //printf("----------------2. TOKEN body MAM IF if-TYPE = %d -------------\n",data.token.type);
         if (check_type(T_TYPE_EOL) == SYN_ERR ){
           return SYN_ERR;
         }
-        if (eol() != SYN_OK){ 
-          return SYN_ERR;
+        int exit_eol = eol();
+        if (exit_eol != SYN_OK){ 
+          return exit_eol;
         }  
         //printf("----------------3. TOKEN body MAM IF if-TYPE = %d -------------\n",data.token.type);
-        if (body() != SYN_OK){ 
-          //printf("----------------4. TOKEN body MAM IF if-TYPE = %d -------------\n",data.token.type);        
-          return SYN_ERR;
+        int exit_body3 = body();
+        if (exit_body3 != SYN_OK){ 
+          return exit_body3;
         }
+        
         //printf("----------------else. TOKEN body MAM IF if-TYPE = %d -------------\n",data.token.type);        
         return SYN_OK;
       }
@@ -584,6 +608,7 @@ int body()
         return LEX_ERR;
       }
       //printf("----------------1. TOKEN IDENTIFIER TYPE = %d -------------\n",data.token.type);  
+      int exit_ids = ids();
       if (check_type(T_TYPE_LEFT_BRACKET) != SYN_ERR ){
         // pravidlo <body> -> ID ( <argument> ) EOL <eol> <body>
         //printf("----------------0. TOKEN BODY MAM ID-TYPE = %d -------------\n",data.token.type);
@@ -591,8 +616,9 @@ int body()
           return LEX_ERR;
         }
         if (check_type(T_TYPE_RIGHT_BRACKET) == SYN_ERR ){
-          if (argument() != SYN_OK){ 
-            return SYN_ERR;
+          int exit_argument = argument();
+          if (exit_argument != SYN_OK){ 
+            return exit_argument;
           }
         }
         //printf("----------------2. TOKEN BODY MAM IF ID ( TYPE = %d -------------\n",data.token.type);
@@ -606,15 +632,17 @@ int body()
         if (check_type(T_TYPE_EOL) == SYN_ERR ){
           return SYN_ERR;
         }
-        if (eol() != SYN_OK){ 
-          return SYN_ERR;
+        int exit_eol = eol();
+        if (exit_eol != SYN_OK){ 
+          return exit_eol;
         }
         if (check_type(T_TYPE_RIGHT_VINCULUM) == SYN_ERR ){
 
           //printf("----------------3. TOKEN body MAM IF if-TYPE = %d -------------\n",data.token.type);
-          if (body() != SYN_OK){ 
+          int exit_body = body();
+          if (exit_body != SYN_OK){ 
             //printf("----------------4. TOKEN body MAM IF if-TYPE = %d -------------\n",data.token.type);        
-            return SYN_ERR;
+            return exit_body;
           }
         }
         //printf("----------------else. TOKEN body MAM IF if-TYPE = %d -------------\n",data.token.type);        
@@ -630,7 +658,7 @@ int body()
         int result_exp_if = expression(&data,&non_det);
         //printf("VYSLEDOK EXPRESSION VO <BODY> - IF = \"%d\"\n", result_exp_if);
         if (result_exp_if != SYN_OK){ 
-            return SYN_ERR;
+            return result_exp_if;
         }
         //printf("----------------1. VARIABLE TYPE = %d -------------\n",data.token.type);
         if (check_type(T_TYPE_EOL) == SYN_ERR ){
@@ -643,14 +671,16 @@ int body()
           return SYN_ERR;
         }
         //printf("----------------3. VARIABLE TYPE  = %d -------------\n",data.token.type);
-        if (eol() != SYN_OK){ 
-          return SYN_ERR;
+        int exit_eol = eol();
+        if (exit_eol != SYN_OK){ 
+          return exit_eol;
         }
         if (check_type(T_TYPE_RIGHT_VINCULUM) == SYN_ERR ){
           //printf("----------------4. VARIABLE TYPE  = %d -------------\n",data.token.type);
-          if (body() != SYN_OK){ 
+          int exit_body = body();
+          if (exit_body != SYN_OK){ 
             //printf("----------------5. VARIABLE TYPE  = %d -------------\n",data.token.type);        
-            return SYN_ERR;
+            return exit_body;
           }
         }
         //printf("----------------else. VARIABLE TYPE  = %d -------------\n",data.token.type);        
@@ -658,7 +688,7 @@ int body()
       }
       // pravidlo <body> -> <ids> = ID(<argument>) EOL <eol> <body>
       // pravidlo <body> -> <ids> = <values> EOL <eol> <body>
-      else if( ids() == SYN_OK){
+      else if( exit_ids == SYN_OK){                                                            //////////////////////////////////////////////////////////////
         //printf("----------------0. BODY = TYPE = %d -------------\n",data.token.type);
         if (check_type(T_TYPE_ASSIGN) == SYN_ERR ){
           return SYN_ERR;
@@ -690,23 +720,26 @@ int body()
               if (check_type(T_TYPE_EOL) == SYN_ERR ){
                   return SYN_ERR;
               }
-              if (eol() != SYN_OK){ 
-                return SYN_ERR;
+              int exit_eol = eol();
+              if (exit_eol != SYN_OK){ 
+                return exit_eol;
               }
               //printf("----------------3. BODY = TYPE = %d -------------\n",data.token.type);
               if (check_type(T_TYPE_RIGHT_VINCULUM) == SYN_ERR ){
                 //printf("----------------4.  BODY = TYPE = TYPE = %d -------------\n",data.token.type);
-                if (body() != SYN_OK){ 
+                int exit_body = body();
+                if (exit_body != SYN_OK){ 
                   //printf("----------------5.  BODY = TYPE = TYPE = %d -------------\n",data.token.type);        
-                  return SYN_ERR;
+                  return exit_body;
                 }
               }
               //printf("----------------6. BODY = TYPE = %d -------------\n",data.token.type);
               return SYN_OK;
             }
             //printf("----------------7. BODY = TYPE = %d -------------\n",data.token.type);
-            if( argument() == SYN_ERR){ 
-              return SYN_ERR;
+            int exit_argument = argument();
+            if( exit_argument != SYN_OK){ 
+              return exit_argument;
             }
 
             //printf("----------------8. BODY = TYPE = %d -------------\n",data.token.type);
@@ -720,8 +753,9 @@ int body()
             if (check_type(T_TYPE_EOL) == SYN_ERR ){
               return SYN_ERR;
             }
-            if (eol() != SYN_OK){ 
-              return SYN_ERR;
+            int exit_eol2 = eol();
+            if (exit_eol2 != SYN_OK){ 
+              return exit_eol2;
             }
             //printf("----------------9.5 BODY = TYPE = %d -------------\n",data.token.type);
             if (check_type(T_TYPE_EOF) == SYN_OK ){
@@ -730,9 +764,10 @@ int body()
             //printf("----------------10. BODY = TYPE = %d -------------\n",data.token.type);
             if (check_type(T_TYPE_RIGHT_VINCULUM) == SYN_ERR ){
               //printf("---------------11. TOKEN body MAM IF if-TYPE = %d -------------\n",data.token.type);
-              if (body() != SYN_OK){ 
+              int exit_body2 = body();
+              if (exit_body2 != SYN_OK){ 
                 //printf("----------------12. TOKEN body MAM IF if-TYPE = %d -------------\n",data.token.type);        
-                return SYN_OK;
+                return exit_body2;
               }
             }
             //printf("----------------70. BODY = TYPE = %d -------------\n",data.token.type);
@@ -756,20 +791,23 @@ int body()
             if (check_type(T_TYPE_COMMA) == SYN_ERR ){ 
               return SYN_ERR;
             }
-            if (values_n() == SYN_ERR){
-              return SYN_ERR;
+            int exit_values_n = values_n();
+            if (exit_values_n != SYN_OK){
+              return exit_values_n;
             }
             //printf("----------3. TOKEN EXPRESSION,VALUE NEXTTYPE = %d -------------\n",data.token.type);
             if (check_type(T_TYPE_EOL) == SYN_ERR ){
               return SYN_ERR;
             }
-            if (eol() != SYN_OK){ 
-              return SYN_ERR;
+            int exit_eol = eol();
+            if (exit_eol != SYN_OK){ 
+              return exit_eol;
             }  
             //printf("-------4. TOKEN EXPRESSION,VALUE NEXTTYPE = %d -------------\n",data.token.type);
-            if (body() != SYN_OK){ 
+            int exit_body = body();
+            if (exit_body != SYN_OK){ 
               //printf("----------------4. TOKEN EXPRESSION,VALUE NEXTTYPE = %d -------------\n",data.token.type);        
-              return SYN_ERR;
+              return exit_body;
             }            
             return SYN_OK;
           }
@@ -808,14 +846,17 @@ int body()
             }     
           
           }
-          else if(tmp_vys == SYN_ERR){
-            return SYN_ERR;
+          else if(tmp_vys != SYN_OK){
+            return tmp_vys;
           }
         }
         
         
         //printf("----------------SYN OK-TYPE = %d -------------\n",data.token.type);
       } 
+      else if (exit_ids != SYN_OK){
+        return exit_ids;
+      }
       return SYN_OK;    
   }
 
@@ -848,8 +889,8 @@ int definition()
       
       int result_exp = expression(&data,&non_det);
       //printf("VYSLEDOK EXPRESSION VO <VALUES_N> = %d\n", result_exp);
-      if( result_exp == SYN_ERR ){
-        return SYN_ERR;
+      if( result_exp != SYN_OK ){
+        return result_exp;
       }
       //printf("----------------VYS DEFINITION TYPE = %d -------------\n",data.token.type);
       return SYN_OK;
@@ -883,7 +924,7 @@ int assignment()
     int result_assignment = expression(&data,&non_det);
     //printf("VYSLEDOK EXPRESSION VO <ASSIGNMENT> = \"%d\"\n", result_assignment);
     if (result_assignment != SYN_OK){ 
-         return SYN_ERR;
+         return result_assignment;
     }
     //printf("----------------3. TOKEN ASSIGNMENT TYPE = %d -------------\n",data.token.type);
     return SYN_OK;
@@ -900,10 +941,10 @@ int ids()
   // pravidlo <ids> -> ID <id_n>
   //printf("----------------0. IDS TYPE = %d -------------\n",data.token.type);
   if (check_type(T_TYPE_COMMA) == SYN_OK ){
-
-    if (id_n() == SYN_ERR){ 
+    int exit_id_n = id_n();
+    if (exit_id_n != SYN_OK){ 
       //printf("----------------2. IDS TYPE = %d -------------\n",data.token.type);
-      return SYN_ERR;
+      return exit_id_n;
     }
     //printf("----------------3. IDS TYPE = %d -------------\n",data.token.type);
     return SYN_OK;
@@ -932,9 +973,13 @@ int id_n()
         return SYN_OK;
       }
       if (check_type(T_TYPE_COMMA) == SYN_OK ){
-        if (id_n() != SYN_ERR){ 
+        int exit_id_n =id_n();
+        if (exit_id_n == SYN_OK){ 
           //printf("----------------3. IDS NEXT TYPE = %d -------------\n",data.token.type);
           return id_n();
+        }
+        else{
+          return exit_id_n;
         }
       }
   }
@@ -950,9 +995,11 @@ int id_n()
 int list_of_return_values()
 {
   // pravidlo <list_of_return_values> -> <values>
-   //printf("----------------LORV TYPE = %d -------------\n",data.token.type);
-  if( values() == SYN_ERR ){
+  //printf("----------------LORV TYPE = %d -------------\n",data.token.type);
+  int exit_values = value();
+  if( values() != SYN_OK ){
     //printf("----------------SYN ERR LORV TYPE = %d -------------\n",data.token.type);
+    // to do tu sa to jebe  pri rekurzii 
     return SYN_ERR;
   }
 
@@ -995,6 +1042,9 @@ int values()
     }
     
   }
+  else{
+    return result_exp;
+  }
   return SYN_ERR;
 }
 
@@ -1014,7 +1064,7 @@ int values_n()
       int result_exp = expression(&data,&non_det);
       //printf("VYSLEDOK EXPRESSION VO <VALUES_N> = %d\n", result_exp);
       if( result_exp != SYN_OK ){
-        //printf("---------------- BAD RETURNS = %d -------------\n",data.token.type);
+        //printf("---------------- BAD RETURNS = %d -------------\n",result_exp);
         bad_returns = true;
         return result_exp;
       }
@@ -1032,7 +1082,11 @@ int values_n()
           else{
             return SYN_ERR;
           }
-        }   
+      }
+      //printf("----------------BAD RETURNS TYPE = %d -------------\n",bad_returns);
+      if (bad_returns == true){
+        return SYN_ERR;
+      }    
       //printf("----------------EXIT VALUES NEXT TYPE = %d -------------\n",data.token.type);
       return SYN_OK;
     }
@@ -1061,17 +1115,18 @@ int params()
       return LEX_ERR;
     }
     //printf("----------------1. TOKEN PARAMS TYPE = %d -------------\n",data.token.type);
-
-    if (type() != SYN_OK){ 
-      return SYN_ERR;
+    int exit_type = type();
+    if (exit_type != SYN_OK){ 
+      return exit_type;
     }
     //printf("----------------2. TOKEN PARAMS TYPE = %d -------------\n",data.token.type);
     if (check_token() == LEX_ERR){
       return LEX_ERR;
     }
     //printf("----------------3. TOKEN PARAMS TYPE = %d -------------\n",data.token.type);
-    if (params_n() != SYN_OK){ 
-      return SYN_ERR;
+    int exit_params_n = params_n();
+    if (exit_params_n != SYN_OK){ 
+      return exit_params_n;
     }
     //printf("----------------4. TOKEN PARAMS TYPE = %d -------------\n",data.token.type);
     return SYN_OK;
@@ -1100,8 +1155,9 @@ int params_n()
       return LEX_ERR;
     }
     //printf("----------------2. TOKEN PARAMSNEXT TYPE = %d -------------\n",data.token.type);
-    if (type() != SYN_OK){ 
-      return SYN_ERR;
+    int exit_type = type();
+    if (exit_type != SYN_OK){ 
+      return exit_type;
     }
     if (check_token() == LEX_ERR){
       return LEX_ERR;
@@ -1111,10 +1167,15 @@ int params_n()
       //printf("  ----> SYN OK argn TYPE = %d  <---- \n",data.token.type);
       return SYN_OK;
     }
-    if (check_type(T_TYPE_COMMA) == SYN_OK ){    
-      if (params_n() != SYN_ERR){ 
+    if (check_type(T_TYPE_COMMA) == SYN_OK ){  
+      int exit_params_n = params_n();  
+      if (exit_params_n == SYN_OK){ 
         return params_n();
       }
+      else{
+        return exit_params_n; 
+      }
+
     }
     //printf("----------------4. TOKEN PARAMSNEXT TYPE = %d -------------\n",data.token.type);
     
@@ -1136,16 +1197,18 @@ int return_value()
       if (check_token() == LEX_ERR){
         return LEX_ERR;
       }
-      //printf("----------------1. TOKEN RV-TYPE = %d -------------\n",data.token.type);  
-      if (type() != SYN_OK){ 
-        return SYN_ERR;
+      //printf("----------------1. TOKEN RV-TYPE = %d -------------\n",data.token.type);
+      int exit_type = type();  
+      if (exit_type != SYN_OK){ 
+        return exit_type;
       }
       if (check_token() == LEX_ERR){
         return LEX_ERR;
       }
       //printf("----------------2. TOKEN RV-TYPE = %d -------------\n",data.token.type);
-      if (return_value_n() == SYN_ERR){ 
-        return SYN_ERR;
+      int exit_return_value_n = return_value_n();
+      if (exit_return_value_n != SYN_OK){ 
+        return exit_return_value_n;
       }
       //printf("----------------3. TOKEN RV-TYPE = %d -------------\n",data.token.type);
       if (check_token() == LEX_ERR){
@@ -1180,22 +1243,25 @@ int return_value_n()
         //printf("  ----> %d  <---- \n",check_type(T_TYPE_RIGHT_BRACKET));
         return SYN_ERR;
       }
-
-      if (type() != SYN_OK){ 
-        return SYN_ERR;
+      int exit_type = type();
+      if (exit_type != SYN_OK){ 
+        return exit_type;
       }
       //printf("----------------2. TOKEN RVN-TYPE = %d -------------\n",data.token.type);
       if (check_token() == LEX_ERR){
         return LEX_ERR;
       }
       //printf("----------------3. TOKEN RVN-TYPE = %d -------------\n",data.token.type);
-      if (return_value_n() != SYN_ERR){ 
+      int exit_return_value_n = return_value_n();
+      if (exit_return_value_n == SYN_OK){ 
+        //printf("----------------3.5 TOKEN RVN-TYPE = %d -------------\n",data.token.type);
         return_value_n();
       }
       else{
-        //printf("  ----> %d  <---- \n",data.token.type);
-        return SYN_ERR;
+        return exit_return_value_n;
       }
+
+
       //printf("----------------4. TOKEN RVN-TYPE = %d -------------\n",data.token.type);
       return SYN_OK;
   }
@@ -1229,7 +1295,8 @@ int argument()
 {
   // pravidlo <argument> -> <value> <argument_n>
   //printf("  ---->0. ARGUMENT TYPE = %d  <---- \n",data.token.type);
-  if ( value() != SYN_ERR){
+  int exit_value = value();
+  if ( exit_value == SYN_OK){
     if (check_token() == LEX_ERR){
      return LEX_ERR;
     } 
@@ -1238,12 +1305,16 @@ int argument()
       return SYN_OK;
     }
     //printf("  ---->1. ARGUMENT TYPE = %d  <---- \n",data.token.type);
-    if (argument_n() == SYN_ERR){ 
+    int exit_argument_n = argument_n();
+    if (exit_argument_n != SYN_OK){ 
       //printf("  ---->1.5 ARGUMENT TYPE = %d  <---- \n",data.token.type);
-      return SYN_ERR;
+      return exit_argument_n;
     }
 
     return SYN_OK;
+  }
+  else {
+    return exit_value;
   }
   //printf("  ---->ziadny arg ARGUMENT TYPE = %d  <---- \n",data.token.type);
   // pravidlo <argument> -> epsilon
@@ -1259,9 +1330,10 @@ int argument_n()
      return LEX_ERR;
     } 
     //printf("  ---->1. ARGUMENT_N TYPE = %d  <---- \n",data.token.type);
-    if (value() == SYN_ERR){ 
+    int exit_value = value();
+    if (exit_value != SYN_OK){ 
       //printf("  ---->1.5 ARGUMENT_N TYPE = %d  <---- \n",data.token.type);
-      return SYN_ERR;
+      return exit_value;
     }
     if (check_token() == LEX_ERR){
      return LEX_ERR;
@@ -1274,8 +1346,12 @@ int argument_n()
    // printf("  ---->2. ARGUMENT_N TYPE = %d  <---- \n",data.token.type);
 
     if ( check_type(T_TYPE_COMMA) == SYN_OK ){
-      if (argument_n() != SYN_ERR){ 
+      int exit_argument_n = argument_n();
+      if (exit_argument_n == SYN_OK){ 
         return argument_n();
+      }
+      else{
+        return exit_argument_n;
       }
     }    
 
