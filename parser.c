@@ -1122,7 +1122,7 @@ int params_n()
   else{
     return SYN_OK;
   }
-  return SYN_OK;
+  //return SYN_OK;
 
   // pravidlo <params_n> ->epsilon
 
@@ -1347,7 +1347,7 @@ int parse()
     {
         result = start(&data);
         bad_returns = false;
-        Print_tree(data.BT_global.root_ptr);
+        //Print_tree(data.BT_global.root_ptr);
         //funkcia s ID main musi byt obsiahnuta 
         // TO DO, toto si pekne pojebal ...
 

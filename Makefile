@@ -10,13 +10,17 @@ CFLAGS= -std=c11 -pedantic -Wall -Wextra
 
 #preklad hlavnych casti
 #--------------------------------------
-all:
+all: ifj20
 
 #testy
 #--------------------------------------
 test_lex: test-lex
 test_symtable: test-symtable
 test_parser: test-parser
+
+#preklad hlavneho compilatoru
+ifj20: ifj20proj.o parser.o str.o scanner.o expression.o symtable.o stack.o
+	$(CC) $(CFLAGS) -o $@ $^
 
 #preklad testovacich programov
 test-lex: test-lex.o str.o scanner.o
@@ -29,6 +33,9 @@ test-parser: test-parser.o parser.o str.o scanner.o expression.o symtable.o stac
 	$(CC) $(CFLAGS) -g -o $@ $^
 #--------------------------------------
 #objektove subory
+
+ifj20proj.o: ifj20proj.c parser.h scanner.h
+	$(CC) $(CFLAGS) -o $@ -c $<
 
 expression.o: expression.c parser.h expression.h error.h scanner.h stack.h symtable.h 
 	$(CC) $(CFLAGS) -o $@ -c $<
@@ -59,6 +66,9 @@ test-parser.o: tests/test-parser.c parser.h symtable.h str.h error.h scanner.h
 
 #ostatne prikazy
 .PHONY: clean clean-all
+
+zip:
+	zip xhorni20.zip *.c *.h Makefile
 
 clean:
 	rm -f *.o
