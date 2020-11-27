@@ -10,7 +10,7 @@
 #include "../expression.h"
 
 
-#define FILE_COUNT_CORRECT 17
+#define FILE_COUNT_CORRECT 22
 #define FILE_COUNT_INCORRECT 135
 #define FILE_COUNT_UJEBANE 68
 
@@ -74,7 +74,6 @@ void test_parser(char *filename){
 }
 
 void kontrola_parser(){
-    int test_count = 1;
 
     // CORRECT
     
@@ -95,7 +94,11 @@ void kontrola_parser(){
                              "tests/test_files_parser/parser_func_call_of_func.test",
                              "tests/test_files_parser/parser_func_:=.test",
                              "tests/test_files_parser/parser_func_ids.test",
-                             "tests/test_files_parser/parser_func_returns.test",};
+                             "tests/test_files_parser/parser_correct_1.test",
+                             "tests/test_files_parser/parser_correct_2.test",
+                             "tests/test_files_parser/parser_correct_3.test",
+                             "tests/test_files_parser/parser_correct_4.test",
+                             "tests/test_files_parser/parser_correct_5.test",};
 
     for (int i = 0; i < FILE_COUNT_CORRECT; i++){
         //blue_color();
@@ -283,7 +286,7 @@ void kontrola_parser(){
                              "syn/function/switched_params_returns.go",
                              "syn/function/unending_function.go",
                              "syn/statement/assign_multiple.go",
-                             "syn/statement/assign_without_comma.go",
+                             "syn/statement/assign_without_coma.go",
                              "syn/statement/assign_without_expr.go",
                              "syn/statement/assign_without_id.go",
                              "syn/statement/assign.go",

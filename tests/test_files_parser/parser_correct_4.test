@@ -1,0 +1,15 @@
+package main
+
+func mamtodobre (mazurek string) (string, string, string) {
+    if 1==1 {
+        if 6 < 7 {
+
+        } else {
+
+        }
+    } else{
+        return 14 + 88, ss
+    }
+
+    return ko, tle, bik
+}
