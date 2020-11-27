@@ -74,4 +74,4 @@ clean:
 	rm -f *.o
 
 clean-all:
-	rm -f *.o test-lex test-symtable test-parser
+	rm -f *.o test-lex test-symtable test-parser ifj20
