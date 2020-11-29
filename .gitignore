@@ -3,5 +3,6 @@
 test-lex
 test-symtable
 test-parser
+test-sem
 ifj20
 xhorni20.zip

@@ -30,6 +30,7 @@ bool bt_stack_push(tBT_stack* stack){
 		return false;
 	}
     //inicializujem strom
+	new_item->local_bt.definded = false;
     bool init_result = BT_init(&new_item->local_bt);
     if (init_result == false){
         return false;

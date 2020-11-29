@@ -388,7 +388,7 @@ int expression(struct parser_data* data, bool *nondetermism){
 
 	bool success = false;
 
-    Prec_table_symbol last4[4];
+    Prec_table_symbol last4[4] = {NON_TERM, NON_TERM, NON_TERM, NON_TERM};
     int last4_c = 1;
     last4[0] = get_symbol_from_token(&data->token);
 
