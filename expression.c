@@ -114,10 +114,11 @@ static Prec_table_symbol get_symbol_from_token(struct token* token){
 
 static enum data_types get_data_type(struct parser_data *data){
 	Data_t* symbol;
+    bool internal_err;
 
 	switch (data->token.type){
         case T_TYPE_IDENTIFIER:
-        bool internal_err;
+
             symbol = bt_stack_search(&data->BT_stack, data->token.attribute.string->str, &internal_err);
             if (symbol == NULL)
                 return TYPE_UNDEFINED;
@@ -246,13 +247,14 @@ static int check_sem(Prec_rules rule, tStack_item* op1, tStack_item* op2, tStack
             }
             break;
         case E_PLUS_E:
-            if ((op1->data_type == TYPE_STRING) && (op3->data_type == TYPE_STRING) ){
-                *type_after_reduce = TYPE_STRING;
-                break;
-            }
         case E_MINUS_E:
         case E_MUL_E:
         case E_DIV_E:
+            if ((op1->data_type == TYPE_STRING) && (op3->data_type == TYPE_STRING) && (rule == E_PLUS_E) ){
+                *type_after_reduce = TYPE_STRING;
+                break;
+            }
+
             if ((op1->data_type == TYPE_STRING) || (op3->data_type == TYPE_STRING) ){
                 return SEM_ERR_EXP;
             }
@@ -353,6 +355,22 @@ static int reduce(){
 	return SYN_OK;
 }
 
+static int circle_number(int cislo){
+    if (cislo < 0){
+        if (cislo == -1){
+            return 3;
+        }
+        if (cislo == -2){
+            return 2;
+        }
+        if (cislo == -3){
+            return 1;
+        }
+    }
+    return cislo;
+}
+
+
 int expression(struct parser_data* data, bool *nondetermism){
 
     int result_exp = SYN_ERR;
@@ -370,10 +388,37 @@ int expression(struct parser_data* data, bool *nondetermism){
 
 	bool success = false;
 
+    Prec_table_symbol last4[4];
+    int last4_c = 1;
+    last4[0] = get_symbol_from_token(&data->token);
+
     do
 	{
 		actual_symbol = get_symbol_from_token(&data->token);
 		top_stack_terminal = stack_top_term(&stack);
+
+        last4[last4_c] = actual_symbol;
+
+        if ((data->token.type == T_TYPE_INTEGER) && (data->token.attribute.int_literal == 0)){
+            last4[last4_c] = ZERO_NUMBER;
+        }
+        if ((data->token.type == T_TYPE_DOUBLE) && (data->token.attribute.double_literal == 0)){
+            last4[last4_c] = ZERO_NUMBER;
+        }
+
+        if ((last4[circle_number(last4_c - 1)] == DIV) && (last4[last4_c] == ZERO_NUMBER)){
+            return SEM_ERR_ZERO_DIV;
+        }
+
+        if ((last4[circle_number(last4_c - 3)] == DIV) 
+            && (last4[circle_number(last4_c - 2)] == LEFT_BRACKET) 
+            && (last4[circle_number(last4_c - 1)] == ZERO_NUMBER) 
+            && (last4[last4_c] == RIGHT_BRACKET)){
+
+            return SEM_ERR_ZERO_DIV;
+        }
+
+
 
 		if (top_stack_terminal == NULL){
 			free_resources();
@@ -390,6 +435,13 @@ int expression(struct parser_data* data, bool *nondetermism){
                     free_resources();
                     return ERROR_INTERNAL;
                 }
+
+                if (last4_c == 3){
+                    last4_c = 0;
+                }
+                else {
+                    last4_c++;
+                }
                 //TU POSLAT INFO PARSERU 
                 result_exp = get_token(&data->token);
                 if ((*nondetermism == true) && (resolved_d == false)){
@@ -400,6 +452,7 @@ int expression(struct parser_data* data, bool *nondetermism){
                         return SYN_OK;
                     }
                 }
+
                 
                 if ((result_exp)){
                     free_resources();
@@ -410,11 +463,19 @@ int expression(struct parser_data* data, bool *nondetermism){
             case E:
                 stack_push(&stack, actual_symbol, get_data_type(data));
 
+                if (last4_c == 3){
+                    last4_c = 0;
+                }
+                else {
+                    last4_c++;
+                }
+
                 result_exp = get_token(&data->token);
                 if ((result_exp)){
                     free_resources();
                     return result_exp;
                 }
+
                 break;
 
             case R:
