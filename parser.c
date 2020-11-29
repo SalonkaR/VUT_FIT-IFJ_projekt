@@ -21,8 +21,6 @@ bool internal_error = false;
 bool non_det = false;
 bool bad_returns = false;
 
-
-int counterVar = 1;
 int result;
 
 
@@ -64,15 +62,6 @@ int check_type(enum t_type param)
     if (data.token.type != param)
     {
         return SYN_ERR;
-    }
-    return SYN_OK;
-}
-
-int check_rule(int rule())
-{
-    if ((result = rule()))
-    {
-        return result;
     }
     return SYN_OK;
 }
@@ -139,7 +128,7 @@ int start()
 {
   // pravidlo <start> -> <eol> package main EOL <eol> <prog> EOF
     if (check_type(T_TYPE_EOL) != SYN_ERR)
-    {  
+    {
       eol();
     }
     //printf("----------------0. TOKEN START TYPE = %d -------------\n",data.token.type);
@@ -196,7 +185,10 @@ int prog()
       //printf("----------------1. TOKEN PROG -TYPE = %d -------------\n",data.token.type);
       //printf("----------------2. TOKEN PROG MAM IF-TYPE = %d -------------\n",check_type(T_TYPE_IDENTIFIER));
       if (check_type(T_TYPE_IDENTIFIER) == SYN_ERR) return SYN_ERR;
+      
       BT_insert(&data.BT_global, data.token.attribute.string->str, &internal_error);
+      bt_stack_push(&data.BT_stack);
+
       if (internal_error == true) return ERROR_INTERNAL;
       
       if (check_token() == LEX_ERR){
@@ -299,6 +291,8 @@ int prog()
       if (check_type(T_TYPE_RIGHT_VINCULUM) == SYN_ERR ){
         return SYN_ERR;
       }
+
+      bt_stack_pop(&data.BT_stack);
 
       if (check_token() == LEX_ERR){
     	  return LEX_ERR;
@@ -1119,12 +1113,12 @@ int values_n()
 int params()
 {
   // pravidlo <params> -> ID <type> <params_n>
-
-  //if (check_token() == LEX_ERR){
-  //  return LEX_ERR;
-  //}
   //printf("----------------0. TOKEN PARAMS TYPE = %d -------------\n",data.token.type);
   if (check_type(T_TYPE_IDENTIFIER) != SYN_ERR ){
+    
+    tBT_stack_item* top_of_the_stack = bt_stack_top(&data.BT_stack);
+    BT_insert(&top_of_the_stack->local_bt, data.token.attribute.string->str, &internal_error);
+    
     if (check_token() == LEX_ERR){
       return LEX_ERR;
     }
@@ -1197,8 +1191,6 @@ int params_n()
   else{
     return SYN_OK;
   }
-  //return SYN_OK;
-
   // pravidlo <params_n> ->epsilon
 
 }
@@ -1237,8 +1229,6 @@ int return_value()
   return SYN_OK;
   
   // pravidlo <return_value> -> epsilon
-     
-  
 }
 
 int return_value_n()
@@ -1247,8 +1237,6 @@ int return_value_n()
 
   //printf("----------------0. TOKEN RVN-TYPE = %d -------------\n",data.token.type);
   if ( check_type(T_TYPE_COMMA) != SYN_ERR ){
-      
-
       if (check_token() == LEX_ERR){
         return LEX_ERR;
       }
@@ -1274,8 +1262,6 @@ int return_value_n()
       else{
         return exit_return_value_n;
       }
-
-
       //printf("----------------4. TOKEN RVN-TYPE = %d -------------\n",data.token.type);
       return SYN_OK;
   }
@@ -1299,6 +1285,8 @@ int type()
        ( check_keyword(KWORD_FLOAT64) != SYN_ERR )  ||
        ( check_keyword(KWORD_STRING) != SYN_ERR )) {
       //printf("  ----> SOM V TYPE OK = %d  <---- \n",data.token.type);
+      
+      
       return SYN_OK;
   }
   //printf("  ----> SOM V TYPE ERR = %d  <---- \n",data.token.type);
