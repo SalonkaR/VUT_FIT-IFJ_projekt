@@ -17,7 +17,7 @@ all: ifj20
 test_lex: test-lex
 test_symtable: test-symtable
 test_parser: test-parser
-
+test_sem: test-sem
 
 #preklad hlavneho compilatoru
 ifj20: ifj20proj.o parser.o str.o scanner.o expression.o symtable.o stack.o bt_stack.o
@@ -32,6 +32,9 @@ test-symtable: test-symtable.o symtable.o str.o scanner.o
 	$(CC) $(CFLAGS) -g -o $@ $^
 
 test-parser: test-parser.o parser.o str.o scanner.o expression.o symtable.o stack.o bt_stack.o
+	$(CC) $(CFLAGS) -g -o $@ $^
+
+test-sem: test-sem.o parser.o str.o scanner.o expression.o symtable.o stack.o bt_stack.o
 	$(CC) $(CFLAGS) -g -o $@ $^
 #--------------------------------------
 #objektove subory
@@ -67,6 +70,9 @@ parser.o: parser.c parser.h expression.h symtable.h str.h error.h scanner.h bt_s
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 test-parser.o: tests/test-parser.c parser.h symtable.h str.h error.h scanner.h
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+test-sem.o: tests/test-sem.c parser.h symtable.h str.h error.h scanner.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 #ostatne prikazy

@@ -3,7 +3,7 @@ package main
 
 
 func foo () {
-    id := defined() 
+    id = defined() 
 }
 
 
