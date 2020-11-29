@@ -17,6 +17,8 @@
 
 struct parser_data data;
 
+struct str_struct *temp_string;
+
 bool internal_error = false;
 bool non_det = false;
 bool bad_returns = false;
@@ -612,7 +614,7 @@ int body()
 
   else if(check_type(T_TYPE_IDENTIFIER) == SYN_OK){
 
-      char temp[] = data.token.attribute.string->str;
+      str_copy(data.token.attribute.string, temp_string);
 
       //printf("---------------- TOKEN IDENTIFIER TYPE = %d -------------\n",data.token.type);
       if (check_token() == LEX_ERR){
@@ -663,7 +665,7 @@ int body()
       else if (check_type(T_TYPE_VARIABLE_DEFINITION) != SYN_ERR ){
         // pravidlo <body> -> ID := <expression> EOL <eol> <body>
 
-        BT_insert(&data.BT_stack, temp, &internal_error);
+        BT_insert(&data.BT_global, temp_string->str, &internal_error);
 
         if (check_token() == LEX_ERR){
           return LEX_ERR;
@@ -891,7 +893,7 @@ int definition()
   if (check_type(T_TYPE_IDENTIFIER) != SYN_ERR ){
       
       bt_stack_push(&data.BT_stack);
-      BT_insert(&data.BT_stack, data.token.attribute.string->str, &internal_error);
+      BT_insert(&data.BT_global, data.token.attribute.string->str, &internal_error);
 
       if (check_token() == LEX_ERR){
         return LEX_ERR;
@@ -1416,6 +1418,10 @@ bool init_variables()
     if(data.token.attribute.string == NULL) return ERROR_INTERNAL;
     if(str_init(data.token.attribute.string) == false) return false;
     
+    temp_string = malloc(sizeof(struct str_struct));
+    if(temp_string == NULL) return ERROR_INTERNAL;
+    if(str_init(temp_string) == false) return false;
+
     return true;
 }
 
@@ -1426,6 +1432,10 @@ void free_variables()
     str_clear(data.token.attribute.string);
     str_free(data.token.attribute.string);
     if((data.token.attribute.string) != NULL) free(data.token.attribute.string);
+
+    str_clear(temp_string);
+    str_free(temp_string);
+    if((temp_string) != NULL) free(temp_string);
 }
 
 int parse()
