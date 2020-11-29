@@ -13,6 +13,7 @@
 #include "parser.h"
 #include "error.h"
 #include "expression.h"
+#include "bt_stack.h"
 
 struct parser_data data;
 
@@ -1405,9 +1406,10 @@ int value()
 bool init_variables()
 {
     data.BT_global.definded = false;  //som retard a musim to spravit
-    data.BT_local.definded = false;   //tu tiez to iste
     if(BT_init(&data.BT_global) == false) return false;
-    if(BT_init(&data.BT_local) == false) return false;
+
+    bt_stack_init(&data.BT_stack);
+    
     data.token.attribute.string = malloc(sizeof(struct str_struct));
     if(data.token.attribute.string == NULL) return ERROR_INTERNAL;
     if(str_init(data.token.attribute.string) == false) return false;
@@ -1418,7 +1420,7 @@ bool init_variables()
 void free_variables()
 {
     BT_dispose(&data.BT_global);
-    BT_dispose(&data.BT_local);
+    bt_stack_free(&data.BT_stack);
     str_clear(data.token.attribute.string);
     str_free(data.token.attribute.string);
     if((data.token.attribute.string) != NULL) free(data.token.attribute.string);

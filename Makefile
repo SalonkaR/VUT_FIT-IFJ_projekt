@@ -18,9 +18,11 @@ test_lex: test-lex
 test_symtable: test-symtable
 test_parser: test-parser
 
+
 #preklad hlavneho compilatoru
-ifj20: ifj20proj.o parser.o str.o scanner.o expression.o symtable.o stack.o
+ifj20: ifj20proj.o parser.o str.o scanner.o expression.o symtable.o stack.o bt_stack.o
 	$(CC) $(CFLAGS) -o $@ $^
+
 
 #preklad testovacich programov
 test-lex: test-lex.o str.o scanner.o
@@ -53,6 +55,9 @@ test-lex.o: tests/test-lex.c scanner.h str.h error.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 symtable.o: symtable.c symtable.h str.h
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+bt_stack.o: bt_stack.c bt_stack.h symtable.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 test-symtable.o: tests/test-symtable.c symtable.h str.h error.h scanner.h

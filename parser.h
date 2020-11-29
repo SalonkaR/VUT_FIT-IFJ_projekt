@@ -12,11 +12,12 @@
 
 #include "symtable.h"
 #include "scanner.h"
+#include "bt_stack.h"
 
 struct parser_data
 {
     tBT BT_global;
-    tBT BT_local;
+    tBT_stack BT_stack;
     struct token token;
     bool in_if_for;
 };

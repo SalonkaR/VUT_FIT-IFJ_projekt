@@ -15,16 +15,14 @@
 
 
 
-typedef struct stack_item
-{
+typedef struct stack_item{
 	Prec_table_symbol symbol; //symbol na stacku
 	enum data_types data_type; //typ dat
 	struct stack_item *next; // ukazatel na dalsi prvok()
 } tStack_item;
 
 
-typedef struct stack
-{
+typedef struct stack{
 	tStack_item *top; //ukazatel na vrchol stacku
 } tStack;
 
