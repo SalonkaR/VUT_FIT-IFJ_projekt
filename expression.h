@@ -49,7 +49,8 @@ typedef enum{
 	STRING,			// string                                           c = 15
 	DOLLAR,			// $                                                c = 16
 	STOP,			// symbol ktory pouzijem pri redukcii( < )          c = 17
-	NON_TERM		// neterminal(E)                                    c = 18
+	NON_TERM,		// neterminal(E)                                    c = 18
+	ZERO_NUMBER		//pouzite pri konotrolovani delenia nulov			c = 19
 } Prec_table_symbol;
 
 
