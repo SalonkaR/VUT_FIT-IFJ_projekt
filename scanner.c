@@ -500,7 +500,7 @@ int get_token(struct token *token)
 				{
 					hexVal[1] = c;
 					int decimal = hexadecimalToDecimal(hexVal);
-					printf("decimal = %d, hexVAl = %s\n", decimal, hexVal);
+					//printf("decimal = %d, hexVAl = %s\n", decimal, hexVal);
 					str_add_char(str, (char) decimal);
 					state = STATE_STRING;
 					break;

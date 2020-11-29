@@ -32,7 +32,7 @@ size_t BT_hash_fun(hKey_t str){
 
 bool BT_init   (tBT *bt_ptr){
     if (bt_ptr->definded == true){
-        printf("Binarny strom je uz inicializovany(symtable.c/BT_init)\n");
+        fprintf(stderr, "Binarny strom je uz inicializovany(symtable.c/BT_init)\n");
         return false;
     }
     bt_ptr->definded = true;
@@ -46,7 +46,7 @@ bool BT_init   (tBT *bt_ptr){
 Data_t *BT_search  (tBT *bt_ptr, hKey_t key, bool *internal_error){
     //skontrolujem ci je definovany binarny strom
     if (bt_ptr->definded != true){
-        printf("V nedefinovanom strome sa neda hladat(symtable.c/iBT_search)\n");
+        fprintf(stderr, "V nedefinovanom strome sa neda hladat(symtable.c/iBT_search)\n");
         *(internal_error) = true;
         return NULL;
     }
@@ -104,7 +104,7 @@ static Data_t *search_rec(tNode *root_ptr, size_t hash_k, hKey_t key){
 Data_t *BT_insert (tBT *bt_ptr, hKey_t key, bool *internal_error){
     //skontrolujem ci je definovany binarny strom
     if (bt_ptr->definded != true){
-        printf("V nedefinovanom strome sa neda hladat(symtable.c/BT_insert)\n");
+        fprintf(stderr, "V nedefinovanom strome sa neda hladat(symtable.c/BT_insert)\n");
         *(internal_error) = true;
         return NULL;
     }
@@ -128,7 +128,7 @@ static Data_t *insert_rec (tBT *bt_ptr, tNode *parent_ptr, tNode* root_ptr,size_
         //alokovanie novej nody
 		tNode *newPtr = malloc(sizeof(struct Node));
 		if (newPtr == NULL){
-            printf("Neuspech mallocu v insert_rec, allocovanie listu(symtable.c/insert_rec)\n");
+            fprintf(stderr, "Neuspech mallocu v insert_rec, allocovanie listu(symtable.c/insert_rec)\n");
             *(internal_error) = true;
 			return NULL;
 		}
@@ -136,7 +136,7 @@ static Data_t *insert_rec (tBT *bt_ptr, tNode *parent_ptr, tNode* root_ptr,size_
         Data_t *newPtr_data = malloc(sizeof(struct data));
 		if (newPtr_data == NULL){
             free(newPtr);
-            printf("Neuspech mallocu v insert_rec, allocovanie dat(symtable.c/insert_rec)\n");
+            fprintf(stderr, "Neuspech mallocu v insert_rec, allocovanie dat(symtable.c/insert_rec)\n");
             *(internal_error) = true;
 			return NULL;
 		}
@@ -146,7 +146,7 @@ static Data_t *insert_rec (tBT *bt_ptr, tNode *parent_ptr, tNode* root_ptr,size_
         if (newPtr_data->identifier == NULL){
             free(newPtr_data);
             free(newPtr);
-            printf("Neuspech mallocu v insert_rec, allocovanie identifikatoru(symtable.c/insert_rec)\n");
+            fprintf(stderr, "Neuspech mallocu v insert_rec, allocovanie identifikatoru(symtable.c/insert_rec)\n");
             *(internal_error) = true;
 			return NULL;
         }
@@ -195,7 +195,7 @@ static Data_t *insert_rec (tBT *bt_ptr, tNode *parent_ptr, tNode* root_ptr,size_
                 //alokovanie dat
                 Data_t *newPtr_data = malloc(sizeof(struct data));
                 if (newPtr_data == NULL){
-                    printf("Neuspech mallocu v insert_rec, allocovanie dat(symtable.c/insert_rec)\n");
+                    fprintf(stderr, "Neuspech mallocu v insert_rec, allocovanie dat(symtable.c/insert_rec)\n");
                     *(internal_error) = true;
                     return NULL;
                 }
@@ -204,7 +204,7 @@ static Data_t *insert_rec (tBT *bt_ptr, tNode *parent_ptr, tNode* root_ptr,size_
                 newPtr_data->identifier = (char *)malloc((strlen(key) + 1) * sizeof(char));
                 if (newPtr_data->identifier == NULL){
                     free(newPtr_data);
-                    printf("Neuspech mallocu v insert_rec, allocovanie identifikatoru(symtable.c/insert_rec)\n");
+                    fprintf(stderr, "Neuspech mallocu v insert_rec, allocovanie identifikatoru(symtable.c/insert_rec)\n");
                     *(internal_error) = true;
                     return NULL;
                 }
@@ -233,7 +233,7 @@ static Data_t *insert_rec (tBT *bt_ptr, tNode *parent_ptr, tNode* root_ptr,size_
 bool BT_delete (tBT *bt_ptr, hKey_t key, bool *internal_error){
     //skontrolujem ci je definovany binarny strom
     if (bt_ptr->definded != true){
-        printf("V nedefinovanom strome sa neda hladat(symtable.c/BT_delete)\n");
+        fprintf(stderr, "V nedefinovanom strome sa neda hladat(symtable.c/BT_delete)\n");
         *(internal_error) = true;
         return false;
     }
@@ -273,7 +273,6 @@ static void ReplaceByRightmost (tBT *bt_ptr, tNode *parent_ptr, tNode *PtrReplac
 
         }
         else{
-            printf("SOM TUUUUUUUUUUUUUUUuuu\n");
             parent_ptr->RPtr = parent_ptr->RPtr->LPtr;
 
             counter = 1;
@@ -481,8 +480,7 @@ static void delete_rec(tBT *bt_ptr, tNode *parent_ptr, tNode *RootPtr, size_t ha
 bool BT_dispose (tBT *bt_ptr){
     //skontrolujem ci je definovany binarny strom
     if (bt_ptr->definded != true){
-        printf("TU SA NEDA HLADAAAAT????\n");
-        printf("V nedefinovanom strome sa neda hladat(symtable.c/BT_dispose)\n");
+        fprintf(stderr, "V nedefinovanom strome sa neda hladat(symtable.c/BT_dispose)\n");
         return false;
     }
 
