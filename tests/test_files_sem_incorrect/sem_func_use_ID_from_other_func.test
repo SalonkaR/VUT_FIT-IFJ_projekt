@@ -1,0 +1,11 @@
+package main
+
+func foo () {
+    tmp := 0
+}
+
+
+
+func main () {
+    tmp = 4
+}

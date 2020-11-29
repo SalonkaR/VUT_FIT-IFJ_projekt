@@ -1,0 +1,7 @@
+package main
+
+func main () {
+    a = a+b
+    a := 32
+    b := 10
+}

@@ -1,0 +1,16 @@
+package main
+
+
+
+func foo () {
+    id := defined() 
+}
+
+
+func defined() {
+    return 5
+}
+
+func main () {
+
+}

@@ -1,0 +1,7 @@
+package main
+
+func main(){
+    a := 0
+    b := "mampici"
+    a = len(b)
+}

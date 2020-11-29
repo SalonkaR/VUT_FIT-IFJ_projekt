@@ -1,0 +1,13 @@
+package main
+
+func defined() {
+    return 5
+}
+
+func foo () {
+    tmp := defined() 
+}
+
+func main () {
+
+}
