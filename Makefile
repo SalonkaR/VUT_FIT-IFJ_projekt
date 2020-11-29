@@ -31,7 +31,7 @@ test-lex: test-lex.o str.o scanner.o
 test-symtable: test-symtable.o symtable.o str.o scanner.o
 	$(CC) $(CFLAGS) -g -o $@ $^
 
-test-parser: test-parser.o parser.o str.o scanner.o expression.o symtable.o stack.o
+test-parser: test-parser.o parser.o str.o scanner.o expression.o symtable.o stack.o bt_stack.o
 	$(CC) $(CFLAGS) -g -o $@ $^
 #--------------------------------------
 #objektove subory

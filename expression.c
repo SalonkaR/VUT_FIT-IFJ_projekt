@@ -114,10 +114,9 @@ static Prec_table_symbol get_symbol_from_token(struct token* token){
 
 static enum data_types get_data_type(struct parser_data *data){
 	Data_t* symbol;
-
+    bool internal_err;
 	switch (data->token.type){
         case T_TYPE_IDENTIFIER:
-        bool internal_err;
             symbol = bt_stack_search(&data->BT_stack, data->token.attribute.string->str, &internal_err);
             if (symbol == NULL)
                 return TYPE_UNDEFINED;

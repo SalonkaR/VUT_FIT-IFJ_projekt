@@ -77,6 +77,7 @@ int check_keyword(enum keyword kword)
     return SYN_OK;
 }
 
+/* vykresli sktrukturu binarniho stromu */
 void Print_tree2(tNode *TempTree, char* sufix, char fromdir){   
      if (TempTree != NULL)
      {
@@ -122,14 +123,14 @@ void Print_tree(tNode *TempTree)
      printf("strom je prazdny\n");
   printf("\n");
   printf("=================================================\n");
-}
+} 
 
 int start()
 {
   // pravidlo <start> -> <eol> package main EOL <eol> <prog> EOF
     if (check_type(T_TYPE_EOL) != SYN_ERR)
     {
-      eol();
+        eol();
     }
     //printf("----------------0. TOKEN START TYPE = %d -------------\n",data.token.type);
     if (data.token.type == T_TYPE_KEYWORD && data.token.attribute.keyword == KWORD_PACKAGE)
@@ -611,6 +612,8 @@ int body()
 
   else if(check_type(T_TYPE_IDENTIFIER) == SYN_OK){
 
+      char temp[] = data.token.attribute.string->str;
+
       //printf("---------------- TOKEN IDENTIFIER TYPE = %d -------------\n",data.token.type);
       if (check_token() == LEX_ERR){
         return LEX_ERR;
@@ -659,6 +662,9 @@ int body()
       }
       else if (check_type(T_TYPE_VARIABLE_DEFINITION) != SYN_ERR ){
         // pravidlo <body> -> ID := <expression> EOL <eol> <body>
+
+        BT_insert(&data.BT_stack, temp, &internal_error);
+
         if (check_token() == LEX_ERR){
           return LEX_ERR;
         }          
@@ -883,6 +889,10 @@ int definition()
 
   //printf("----------------0. TOKEN DEFINITION TYPE = %d -------------\n",data.token.type);
   if (check_type(T_TYPE_IDENTIFIER) != SYN_ERR ){
+      
+      bt_stack_push(&data.BT_stack);
+      BT_insert(&data.BT_stack, data.token.attribute.string->str, &internal_error);
+
       if (check_token() == LEX_ERR){
         return LEX_ERR;
       }
@@ -1159,6 +1169,10 @@ int params_n()
     if (check_type(T_TYPE_IDENTIFIER) == SYN_ERR ){
       return SYN_ERR;
     }
+
+    tBT_stack_item* top_of_the_stack = bt_stack_top(&data.BT_stack);
+    BT_insert(&top_of_the_stack->local_bt, data.token.attribute.string->str, &internal_error);
+
     if (check_token() == LEX_ERR){
       return LEX_ERR;
     }
@@ -1426,7 +1440,7 @@ int parse()
     {
         result = start(&data);
         bad_returns = false;
-        //Print_tree(data.BT_global.root_ptr);
+        Print_tree(data.BT_global.root_ptr);
         //funkcia s ID main musi byt obsiahnuta 
         // TO DO, toto si pekne pojebal ...
 
