@@ -39,7 +39,7 @@ test-parser: test-parser.o parser.o str.o scanner.o expression.o symtable.o stac
 ifj20proj.o: ifj20proj.c parser.h scanner.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-expression.o: expression.c parser.h expression.h error.h scanner.h stack.h symtable.h 
+expression.o: expression.c parser.h expression.h error.h scanner.h stack.h symtable.h bt_stack.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 stack.o: stack.c stack.h expression.h symtable.h
@@ -63,7 +63,7 @@ bt_stack.o: bt_stack.c bt_stack.h symtable.h
 test-symtable.o: tests/test-symtable.c symtable.h str.h error.h scanner.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-parser.o: parser.c parser.h expression.h symtable.h str.h error.h scanner.h
+parser.o: parser.c parser.h expression.h symtable.h str.h error.h scanner.h bt_stack.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 test-parser.o: tests/test-parser.c parser.h symtable.h str.h error.h scanner.h

@@ -11,6 +11,7 @@
 #include "expression.h"
 #include "stack.h"
 #include "error.h"
+#include "bt_stack.h"
 #include "parser.h"
 
 
@@ -112,16 +113,15 @@ static Prec_table_symbol get_symbol_from_token(struct token* token){
 }
 
 static enum data_types get_data_type(struct parser_data *data){
-	Data_t* symbol; //will be used
+	Data_t* symbol;
 
 	switch (data->token.type){
         case T_TYPE_IDENTIFIER:
-        //TODO
-            // symbol = BT_search(&data->local_table, token->attribute.string->str);
-            // if (symbol == NULL)
-            //     return TYPE_UNDEFINED;
-            // return symbol->type;
-            return TYPE_UNDEFINED;
+        bool internal_err;
+            symbol = bt_stack_search(&data->BT_stack, data->token.attribute.string->str, &internal_err);
+            if (symbol == NULL)
+                return TYPE_UNDEFINED;
+            return symbol->type;
 
         case T_TYPE_INTEGER:
             return TYPE_INT;
@@ -226,8 +226,6 @@ static int check_sem(Prec_rules rule, tStack_item* op1, tStack_item* op2, tStack
         }
     }
 
-    //semanticka kontrola aritmetickych operacii
-    //TODO
     switch(rule){
         case E_EQ_E:
         case E_NEQ_E:
@@ -235,18 +233,47 @@ static int check_sem(Prec_rules rule, tStack_item* op1, tStack_item* op2, tStack
         case E_L_E:
         case E_MEQ_E:
         case E_M_E:
+
+            *type_after_reduce = TYPE_BOOL;
+            if ((op1->data_type == TYPE_STRING) || (op3->data_type == TYPE_STRING) ){
+                return SEM_ERR_EXP;
+            }
+            if ((op1->data_type == TYPE_INT) && (op3->data_type == TYPE_DOUBLE) ){
+                return SEM_ERR_EXP;
+            }
+            if ((op1->data_type == TYPE_DOUBLE) && (op3->data_type == TYPE_INT) ){
+                return SEM_ERR_EXP;
+            }
             break;
         case E_PLUS_E:
-            break;
+            if ((op1->data_type == TYPE_STRING) && (op3->data_type == TYPE_STRING) ){
+                *type_after_reduce = TYPE_STRING;
+                break;
+            }
         case E_MINUS_E:
-            break;
         case E_MUL_E:
-            break;
         case E_DIV_E:
+            if ((op1->data_type == TYPE_STRING) || (op3->data_type == TYPE_STRING) ){
+                return SEM_ERR_EXP;
+            }
+
+            if ((op1->data_type == TYPE_INT) && (op3->data_type == TYPE_INT) ){
+                *type_after_reduce = TYPE_INT;
+                break;
+            }
+            else if ((op1->data_type == TYPE_DOUBLE) && (op3->data_type == TYPE_DOUBLE) ){
+                *type_after_reduce = TYPE_DOUBLE;
+                break;
+            }
+            else {
+                return SEM_ERR_EXP;
+            }
             break;
         case E_BRACKETS:
+            *type_after_reduce = op2->data_type;
             break;
         case OPERAND:
+            *type_after_reduce = op1->data_type;
             break;
 
         default:
@@ -272,7 +299,7 @@ static int reduce(){
 	tStack_item* op1 = NULL;
 	tStack_item* op2 = NULL;
 	tStack_item* op3 = NULL;
-	enum data_types type_after_reduce = TYPE_INT; //ZMENIT NA NEDEFINOIVANE //TODO
+	enum data_types type_after_reduce = TYPE_UNDEFINED;
 	Prec_rules rule;
 	bool found = false;
 
@@ -301,25 +328,16 @@ static int reduce(){
 		rule = test_rule(count, op1, op2, op3);
 	}
 	else{
-        //printf("TU SOM V EXPRESSION4\n");
 		return SYN_ERR;
     }
 
 	if (rule == NOT_A_RULE){
-        //printf("TU SOM V EXPRESSION5\n");
 		return SYN_ERR;
 	}
 	else{
-        // //skontrolujem semantiku vyrazu
-		// if ((result = check_sem(rule, op1, op2, op3, &type_after_reduce))){
-		// 	return result;
-        // }
-
-		if (rule == E_PLUS_E && type_after_reduce == TYPE_STRING){
-			//GENERATE_CODE(generate_concat_stack_strings);
-		}
-		else {
-            //GENERATE_CODE(generate_stack_operation, rule);
+        //skontrolujem semantiku vyrazu
+		if ((result = check_sem(rule, op1, op2, op3, &type_after_reduce))){
+			return result;
         }
 
         //popnem count+1 znakov
