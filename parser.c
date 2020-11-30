@@ -590,6 +590,7 @@ int body()
         }
         //printf("----------------1. TOKEN body MAM IF if-TYPE = %d -------------\n",data.token.type);
         int exit_list_of_return_values = list_of_return_values();
+        //printf("----------------exit lorv = %d -------------\n",exit_list_of_return_values);
         if (exit_list_of_return_values != SYN_OK){ 
           return exit_list_of_return_values;
         } 
@@ -842,15 +843,17 @@ int body()
               return SYN_ERR;
             }
             //printf("----------------1. else if = TYPE = %d -------------\n",data.token.type);
-            if (eol() != SYN_OK){ 
-              return SYN_ERR;
+            int exit_eol = eol();
+            if (exit_eol != SYN_OK){ 
+              return exit_eol;
             }
             //printf("----------------1.5 else if = TYPE = %d -------------\n",data.token.type);
             if (check_type(T_TYPE_RIGHT_VINCULUM) == SYN_ERR ){
               //printf("---------------2. else if-TYPE = %d -------------\n",data.token.type);
-              if (body() != SYN_OK){ 
+              int exit_body = body();
+              if (exit_body != SYN_OK){ 
                 //printf("----------------3. else if-TYPE = %d -------------\n",data.token.type);        
-                return SYN_ERR;
+                return exit_body;
               }
               
               if (check_type(T_TYPE_EOF) == SYN_OK ){
@@ -1016,11 +1019,11 @@ int list_of_return_values()
 {
   // pravidlo <list_of_return_values> -> <values>
   //printf("----------------LORV TYPE = %d -------------\n",data.token.type);
-  int exit_values = value();
-  if( values() != SYN_OK ){
-    //printf("----------------SYN ERR LORV TYPE = %d -------------\n",data.token.type);
+  int exit_values = values();
+  if( exit_values != SYN_OK ){
+    //printf("----------------SYN ERR LORV TYPE = %d -------------\n",exit_values);
     // to do tu sa to jebe  pri rekurzii 
-    return SYN_ERR;
+    return exit_values;
   }
 
   // pravidlo <list_of_return_values> -> epsilon
@@ -1051,10 +1054,10 @@ int values()
     //printf("----------------1. VALUES TYPE = %d -------------\n",data.token.type);
     int vys_values_n = values_n();
     //printf("----------------VYS VN VALUES TYPE = %d -------------\n",vys_values_n);
-    if ( vys_values_n == SYN_ERR){ 
-      //printf("----------------1.5 VALUES TYPE = %d -------------\n",data.token.type);
+    if ( vys_values_n != SYN_OK){ 
+      //printf("----------------1.5 VALUES TYPE = %d -------------\n",vys_values_n);
       //bad_returns = false;
-      return SYN_ERR;
+      return vys_values_n;
     }
     //printf("----------------exit VALUES TYPE = %d -------------\n",data.token.type);
     if (bad_returns == false){
@@ -1063,8 +1066,10 @@ int values()
     
   }
   else{
+    //printf("--------------RESULT VALUES TYPE = %d -------------\n",data.token.type);
     return result_exp;
   }
+  //printf("--------------syn err VALUES TYPE = %d -------------\n",data.token.type);
   return SYN_ERR;
 }
 
@@ -1085,7 +1090,9 @@ int values_n()
       //printf("VYSLEDOK EXPRESSION VO <VALUES_N> = %d\n", result_exp);
       if( result_exp != SYN_OK ){
         //printf("---------------- BAD RETURNS = %d -------------\n",result_exp);
-        bad_returns = true;
+        if (result_exp == SYN_ERR){
+          bad_returns = true;
+        }
         return result_exp;
       }
       //printf("----------------1.5 VALUES NEXT TYPE = %d -------------\n",data.token.type);
