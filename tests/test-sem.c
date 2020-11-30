@@ -101,7 +101,7 @@ void kontrola_sem(){
                             "tests/test_files_sem_incorrect/sem_no_main.test",
                             "tests/test_files_sem_incorrect/sem_func_use_nonexist_ID_value.test",
                             "tests/test_files_sem_incorrect/sem_func_use_ID_from_other_func.test",
-                            "tests/test_files_sem_incorrect/sem_fun_change_toomany_ID_values.test",
+                            "tests/test_files_sem_incorrect/sem_func_change_toomany_ID_values.test",
                             "tests/test_files_sem_incorrect/sem_func_change_nondef_ID_value.test",};
     
     printf("\n\n TESTY NA SUBOROCH KTORE BY MALI VRACAT SYN_ERR\n");
