@@ -347,6 +347,9 @@ int body()
           if (check_type(T_TYPE_LEFT_VINCULUM) == SYN_ERR ){
             return SYN_ERR;
           }
+
+          bt_stack_push(&data.BT_stack);
+
           if (check_token() == LEX_ERR){
             return LEX_ERR;
           }
@@ -387,6 +390,7 @@ int body()
             return SYN_ERR;
           }
           
+          bt_stack_pop(&data.BT_stack);
 
           if (check_token() == LEX_ERR){
             return LEX_ERR;
@@ -395,7 +399,10 @@ int body()
 
           if (check_keyword(KWORD_ELSE) == SYN_ERR ){
             return SYN_ERR;
-          }  
+          }
+
+          bt_stack_push(&data.BT_stack);
+
           if (check_token() == LEX_ERR){
             return LEX_ERR;
           }
@@ -441,6 +448,8 @@ int body()
             return SYN_ERR;
           }
           
+          bt_stack_pop(&data.BT_stack);
+
           if (check_token() == LEX_ERR){
             return LEX_ERR;
           }
@@ -473,6 +482,9 @@ int body()
           if (check_token() == LEX_ERR){
             return LEX_ERR;
           }
+
+          bt_stack_push(&data.BT_stack);
+
           //printf("----------------1 TOKEN BODY MAM IF FOR-TYPE = %d -------------\n",data.token.type);
           int exit_definition = definition();
           if (exit_definition != SYN_OK){ 
@@ -519,6 +531,9 @@ int body()
           if (check_type(T_TYPE_LEFT_VINCULUM) == SYN_ERR ){
             return SYN_ERR;
           }
+
+          bt_stack_push(&data.BT_stack);
+
           if (check_token() == LEX_ERR){
             return LEX_ERR;
           }
@@ -575,6 +590,10 @@ int body()
               return exit_eol2;
             }
           }
+
+          bt_stack_pop(&data.BT_stack);
+          bt_stack_pop(&data.BT_stack);
+
           int exit_body2 = body();
           if (exit_body2 != SYN_OK){ 
             return exit_body2;
@@ -625,6 +644,17 @@ int body()
       int exit_ids = ids();
       if (check_type(T_TYPE_LEFT_BRACKET) != SYN_ERR ){
         // pravidlo <body> -> ID ( <argument> ) EOL <eol> <body>
+        bool result_internal_error = false;
+        Data_t *result_bt_search = BT_search(&data.BT_global, temp_string->str, &result_internal_error);
+        if(result_internal_error == true){
+            return ERROR_INTERNAL;
+        }
+        if(result_bt_search == NULL)
+        {
+            return SEM_ERR_UNDEFINED_VAR;
+        }
+        
+
         //printf("----------------0. TOKEN BODY MAM ID-TYPE = %d -------------\n",data.token.type);
         if (check_token() == LEX_ERR){
           return LEX_ERR;
@@ -665,8 +695,9 @@ int body()
       }
       else if (check_type(T_TYPE_VARIABLE_DEFINITION) != SYN_ERR ){
         // pravidlo <body> -> ID := <expression> EOL <eol> <body>
-
-        BT_insert(&data.BT_global, temp_string->str, &internal_error);
+        
+        tBT_stack_item* top_of_the_stack = bt_stack_top(&data.BT_stack);
+        BT_insert(&top_of_the_stack->local_bt, temp_string->str, &internal_error);
 
         if (check_token() == LEX_ERR){
           return LEX_ERR;
@@ -895,8 +926,9 @@ int definition()
   //printf("----------------0. TOKEN DEFINITION TYPE = %d -------------\n",data.token.type);
   if (check_type(T_TYPE_IDENTIFIER) != SYN_ERR ){
       
-      bt_stack_push(&data.BT_stack);
-      BT_insert(&data.BT_global, data.token.attribute.string->str, &internal_error);
+      tBT_stack_item* top_of_the_stack = bt_stack_top(&data.BT_stack);
+      BT_insert(&top_of_the_stack->local_bt, data.token.attribute.string->str, &internal_error);
+    
 
       if (check_token() == LEX_ERR){
         return LEX_ERR;
@@ -1436,6 +1468,7 @@ void free_variables()
 {
     BT_dispose(&data.BT_global);
     bt_stack_free(&data.BT_stack);
+    
     str_clear(data.token.attribute.string);
     str_free(data.token.attribute.string);
     if((data.token.attribute.string) != NULL) free(data.token.attribute.string);
@@ -1458,11 +1491,8 @@ int parse()
         result = start(&data);
         bad_returns = false;
         Print_tree(data.BT_global.root_ptr);
-        //funkcia s ID main musi byt obsiahnuta 
-        // TO DO, toto si pekne pojebal ...
-
-
-        //if(BT_search(&data.BT_global, "main", &internal_error) == NULL) result = SYN_ERR;
+        //funkcia s ID main musi byt obsiahnuta
+        //if(BT_search(&data.BT_global, "main", &internal_error) == NULL) result = SEM_ERR_UNDEFINED_VAR;
     }
     //uvolnenie pamate 
     free_variables();
