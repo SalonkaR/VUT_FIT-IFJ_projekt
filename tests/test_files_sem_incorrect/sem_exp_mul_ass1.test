@@ -1,0 +1,9 @@
+package main
+
+
+func main (){
+    jebo := 1 * 4
+    jebko := 10.5
+    jebo , jebko = 100, 3.1415
+
+}

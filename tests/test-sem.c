@@ -12,7 +12,7 @@
 
 
 #define FILE_COUNT_CORRECT 5
-#define FILE_COUNT_INCORRECT 6
+#define FILE_COUNT_INCORRECT 14
 
 void reset() {
   printf("\033[0m");
@@ -102,7 +102,15 @@ void kontrola_sem(){
                             "tests/test_files_sem_incorrect/sem_func_use_nonexist_ID_value.test",
                             "tests/test_files_sem_incorrect/sem_func_use_ID_from_other_func.test",
                             "tests/test_files_sem_incorrect/sem_func_change_toomany_ID_values.test",
-                            "tests/test_files_sem_incorrect/sem_func_change_nondef_ID_value.test",};
+                            "tests/test_files_sem_incorrect/sem_func_change_nondef_ID_value.test",
+                            "tests/test_files_sem_incorrect/sem_redef_var.test",
+                            "tests/test_files_sem_incorrect/sem_exp1.test",
+                            "tests/test_files_sem_incorrect/sem_exp_mul_ass1.test",
+                            "tests/test_files_sem_incorrect/sem_moreright1.test",
+                            "tests/test_files_sem_incorrect/sem_zero_div1.test",
+                            "tests/test_files_sem_incorrect/sem_zero_div2.test",
+                            "tests/test_files_sem_incorrect/sem_zero_div3.test",
+                            "tests/test_files_sem_incorrect/sem_zero_div4.test",};
     
     printf("\n\n TESTY NA SUBOROCH KTORE BY MALI VRACAT SYN_ERR\n");
     for (int i = 0; i < FILE_COUNT_INCORRECT; i++){

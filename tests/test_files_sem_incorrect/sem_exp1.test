@@ -1,0 +1,15 @@
+package main
+
+
+func main (){
+    jebo := 1 * 4
+    jebko := 10.5
+    if 1 != 2{
+        id := jebo - 10 * (1+2)
+        for i:= 1; i < 10; i = jebko + 1{
+
+        }
+    }else{
+
+    }
+}

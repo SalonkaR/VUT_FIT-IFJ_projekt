@@ -35,7 +35,6 @@ typedef struct data
     enum data_types type;
     hKey_t identifier;	 
 	bool defined;
-	bool global;
     struct data *nextptr;
 } Data_t;
 
