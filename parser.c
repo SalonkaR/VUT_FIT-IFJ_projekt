@@ -19,6 +19,8 @@ struct parser_data data;
 
 struct str_struct *temp_string;
 
+struct str_struct *func_id;
+
 bool internal_error = false;
 bool non_det = false;
 bool bad_returns = false;
@@ -180,7 +182,7 @@ int prog()
    //vypytam si dalsi token, ocakavam func
   //printf("----------------0. TOKEN PROG MAM - TYPE = %d -------------\n",data.token.type);
 
-  if ( check_keyword(KWORD_FUNC) != SYN_ERR ){
+  if (check_keyword(KWORD_FUNC) != SYN_ERR ){
 
       if (check_token() == LEX_ERR){
     	  return LEX_ERR;
@@ -188,8 +190,9 @@ int prog()
       //printf("----------------1. TOKEN PROG -TYPE = %d -------------\n",data.token.type);
       //printf("----------------2. TOKEN PROG MAM IF-TYPE = %d -------------\n",check_type(T_TYPE_IDENTIFIER));
       if (check_type(T_TYPE_IDENTIFIER) == SYN_ERR) return SYN_ERR;
+      str_copy(data.token.attribute.string, func_id);
       
-      BT_insert(&data.BT_global, data.token.attribute.string->str, &internal_error);
+      BT_insert(&data.BT_global, func_id->str, &internal_error);
       bt_stack_push(&data.BT_stack);
 
       if (internal_error == true) return ERROR_INTERNAL;
@@ -208,6 +211,9 @@ int prog()
       }
       //printf("----------------3. TOKEN PROG TYPE = %d -------------\n",data.token.type);
 
+      //main nemoze mat ziadne vstupne parametre
+      
+      if (check_type(T_TYPE_RIGHT_BRACKET) == SYN_ERR && str_cmp_const_str(func_id, "main") == 0) return SEM_ERR_NO_PARAMS;
 
     	if (check_type(T_TYPE_RIGHT_BRACKET) == SYN_ERR ){
         //printf("VOLAM PARAMS -----------\n");
@@ -698,6 +704,11 @@ int body()
         
         tBT_stack_item* top_of_the_stack = bt_stack_top(&data.BT_stack);
         BT_insert(&top_of_the_stack->local_bt, temp_string->str, &internal_error);
+
+
+
+        printf("%s\n", temp_string->str);
+        Print_tree(top_of_the_stack->local_bt.root_ptr);
 
         if (check_token() == LEX_ERR){
           return LEX_ERR;
@@ -1461,6 +1472,10 @@ bool init_variables()
     if(temp_string == NULL) return ERROR_INTERNAL;
     if(str_init(temp_string) == false) return false;
 
+    func_id = malloc(sizeof(struct str_struct));
+    if(func_id == NULL) return ERROR_INTERNAL;
+    if(str_init(func_id) == false) return false;
+
     return true;
 }
 
@@ -1476,6 +1491,10 @@ void free_variables()
     str_clear(temp_string);
     str_free(temp_string);
     if((temp_string) != NULL) free(temp_string);
+
+    str_clear(func_id);
+    str_free(func_id);
+    if((func_id) != NULL) free(func_id);
 }
 
 int parse()
