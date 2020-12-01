@@ -215,7 +215,6 @@ int prog()
       //printf("----------------3. TOKEN PROG TYPE = %d -------------\n",data.token.type);
 
       //main nemoze mat ziadne vstupne parametre
-      
       if (check_type(T_TYPE_RIGHT_BRACKET) == SYN_ERR && str_cmp_const_str(func_id, "main") == 0) return SEM_ERR_NO_PARAMS;
 
     	if (check_type(T_TYPE_RIGHT_BRACKET) == SYN_ERR ){
@@ -229,6 +228,10 @@ int prog()
       if (check_token() == LEX_ERR){
     	  return LEX_ERR;
       }
+
+      //main nemoze mat ziadne vystupne parametre
+      if (check_type(T_TYPE_LEFT_VINCULUM) == SYN_ERR && str_cmp_const_str(func_id, "main") == 0) return SEM_ERR_NO_PARAMS;
+
       //printf("----------------4.5. TOKEN PROG MAM IF-TYPE = %d -------------\n",data.token.type);
     	if (check_type(T_TYPE_LEFT_VINCULUM) == SYN_ERR ){
         //printf("----------------VOLAM RV-------------\n");
@@ -688,6 +691,10 @@ int body()
       int exit_ids;
       if (check_type(T_TYPE_LEFT_BRACKET) != SYN_ERR ){
         // pravidlo <body> -> ID ( <argument> ) EOL <eol> <body>
+
+        //funkcia main nemoze byt volana
+        if(str_cmp_const_str(temp_string, "main") == 0) return SEM_ERR_OTHER;
+
         bool result_internal_error = false;
         Data_t *result_bt_search = BT_search(&data.BT_global, temp_string->str, &result_internal_error);
         if(result_internal_error == true){
@@ -809,19 +816,23 @@ int body()
       else if( (exit_ids = ids()) == SYN_OK){                                                  
         //////////////////////////////////////////////////////////////
         //printf("----------------0. BODY = TYPE = %d -------------\n",data.token.type);
-        if (check_type(T_TYPE_ASSIGN) == SYN_ERR ){
+        if (check_type(T_TYPE_ASSIGN) == SYN_ERR){
           return SYN_ERR;
         }
         if (check_token() == LEX_ERR){
           return LEX_ERR;
         }
-        if (check_type(T_TYPE_EOL) == SYN_OK ){
+        if (check_type(T_TYPE_EOL) == SYN_OK){
           return SYN_ERR;
         }
         //printf("----------------1. BODY = TYPE = %d -------------\n",data.token.type);
-        if (check_type(T_TYPE_IDENTIFIER) == SYN_OK ){
+        if (check_type(T_TYPE_IDENTIFIER) == SYN_OK){
           // pravidlo <body> -> <ids> = ID(<argument>) EOL <eol> <body>
           //printf("----------------1.5 BODY = TYPE = %d -------------\n",data.token.type);
+          
+          //main nemoze byt volany a nema ziadne navratove hodnoty, cize nemoze byt priradzovane do ziadneho ID
+          //TODO
+          
           non_det = true;
 
           data.check_type = true;
@@ -840,7 +851,7 @@ int body()
 
 
             //printf("----------------2 BODY = TYPE = %d -------------\n",data.token.type);
-            if (check_type(T_TYPE_RIGHT_BRACKET) == SYN_OK ){
+            if (check_type(T_TYPE_RIGHT_BRACKET) == SYN_OK){
               
               if (check_token() == LEX_ERR){
                 return LEX_ERR;
@@ -1362,7 +1373,8 @@ int params_n()
     }
 
     tBT_stack_item* top_of_the_stack = bt_stack_top(&data.BT_stack);
-    BT_insert(&top_of_the_stack->local_bt, data.token.attribute.string->str, &internal_error);
+    //kontrola ci IDcka vstupnych parametrov nie su rovnake
+    if (BT_insert(&top_of_the_stack->local_bt, data.token.attribute.string->str, &internal_error) == NULL) return SEM_ERR_UNDEFINED_VAR;
 
     if (check_token() == LEX_ERR){
       return LEX_ERR;
@@ -1441,12 +1453,12 @@ int return_value_n()
   // pravidlo <return_value_n> -> , <type> <return_value_n>
 
   //printf("----------------0. TOKEN RVN-TYPE = %d -------------\n",data.token.type);
-  if ( check_type(T_TYPE_COMMA) != SYN_ERR ){
+  if (check_type(T_TYPE_COMMA) != SYN_ERR ){
       if (check_token() == LEX_ERR){
         return LEX_ERR;
       }
       //printf("----------------1. TOKEN RVN-TYPE = %d -------------\n",data.token.type);
-      if( check_type(T_TYPE_RIGHT_BRACKET) == SYN_OK ){
+      if (check_type(T_TYPE_RIGHT_BRACKET) == SYN_OK ){
         //printf("  ----> %d  <---- \n",check_type(T_TYPE_RIGHT_BRACKET));
         return SYN_ERR;
       }
