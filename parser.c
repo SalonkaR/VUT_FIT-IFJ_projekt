@@ -192,10 +192,13 @@ int prog()
       if (check_type(T_TYPE_IDENTIFIER) == SYN_ERR) return SYN_ERR;
       str_copy(data.token.attribute.string, func_id);
       
-      BT_insert(&data.BT_global, func_id->str, &internal_error);
-      bt_stack_push(&data.BT_stack);
-
+      Data_t *func_insert_global = BT_insert(&data.BT_global, data.token.attribute.string->str, &internal_error);
       if (internal_error == true) return ERROR_INTERNAL;
+      if (func_insert_global == NULL){
+        return SEM_ERR_UNDEFINED_VAR;
+      }
+
+      bt_stack_push(&data.BT_stack);
       
       if (check_token() == LEX_ERR){
     	  return LEX_ERR;
@@ -300,7 +303,7 @@ int prog()
       if (check_type(T_TYPE_RIGHT_VINCULUM) == SYN_ERR ){
         return SYN_ERR;
       }
-
+      //konci funkcia tak popnem stack frame
       bt_stack_pop(&data.BT_stack);
 
       if (check_token() == LEX_ERR){
@@ -343,11 +346,18 @@ int body()
           if (check_token() == LEX_ERR){
             return LEX_ERR;
           }
+
+          //pushnem novy frame pre premmenne
+          bt_stack_push(&data.BT_stack);
+
+
+          data.in_if_for = true;
           int result_exp_if = expression(&data,&non_det);
           //printf("VYSLEDOK EXPRESSION VO <BODY> - IF = \"%d\"\n", result_exp_if);
           if (result_exp_if != SYN_OK){ 
             return result_exp_if;
           }
+          data.in_if_for = false;
 
           //printf("----------------2. TOKEN body MAM IF if-TYPE = %d -------------\n",data.token.type);
           if (check_type(T_TYPE_LEFT_VINCULUM) == SYN_ERR ){
@@ -395,6 +405,9 @@ int body()
             //printf("----------------5.25 TOKEN body MAM IF if-TYPE = %d -------------\n",data.token.type);
             return SYN_ERR;
           }
+
+          //vychadzam z ifu tak popnem jeden frame zo stacku pre premenne
+          bt_stack_pop(&data.BT_stack);
           
           bt_stack_pop(&data.BT_stack);
 
@@ -405,8 +418,9 @@ int body()
 
           if (check_keyword(KWORD_ELSE) == SYN_ERR ){
             return SYN_ERR;
-          }
+          }  
 
+          //vchadzam do elsu tak pushnem novy stack na premenne
           bt_stack_push(&data.BT_stack);
 
           if (check_token() == LEX_ERR){
@@ -453,6 +467,9 @@ int body()
           if (check_type(T_TYPE_RIGHT_VINCULUM) == SYN_ERR ){
             return SYN_ERR;
           }
+
+          //vychadzam z elsu tak popnem stack pre premmenne
+          bt_stack_pop(&data.BT_stack);
           
           bt_stack_pop(&data.BT_stack);
 
@@ -489,6 +506,7 @@ int body()
             return LEX_ERR;
           }
 
+          //vytvorim si temporary frame pre for defiuniton(1. vo fore)
           bt_stack_push(&data.BT_stack);
 
           //printf("----------------1 TOKEN BODY MAM IF FOR-TYPE = %d -------------\n",data.token.type);
@@ -513,12 +531,18 @@ int body()
           if (check_token() == LEX_ERR){
             return LEX_ERR;
           }
+
+          data.in_if_for = true;
+
           //printf("----------------3 TOKEN BODY MAM IF FOR-TYPE = %d -------------\n",data.token.type);
           int result_exp_for = expression(&data,&non_det);
           //printf("VYSLEDOK EXPRESSION VO <BODY> - FOR - EXPRESSION = \"%d\"\n", result_exp_for);
           if (result_exp_for != SYN_OK){ 
             return result_exp_for;
           }
+
+          data.in_if_for = false;
+
           //printf("----------------5 TOKEN BODY MAM IF FOR-TYPE = %d -------------\n",data.token.type);
           if (check_type(T_TYPE_SEMICOLON) == SYN_ERR ){
             return SYN_ERR;
@@ -538,7 +562,9 @@ int body()
             return SYN_ERR;
           }
 
+          //som vo fore pushnem si novy stack frame (2. vo fore)
           bt_stack_push(&data.BT_stack);
+
 
           if (check_token() == LEX_ERR){
             return LEX_ERR;
@@ -557,10 +583,16 @@ int body()
             if (exit_eol != SYN_OK){ 
               return exit_eol;
             }
-          }       
+          }   
+
           //printf("----------------8. TOKEN body MAM FOR if-TYPE = %d -------------\n",data.token.type);
           if (check_type(T_TYPE_RIGHT_VINCULUM) == SYN_ERR ){
             //printf("----------------VOLAM BODY - TYPE = %d -------------\n",data.token.type);
+            
+            //konci for tak popnem 2 stack framy
+            bt_stack_pop(&data.BT_stack);
+            bt_stack_pop(&data.BT_stack);
+
             int exit_body = body();
             if (exit_body != SYN_OK){ 
               return exit_body;
@@ -597,8 +629,10 @@ int body()
             }
           }
 
+          //vychadzam z foru tak popnem 2 stack framy
           bt_stack_pop(&data.BT_stack);
           bt_stack_pop(&data.BT_stack);
+
 
           int exit_body2 = body();
           if (exit_body2 != SYN_OK){ 
@@ -640,14 +674,18 @@ int body()
 
   else if(check_type(T_TYPE_IDENTIFIER) == SYN_OK){
 
-      str_copy(data.token.attribute.string, temp_string);
+      //pushnueme si do queue id
+      tID_queue_item *top_queue = id_queue_push(&data.ID_queue);
+      //vyplnim to id
+      str_copy(data.token.attribute.string, &top_queue->id);
+
 
       //printf("---------------- TOKEN IDENTIFIER TYPE = %d -------------\n",data.token.type);
       if (check_token() == LEX_ERR){
         return LEX_ERR;
       }
       //printf("----------------1. TOKEN IDENTIFIER TYPE = %d -------------\n",data.token.type);  
-      int exit_ids = ids();
+      int exit_ids;
       if (check_type(T_TYPE_LEFT_BRACKET) != SYN_ERR ){
         // pravidlo <body> -> ID ( <argument> ) EOL <eol> <body>
         bool result_internal_error = false;
@@ -662,6 +700,10 @@ int body()
         
 
         //printf("----------------0. TOKEN BODY MAM ID-TYPE = %d -------------\n",data.token.type);
+        
+        //popnem z queue pretoze tento id je volanie funkcie
+        id_queue_pop(&data.ID_queue);
+
         if (check_token() == LEX_ERR){
           return LEX_ERR;
         }
@@ -701,24 +743,41 @@ int body()
       }
       else if (check_type(T_TYPE_VARIABLE_DEFINITION) != SYN_ERR ){
         // pravidlo <body> -> ID := <expression> EOL <eol> <body>
+
+
+
+        //checknem ci este id neni definovane
+        tBT_stack_item *top_bt_stack = bt_stack_top(&data.BT_stack);
+        tID_queue_item *top_queue_def = id_queue_top(&data.ID_queue);
+        Data_t *search_found = BT_search(&top_bt_stack->local_bt, top_queue_def->id.str, &internal_error);
+        if (internal_error == true){
+          return ERROR_INTERNAL;
+        }
+        if (search_found != NULL){
+          return SEM_ERR_UNDEFINED_VAR;
+        }
+
+        BT_insert(&top_bt_stack->local_bt, top_queue_def->id.str, &internal_error);
+        if (internal_error == true){
+          return ERROR_INTERNAL;
+        }
         
-        tBT_stack_item* top_of_the_stack = bt_stack_top(&data.BT_stack);
-        BT_insert(&top_of_the_stack->local_bt, temp_string->str, &internal_error);
-
-
-
-        printf("%s\n", temp_string->str);
-        Print_tree(top_of_the_stack->local_bt.root_ptr);
 
         if (check_token() == LEX_ERR){
           return LEX_ERR;
         }          
-          
+        
+        data.set_type_id = true;
         int result_exp_if = expression(&data,&non_det);
         //printf("VYSLEDOK EXPRESSION VO <BODY> - IF = \"%d\"\n", result_exp_if);
         if (result_exp_if != SYN_OK){ 
             return result_exp_if;
         }
+        data.set_type_id = false;
+
+        //popnem id z queue pretoze uz som nastavil jeho typ v expression
+        id_queue_pop(&data.ID_queue);
+
         //printf("----------------1. VARIABLE TYPE = %d -------------\n",data.token.type);
         if (check_type(T_TYPE_EOL) == SYN_ERR ){
           if (check_token() == LEX_ERR){
@@ -747,7 +806,8 @@ int body()
       }
       // pravidlo <body> -> <ids> = ID(<argument>) EOL <eol> <body>
       // pravidlo <body> -> <ids> = <values> EOL <eol> <body>
-      else if( exit_ids == SYN_OK){                                                            //////////////////////////////////////////////////////////////
+      else if( (exit_ids = ids()) == SYN_OK){                                                  
+        //////////////////////////////////////////////////////////////
         //printf("----------------0. BODY = TYPE = %d -------------\n",data.token.type);
         if (check_type(T_TYPE_ASSIGN) == SYN_ERR ){
           return SYN_ERR;
@@ -763,12 +823,22 @@ int body()
           // pravidlo <body> -> <ids> = ID(<argument>) EOL <eol> <body>
           //printf("----------------1.5 BODY = TYPE = %d -------------\n",data.token.type);
           non_det = true;
+
+          data.check_type = true;
           int result_expr = expression(&data,&non_det);
+          data.check_type = false;
+
           //printf("EXPR RESULT = TYPE = %d -------------\n",result_expr);
           if (non_det == false){
             if (check_token() == LEX_ERR){
               return LEX_ERR;
             }
+
+            //tu treba si poznacit pri volani danej funkcie ci vracia dane typy ake su na lavej strane
+            id_queue_free(&data.ID_queue);
+            id_queue_init(&data.ID_queue);
+
+
             //printf("----------------2 BODY = TYPE = %d -------------\n",data.token.type);
             if (check_type(T_TYPE_RIGHT_BRACKET) == SYN_OK ){
               
@@ -833,8 +903,13 @@ int body()
             return SYN_OK;          
           }
           // pravidlo <body> -> <ids> = <expression>,<values_n> EOL <eol> <body>
-          else{
+          else{            
             non_det = false;
+
+            //popnem uz jedno id z queue ktore bolo skontrolovane
+            id_queue_pop(&data.ID_queue);
+
+
             //printf("----------------0. TOKEN EXPRESSION,VALUE NEXT TYPE = %d -------------\n",data.token.type);
             if (result_expr != SYN_OK){
               return result_expr;
@@ -854,6 +929,13 @@ int body()
             if (exit_values_n != SYN_OK){
               return exit_values_n;
             }
+
+
+            //ak fronta nieje prazdna, musi byt na lavej strane viac idciek ako vyrazov na pravej
+            if (id_queue_top(&data.ID_queue) != NULL){
+              return SEM_ERR_OTHER;
+            }
+
             //printf("----------3. TOKEN EXPRESSION,VALUE NEXTTYPE = %d -------------\n",data.token.type);
             if (check_type(T_TYPE_EOL) == SYN_ERR ){
               return SYN_ERR;
@@ -879,6 +961,12 @@ int body()
           //printf("---------------- -0. else if = TYPE = %d -------------\n",data.token.type);
           int tmp_vys = values();
           //printf("---------------- -0. TYPE = %d -------------\n",tmp_vys);
+
+          //ak fronta nieje prazdna, musi byt na lavej strane viac idciek ako vyrazov na pravej
+          if (id_queue_top(&data.ID_queue) != NULL){
+            return SEM_ERR_OTHER;
+          }
+
           if (tmp_vys == SYN_OK ){
             //printf("---------------- -0. else if = TYPE = %d -------------\n",data.token.type);
             if (check_type(T_TYPE_EOL) == SYN_ERR ){
@@ -937,9 +1025,15 @@ int definition()
   //printf("----------------0. TOKEN DEFINITION TYPE = %d -------------\n",data.token.type);
   if (check_type(T_TYPE_IDENTIFIER) != SYN_ERR ){
       
-      tBT_stack_item* top_of_the_stack = bt_stack_top(&data.BT_stack);
-      BT_insert(&top_of_the_stack->local_bt, data.token.attribute.string->str, &internal_error);
-    
+      tID_queue_item *top_queue = id_queue_push(&data.ID_queue);
+
+      str_copy(data.token.attribute.string, &top_queue->id);
+
+      tBT_stack_item *top_bt_stack = bt_stack_top(&data.BT_stack);
+      Data_t *search_found = BT_insert(&top_bt_stack->local_bt, top_queue->id.str, &internal_error);
+      if (internal_error == true){
+        return ERROR_INTERNAL;
+      }
 
       if (check_token() == LEX_ERR){
         return LEX_ERR;
@@ -953,11 +1047,17 @@ int definition()
       }
       //printf("----------------2. TOKEN DEFINITION TYPE = %d -------------\n",data.token.type);
       
+      data.set_type_id = true;
       int result_exp = expression(&data,&non_det);
+      data.set_type_id = false;
+      
       //printf("VYSLEDOK EXPRESSION VO <VALUES_N> = %d\n", result_exp);
       if( result_exp != SYN_OK ){
         return result_exp;
       }
+
+      id_queue_pop(&data.ID_queue);
+
       //printf("----------------VYS DEFINITION TYPE = %d -------------\n",data.token.type);
       return SYN_OK;
   }
@@ -976,6 +1076,12 @@ int assignment()
 
 //intf("----------------0. TOKEN ASSIGNMENT TYPE = %d -------------\n",data.token.type);
   if (check_type(T_TYPE_IDENTIFIER) != SYN_ERR ){
+
+    tID_queue_item *top_queue = id_queue_push(&data.ID_queue);
+
+    str_copy(data.token.attribute.string, &top_queue->id);
+
+
     if (check_token() == LEX_ERR){
       return LEX_ERR;
     }
@@ -987,11 +1093,18 @@ int assignment()
       return LEX_ERR;
     }
     //printf("----------------2. TOKEN ASSIGNMENT TYPE = %d -------------\n",data.token.type);
+
+    data.check_type = true;
     int result_assignment = expression(&data,&non_det);
+    data.check_type = false;
+    
     //printf("VYSLEDOK EXPRESSION VO <ASSIGNMENT> = \"%d\"\n", result_assignment);
     if (result_assignment != SYN_OK){ 
          return result_assignment;
     }
+
+    id_queue_pop(&data.ID_queue);
+
     //printf("----------------3. TOKEN ASSIGNMENT TYPE = %d -------------\n",data.token.type);
     return SYN_OK;
   }
@@ -1031,6 +1144,11 @@ int id_n()
       if (check_type(T_TYPE_IDENTIFIER) == SYN_ERR ){
         return SYN_ERR;
       }
+
+      //pushujem si idcka do fronty
+      tID_queue_item *top_queue = id_queue_push(&data.ID_queue);
+      str_copy(data.token.attribute.string, &top_queue->id); 
+
       if (check_token() == LEX_ERR){
         return LEX_ERR;
       }
@@ -1062,7 +1180,10 @@ int list_of_return_values()
 {
   // pravidlo <list_of_return_values> -> <values>
   //printf("----------------LORV TYPE = %d -------------\n",data.token.type);
+
+  data.check_returns = true;
   int exit_values = values();
+  data.check_returns = false;
   if( exit_values != SYN_OK ){
     //printf("----------------SYN ERR LORV TYPE = %d -------------\n",exit_values);
     // to do tu sa to jebe  pri rekurzii 
@@ -1080,7 +1201,17 @@ int values()
   if( check_type(T_TYPE_EOL) != SYN_ERR ) {
       return SYN_OK;
   }
+
+  data.check_type = true;
+  
   int result_exp = expression(&data,&non_det);
+  printf("SOM VO VALUES A expression vratilo = '%d'\n", result_exp);
+  data.check_type = false;
+
+  //popnem uz 1 expression checknuty
+  id_queue_pop(&data.ID_queue);
+
+
   //printf("VYSLEDOK EXPRESSION VO <VALUES> = %d\n", result_exp);
   //printf("TOKEN Z EXPRESSION TYPE = %d -------------\n",data.token.type);
   if( result_exp != SYN_ERR ){
@@ -1129,7 +1260,15 @@ int values_n()
         return LEX_ERR;
       }
       //printf("----------------1 VALUES NEXT TYPE = %d -------------\n",data.token.type);
+
+      data.check_type = true;
+    
       int result_exp = expression(&data,&non_det);
+      printf("SOM VO VALUES_N A expression vratilo = '%d'\n", result_exp);
+      data.check_type = true;
+
+      id_queue_pop(&data.ID_queue);
+
       //printf("VYSLEDOK EXPRESSION VO <VALUES_N> = %d\n", result_exp);
       if( result_exp != SYN_OK ){
         //printf("---------------- BAD RETURNS = %d -------------\n",result_exp);
@@ -1462,7 +1601,15 @@ bool init_variables()
     data.BT_global.definded = false;  //som retard a musim to spravit
     if(BT_init(&data.BT_global) == false) return false;
 
+    //inicializacia boolovsky hodnot v parser_data
+    data.in_if_for = false;
+    data.set_type_id = false;
+    data.check_type = false;
+    data.check_returns = false;
+
     bt_stack_init(&data.BT_stack);
+
+    id_queue_init(&data.ID_queue);
     
     data.token.attribute.string = malloc(sizeof(struct str_struct));
     if(data.token.attribute.string == NULL) return ERROR_INTERNAL;
@@ -1483,7 +1630,8 @@ void free_variables()
 {
     BT_dispose(&data.BT_global);
     bt_stack_free(&data.BT_stack);
-    
+    id_queue_free(&data.ID_queue);
+
     str_clear(data.token.attribute.string);
     str_free(data.token.attribute.string);
     if((data.token.attribute.string) != NULL) free(data.token.attribute.string);

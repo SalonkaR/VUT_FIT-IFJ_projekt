@@ -13,13 +13,20 @@
 #include "symtable.h"
 #include "scanner.h"
 #include "bt_stack.h"
+#include "id_queue.h"
 
 struct parser_data
 {
     tBT BT_global;
     tBT_stack BT_stack;
     struct token token;
+
     bool in_if_for;
+    bool set_type_id;
+    bool check_type;
+    bool check_returns;
+
+    tID_queue ID_queue;
 };
 
 int parse();

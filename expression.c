@@ -252,7 +252,7 @@ static int check_sem(Prec_rules rule, tStack_item* op1, tStack_item* op2, tStack
                 *type_after_reduce = TYPE_STRING;
                 break;
             }
-
+            
             if ((op1->data_type == TYPE_STRING) || (op3->data_type == TYPE_STRING) ){
                 return SEM_ERR_EXP;
             }
@@ -395,7 +395,7 @@ int expression(struct parser_data* data, bool *nondetermism){
 		actual_symbol = get_symbol_from_token(&data->token);
 		top_stack_terminal = stack_top_term(&stack);
 
-        last4[last4_c] = actual_symbol;
+        //last4[last4_c] = actual_symbol;
 
         if ((data->token.type == T_TYPE_INTEGER) && (data->token.attribute.int_literal == 0)){
             last4[last4_c] = ZERO_NUMBER;
@@ -404,15 +404,18 @@ int expression(struct parser_data* data, bool *nondetermism){
             last4[last4_c] = ZERO_NUMBER;
         }
 
+
         if ((last4[circle_number(last4_c - 1)] == DIV) && (last4[last4_c] == ZERO_NUMBER)){
+            free_resources();
             return SEM_ERR_ZERO_DIV;
         }
+
 
         if ((last4[circle_number(last4_c - 3)] == DIV) 
             && (last4[circle_number(last4_c - 2)] == LEFT_BRACKET) 
             && (last4[circle_number(last4_c - 1)] == ZERO_NUMBER) 
             && (last4[last4_c] == RIGHT_BRACKET)){
-
+            free_resources();
             return SEM_ERR_ZERO_DIV;
         }
 
@@ -428,7 +431,7 @@ int expression(struct parser_data* data, bool *nondetermism){
                     free_resources();
                     return ERROR_INTERNAL;
                 }
-
+                //printf("SHIFTUJEM NA STACK->typ=%d\n", get_data_type(data));
                 if(!stack_push(&stack, actual_symbol, get_data_type(data))){
                     free_resources();
                     return ERROR_INTERNAL;
@@ -442,6 +445,7 @@ int expression(struct parser_data* data, bool *nondetermism){
                 }
                 //TU POSLAT INFO PARSERU 
                 result_exp = get_token(&data->token);
+                last4[last4_c] = get_symbol_from_token(&data->token);
                 if ((*nondetermism == true) && (resolved_d == false)){
                     if (data->token.type == T_TYPE_LEFT_BRACKET){
                         *nondetermism = false;
@@ -469,6 +473,7 @@ int expression(struct parser_data* data, bool *nondetermism){
                 }
 
                 result_exp = get_token(&data->token);
+                last4[last4_c] = get_symbol_from_token(&data->token);
                 if ((result_exp)){
                     free_resources();
                     return result_exp;
@@ -477,7 +482,9 @@ int expression(struct parser_data* data, bool *nondetermism){
                 break;
 
             case R:
-                if ((result_exp = reduce())){
+                result_exp = reduce();
+                
+                if (result_exp != SYN_OK){
                     free_resources();
                     return result_exp;
                 }
@@ -505,6 +512,58 @@ int expression(struct parser_data* data, bool *nondetermism){
         free_resources();
         return SYN_ERR;
     }
+
+    //TODO
+    //nastavenie TYPU idcka pri definicii
+    if (data->set_type_id == true){
+        if (expression_result->data_type == TYPE_BOOL){
+            free_resources();
+            return SEM_ERR_OTHER;
+        }
+        tID_queue_item *top_queue = id_queue_top(&data->ID_queue);
+
+        tBT_stack_item *top_bt_stack = bt_stack_top(&data->BT_stack);
+        bool internal_err;
+        Data_t *search_found = BT_search(&top_bt_stack->local_bt, top_queue->id.str, &internal_err);
+        if (internal_err == true){
+            free_resources();
+            return ERROR_INTERNAL;
+        }
+        search_found->type = expression_result->data_type;
+    }
+    //ked sme v ife alebo vo fore v podmienke, vysledok musi btr typpu bool
+    else if (data->in_if_for == true){
+        if (expression_result->data_type != TYPE_BOOL){
+            free_resources();
+            return SEM_ERR_OTHER;
+        }
+    }
+    //pri assigne musia sa zhodovat typy
+    else if (data->check_type == true && data->check_returns == false){
+
+        bool internal_err;
+        tID_queue_item *top_queue_def = id_queue_top(&data->ID_queue);
+        //viac vyrazov na pravej strane ako idciek na lavej
+        if (top_queue_def == NULL){
+            free_resources();
+            return SEM_ERR_OTHER;
+        }
+        Data_t *search_found = bt_stack_search(&data->BT_stack, top_queue_def->id.str, &internal_err);
+        if (internal_err == true){
+            free_resources();
+            return ERROR_INTERNAL;
+        }
+        if (search_found == NULL){
+            free_resources();
+            return SEM_ERR_UNDEFINED_VAR;
+        }
+
+        if (search_found->type != expression_result->data_type){
+            free_resources();
+            return SEM_ERR_OTHER;
+        }
+    }
+
 
     free_resources();
     return SYN_OK;

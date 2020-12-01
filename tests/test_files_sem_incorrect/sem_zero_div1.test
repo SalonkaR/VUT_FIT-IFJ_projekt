@@ -3,5 +3,5 @@ package main
 func main () {
     a := 32
     b := 10
-    a = a+b
+    a = b / 0
 }

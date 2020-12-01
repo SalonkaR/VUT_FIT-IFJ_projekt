@@ -155,7 +155,6 @@ static Data_t *insert_rec (tBT *bt_ptr, tNode *parent_ptr, tNode* root_ptr,size_
         //data
         newPtr_data->nextptr = NULL;
         newPtr_data->defined = false;
-        newPtr_data->global = false;
         newPtr_data->type = TYPE_UNDEFINED;
         //node
         newPtr->hashKey = hash_k;
@@ -216,7 +215,6 @@ static Data_t *insert_rec (tBT *bt_ptr, tNode *parent_ptr, tNode* root_ptr,size_
 
                 newPtr_data->nextptr = tmp;
                 newPtr_data->defined = false;
-                newPtr_data->global = false;
                 newPtr_data->type = TYPE_UNDEFINED;
 
                 root_ptr->data = newPtr_data;
