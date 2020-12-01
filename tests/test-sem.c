@@ -79,10 +79,10 @@ void kontrola_sem(){
     
     char *filenames[FILE_COUNT_CORRECT] =  
                             {"tests/test_files_sem_correct/sem_main.test",
-                            "tests/test_files_sem_correct/sem_func_change_ID_values.test",
-                            "tests/test_files_sem_correct/sem_func_change_ID_value.test",
-                            "tests/test_files_sem_correct/sem_func_call_defined_func.test",
-                            "tests/test_files_sem_correct/sem_builtin_func.test",};
+                             "tests/test_files_sem_correct/sem_func_change_ID_values.test",
+                             "tests/test_files_sem_correct/sem_func_change_ID_value.test",
+                             "tests/test_files_sem_correct/sem_func_call_defined_func.test",
+                             "tests/test_files_sem_correct/sem_builtin_func.test",};
 
     for (int i = 0; i < FILE_COUNT_CORRECT; i++){
         //blue_color();

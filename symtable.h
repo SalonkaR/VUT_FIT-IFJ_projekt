@@ -67,7 +67,7 @@ bool BT_init   (tBT *bt_ptr);
 //vracia interal_error=true ak nastala interna chyba
 Data_t *BT_search  (tBT *bt_ptr, hKey_t key, bool *internal_error);
 
-//vracia NULL ak nebolo uz key je v binarnom strome a boolovska hodnota false
+//vracia NULL ak key uz je v binarnom strome a boolovska hodnota false
 //vracia ukazatel na strukturu Data_t ak sa podaril insert a boolovska hodnota false
 //vracia interal_error=true ak nastala interna chyba
 Data_t *BT_insert (tBT *bt_ptr, hKey_t key, bool *internal_error);

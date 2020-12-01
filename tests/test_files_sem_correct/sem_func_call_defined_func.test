@@ -4,8 +4,9 @@ func defined() {
     return 5
 }
 
-func foo () {
-    tmp := defined() 
+func foo (i int, j int) {
+    tmp := 1 
+    tmp = defined()
 }
 
 func main () {
