@@ -28,7 +28,7 @@ ifj20: ifj20proj.o parser.o str.o scanner.o expression.o symtable.o stack.o bt_s
 test-lex: test-lex.o str.o scanner.o
 	$(CC) $(CFLAGS) -g -o $@ $^
 
-test-symtable: test-symtable.o symtable.o str.o scanner.o
+test-symtable: test-symtable.o symtable.o str.o scanner.o id_queue.o
 	$(CC) $(CFLAGS) -g -o $@ $^
 
 test-parser: test-parser.o parser.o str.o scanner.o expression.o symtable.o stack.o bt_stack.o id_queue.o
@@ -57,7 +57,7 @@ str.o: str.c str.h
 test-lex.o: tests/test-lex.c scanner.h str.h error.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-symtable.o: symtable.c symtable.h str.h
+symtable.o: symtable.c symtable.h str.h id_queue.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 bt_stack.o: bt_stack.c bt_stack.h symtable.h
