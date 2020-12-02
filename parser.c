@@ -291,6 +291,7 @@ int prog()
             if (exit_eol2 != SYN_OK){ 
               return exit_eol2;
             }
+            bt_stack_pop(&data.BT_stack);
             //printf("----------------VOLAM PROG- TYPE = %d -------------\n",data.token.type);
             int exit_prog = prog();
             if (exit_prog != SYN_OK){ 
@@ -592,9 +593,9 @@ int body()
           if (check_type(T_TYPE_RIGHT_VINCULUM) == SYN_ERR ){
             //printf("----------------VOLAM BODY - TYPE = %d -------------\n",data.token.type);
             
-            //konci for tak popnem 2 stack framy
-            bt_stack_pop(&data.BT_stack);
-            bt_stack_pop(&data.BT_stack);
+            // //konci for tak popnem 2 stack framy
+            // bt_stack_pop(&data.BT_stack);
+            // bt_stack_pop(&data.BT_stack);
 
             int exit_body = body();
             if (exit_body != SYN_OK){ 
