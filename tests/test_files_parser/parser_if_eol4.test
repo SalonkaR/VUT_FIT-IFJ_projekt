@@ -9,3 +9,6 @@ func foo () {
 
     }
 }
+func main(){
+
+}

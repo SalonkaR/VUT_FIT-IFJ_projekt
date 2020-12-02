@@ -1,6 +1,15 @@
 package main
 
+
+func jozko(){
+    return
+}
+
 func main (){
+    id := 0
+    id1 := 0
+    kkt := 0
+    a := 0
     id,kkt = a+2,
     id1 = jozko()
 }

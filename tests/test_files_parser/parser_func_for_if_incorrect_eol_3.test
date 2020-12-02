@@ -2,7 +2,8 @@ package main
 func kotlebik () {
 
 
-
+    a := 0
+    b := 0
     for ;
     a; 
     {
@@ -11,4 +12,7 @@ func kotlebik () {
             
         }
     }
+}
+func main(){
+
 }

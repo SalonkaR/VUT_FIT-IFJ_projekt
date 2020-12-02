@@ -6,8 +6,11 @@ func foo () {
 
     }  
 
-    for a := 1; 1 < 3
-    ; a = 1{
+    for b := 1; 1 < 3
+    ; b = 1{
 
     }  
+}
+func main(){
+
 }

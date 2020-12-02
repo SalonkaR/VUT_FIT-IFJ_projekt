@@ -1,6 +1,21 @@
 package main
 
+
+func jozko(a int , b int ){
+    return
+}
+
+
 func main (){
+    id := 0
+    id1 := 0
+    id2 := 0
+    id3 := 0
+    id5 := 0
+    jebem := 0
+    po := 0
+    kokot := 0
+    chod_dpc := 0
     id1, jebem = jozko(po, kokot)
     id, id2, id3 = 1+3, 45, chod_dpc
 

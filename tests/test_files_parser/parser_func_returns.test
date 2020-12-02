@@ -1,8 +1,14 @@
 package main
 func mak () {
     /*jozko, milanko = 1+1, 1*2 */
+    debil := 1
+    jozo := 1
     for ; (1 !=  debil *(13-(2-9)*9)) ; jozo = 1/0{
 
     } 
     return (1 / debil *(13-2-9*9)), 69 + 420, 1*9
 } 
+
+func main(){
+
+}

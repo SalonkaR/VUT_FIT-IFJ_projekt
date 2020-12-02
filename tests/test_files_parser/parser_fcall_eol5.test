@@ -1,7 +1,14 @@
 package main
 
+func madar(a int,b int, c int){
+
+}
 
 func foo () {
     madar(1, 2, 4
     )
+}
+
+func main(){
+
 }

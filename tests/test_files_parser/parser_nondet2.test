@@ -1,6 +1,12 @@
 package main
 
+func jozko(id int){
+    return
+}
+
+
 func main (){
-    id = 1+3
+    id := 1+3
+    id1 := 0
     id1 = jozko(id)
 }

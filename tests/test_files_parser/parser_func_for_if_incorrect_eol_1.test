@@ -1,7 +1,8 @@
 package main
 func kotlebik () {
 
-
+    a:= 0
+    b:= 0
 
     for ;a; {
         if b {
@@ -11,4 +12,8 @@ func kotlebik () {
             
         }
     }
+}
+
+func main(){
+
 }

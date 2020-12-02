@@ -5,3 +5,7 @@ func foo () {
     madar
     ()
 }
+
+func main(){
+
+}

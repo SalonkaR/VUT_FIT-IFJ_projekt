@@ -7,4 +7,6 @@ func foo () {
     } else{
 
     } }
-    
+func main(){
+
+}

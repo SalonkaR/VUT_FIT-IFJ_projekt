@@ -4,3 +4,7 @@ func params_misstake (a , b float64) {
     jozo := 3 + 1
     return jozo
 }
+
+func main(){
+
+}

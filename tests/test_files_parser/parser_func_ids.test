@@ -1,8 +1,23 @@
 package main
+
+func love(){
+
+}
+
+
 func kobylamamalybok () {
+    kapn := 0
+    kap := 0
+    coconut := 0
+    gadze := 0
+    neminaju := 0
+
     kapn ,kap , coconut = resttjeslabykkt (50,7)
 
     gadze ,neminaju  = love ()
 
 
 } 
+func main(){
+
+}

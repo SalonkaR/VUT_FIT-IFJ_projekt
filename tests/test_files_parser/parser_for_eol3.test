@@ -7,3 +7,6 @@ func foo () {
         return
     }  
 }
+func main(){
+
+}

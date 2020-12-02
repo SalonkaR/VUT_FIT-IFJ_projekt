@@ -8,3 +8,6 @@ func foo () {
 
     }
 }
+func main(){
+
+}
