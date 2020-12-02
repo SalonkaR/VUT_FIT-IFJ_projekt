@@ -12,7 +12,7 @@
 
 
 #define FILE_COUNT_CORRECT 5
-#define FILE_COUNT_INCORRECT 14
+#define FILE_COUNT_INCORRECT 15
 
 void reset() {
   printf("\033[0m");
@@ -110,7 +110,8 @@ void kontrola_sem(){
                             "tests/test_files_sem_incorrect/sem_zero_div1.test",
                             "tests/test_files_sem_incorrect/sem_zero_div2.test",
                             "tests/test_files_sem_incorrect/sem_zero_div3.test",
-                            "tests/test_files_sem_incorrect/sem_zero_div4.test",};
+                            "tests/test_files_sem_incorrect/sem_zero_div4.test",
+                            "tests/test_files_sem_incorrect/sem_return1.test",};
     
     printf("\n\n TESTY NA SUBOROCH KTORE BY MALI VRACAT SYN_ERR\n");
     for (int i = 0; i < FILE_COUNT_INCORRECT; i++){

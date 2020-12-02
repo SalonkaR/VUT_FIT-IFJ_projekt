@@ -24,6 +24,9 @@ struct str_struct *func_id;
 bool internal_error = false;
 bool non_det = false;
 bool bad_returns = false;
+bool saving_return_types = false;
+Data_t *actual_func = NULL;
+
 
 int result;
 
@@ -193,6 +196,7 @@ int prog()
       str_copy(data.token.attribute.string, func_id);
       
       Data_t *func_insert_global = BT_insert(&data.BT_global, data.token.attribute.string->str, &internal_error);
+      actual_func = func_insert_global;
       if (internal_error == true) return ERROR_INTERNAL;
       if (func_insert_global == NULL){
         return SEM_ERR_UNDEFINED_VAR;
@@ -235,7 +239,9 @@ int prog()
       //printf("----------------4.5. TOKEN PROG MAM IF-TYPE = %d -------------\n",data.token.type);
     	if (check_type(T_TYPE_LEFT_VINCULUM) == SYN_ERR ){
         //printf("----------------VOLAM RV-------------\n");
+        saving_return_types = true;
         int exit_return_value = return_value();
+        saving_return_types = false;
         if (exit_return_value != SYN_OK){ 
           return exit_return_value;
         }
@@ -291,7 +297,10 @@ int prog()
             if (exit_eol2 != SYN_OK){ 
               return exit_eol2;
             }
+
+            //konci funkcia tak popnem stack frame
             bt_stack_pop(&data.BT_stack);
+            actual_func = NULL;
             //printf("----------------VOLAM PROG- TYPE = %d -------------\n",data.token.type);
             int exit_prog = prog();
             if (exit_prog != SYN_OK){ 
@@ -309,6 +318,7 @@ int prog()
       }
       //konci funkcia tak popnem stack frame
       bt_stack_pop(&data.BT_stack);
+      actual_func = NULL;
 
       if (check_token() == LEX_ERR){
     	  return LEX_ERR;
@@ -1197,6 +1207,13 @@ int list_of_return_values()
   data.check_returns = true;
   int exit_values = values();
   data.check_returns = false;
+
+  //ak bolo malo vyrazov v returne ako je navreatovych hodnot funkcie vratim error
+  if (data.checked_returns != actual_func->no_ret_values){
+    return SEM_ERR_NO_PARAMS;
+  }
+  //nastavim spat pocitadlo checknutych returnov
+  data.checked_returns = 0;
   if( exit_values != SYN_OK ){
     //printf("----------------SYN ERR LORV TYPE = %d -------------\n",exit_values);
     // to do tu sa to jebe  pri rekurzii 
@@ -1220,6 +1237,10 @@ int values()
   int result_exp = expression(&data,&non_det);
   printf("SOM VO VALUES A expression vratilo = '%d'\n", result_exp);
   data.check_type = false;
+
+  if (data.check_returns == true){
+    data.checked_returns++;
+  }
 
   //popnem uz 1 expression checknuty
   id_queue_pop(&data.ID_queue);
@@ -1280,6 +1301,10 @@ int values_n()
       int result_exp = expression(&data,&non_det);
       printf("SOM VO VALUES_N A expression vratilo = '%d'\n", result_exp);
       data.check_type = true;
+
+    if (data.check_returns == true){
+        data.checked_returns++;
+    }
 
       id_queue_pop(&data.ID_queue);
 
@@ -1509,7 +1534,28 @@ int type()
        ( check_keyword(KWORD_FLOAT64) != SYN_ERR )  ||
        ( check_keyword(KWORD_STRING) != SYN_ERR )) {
       //printf("  ----> SOM V TYPE OK = %d  <---- \n",data.token.type);
-      
+      if (saving_return_types == true){
+        if (data.token.type == T_TYPE_KEYWORD && data.token.attribute.keyword == KWORD_INT){
+
+          tID_queue_item *pushnuta = id_queue_push(&actual_func->func_params);
+          
+          hKey_t tmp = "int";
+          str_add_const_str(&pushnuta->id, tmp);
+        }
+        else if (data.token.type == T_TYPE_KEYWORD && data.token.attribute.keyword == KWORD_FLOAT64){
+
+          tID_queue_item *pushnuta = id_queue_push(&actual_func->func_params);
+          hKey_t tmp = "double";
+          str_add_const_str(&pushnuta->id, tmp);
+        }
+        else if (data.token.type == T_TYPE_KEYWORD && data.token.attribute.keyword == KWORD_STRING){
+
+          tID_queue_item *pushnuta= id_queue_push(&actual_func->func_params);
+          hKey_t string = "string";
+          str_add_const_str(&pushnuta->id, string);
+        }
+        actual_func->no_ret_values++;
+      }
       
       return SYN_OK;
   }
@@ -1625,6 +1671,7 @@ bool init_variables()
     data.set_type_id = false;
     data.check_type = false;
     data.check_returns = false;
+    data.checked_returns = 0;
 
     bt_stack_init(&data.BT_stack);
 

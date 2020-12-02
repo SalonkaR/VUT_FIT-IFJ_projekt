@@ -26,6 +26,7 @@ struct parser_data
     bool check_type;
     bool check_returns;
 
+    int checked_returns; //pomocne pocitadlo pre expression pri checkovani return values
     tID_queue ID_queue;
 };
 

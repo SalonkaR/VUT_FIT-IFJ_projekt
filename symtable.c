@@ -153,6 +153,7 @@ static Data_t *insert_rec (tBT *bt_ptr, tNode *parent_ptr, tNode* root_ptr,size_
         }
         //nakopirovanie indentifikatoru do dat
         id_queue_init(&newPtr_data->func_params);
+        newPtr_data->no_ret_values =0;
         strcpy(newPtr_data->identifier, key);
         //data
         newPtr_data->nextptr = NULL;
@@ -215,6 +216,7 @@ static Data_t *insert_rec (tBT *bt_ptr, tNode *parent_ptr, tNode* root_ptr,size_
                 //data
                 Data_t *tmp = root_ptr->data->nextptr;
                 id_queue_init(&newPtr_data->func_params);
+                newPtr_data->no_ret_values =0;
                 newPtr_data->nextptr = tmp;
                 newPtr_data->defined = false;
                 newPtr_data->type = TYPE_UNDEFINED;

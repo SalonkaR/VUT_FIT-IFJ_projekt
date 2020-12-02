@@ -35,6 +35,7 @@ typedef struct data
 {
     enum data_types type;
 	tID_queue func_params;
+	int no_ret_values;
     hKey_t identifier;	 
 	bool defined;
     struct data *nextptr;
