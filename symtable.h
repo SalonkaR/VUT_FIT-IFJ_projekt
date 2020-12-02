@@ -7,6 +7,7 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "id_queue.h"
 #include "str.h"
 
 #define MODULO_NUM 12007 //musi byt prvocislo, pocet unikatnych slov v harry potter knihach * 2
@@ -33,6 +34,7 @@ enum data_types
 typedef struct data
 {
     enum data_types type;
+	tID_queue func_params;
     hKey_t identifier;	 
 	bool defined;
     struct data *nextptr;

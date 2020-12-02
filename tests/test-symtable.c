@@ -98,8 +98,8 @@ void test_BSTSearch(tBT *binary_tree, hKey_t key){
         return;
     }
     printf("Polozka (key: '%s' hash:'%lu') bola najdena !\n", key, hask_k);
-    printf("Polozka obsahuje data_type:'%d', id:'%s', defined: '%d', global:'%d'\n", 
-            searched->type, searched->identifier, searched->defined, searched->global);
+    printf("Polozka obsahuje data_type:'%d', id:'%s', defined: '%d'\n", 
+            searched->type, searched->identifier, searched->defined);
     Print_tree(binary_tree->root_ptr);
 }
 

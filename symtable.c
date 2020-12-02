@@ -9,6 +9,7 @@
 
 #include "symtable.h"
 #include "str.h"
+#include "id_queue.h"
 
 //definicie funkcii pre symtable
 static Data_t *search_rec(tNode *root_ptr, size_t hash_k, hKey_t key);
@@ -151,6 +152,7 @@ static Data_t *insert_rec (tBT *bt_ptr, tNode *parent_ptr, tNode* root_ptr,size_
 			return NULL;
         }
         //nakopirovanie indentifikatoru do dat
+        id_queue_init(&newPtr_data->func_params);
         strcpy(newPtr_data->identifier, key);
         //data
         newPtr_data->nextptr = NULL;
@@ -212,7 +214,7 @@ static Data_t *insert_rec (tBT *bt_ptr, tNode *parent_ptr, tNode* root_ptr,size_
 
                 //data
                 Data_t *tmp = root_ptr->data->nextptr;
-
+                id_queue_init(&newPtr_data->func_params);
                 newPtr_data->nextptr = tmp;
                 newPtr_data->defined = false;
                 newPtr_data->type = TYPE_UNDEFINED;
@@ -255,6 +257,7 @@ static void ReplaceByRightmost (tBT *bt_ptr, tNode *parent_ptr, tNode *PtrReplac
 	if (RootPtr->RPtr == NULL){
         //vymazem data
         Data_t *dataToDelete =  PtrReplaced->data;
+        id_queue_free(&dataToDelete->func_params);
         free(dataToDelete->identifier);
         free(dataToDelete);
         PtrReplaced->data = NULL;
@@ -308,6 +311,7 @@ static void delete_rec(tBT *bt_ptr, tNode *parent_ptr, tNode *RootPtr, size_t ha
                 }
                 //ked v linked liste sa nachadza len 1 prvok
                 if (count ==1){
+                    id_queue_free(&RootPtr->data->func_params);
                     free(RootPtr->data->identifier);
                     free(RootPtr->data);
                     free(RootPtr);
@@ -332,6 +336,7 @@ static void delete_rec(tBT *bt_ptr, tNode *parent_ptr, tNode *RootPtr, size_t ha
                     while (found != NULL){
                         if (strcmp(found->nextptr->identifier, key) == 0){
                             Data_t *tmp_next = found->nextptr->nextptr;
+                            id_queue_free(&found->nextptr->func_params);
                             free(found->nextptr->identifier);
                             free(found->nextptr);
 
@@ -366,6 +371,7 @@ static void delete_rec(tBT *bt_ptr, tNode *parent_ptr, tNode *RootPtr, size_t ha
                             parent_ptr->RPtr = RootPtr->LPtr;
                         }
                     }
+                    id_queue_free(&RootPtr->data->func_params);
                     free(RootPtr->data->identifier);
                     free(RootPtr->data);
 
@@ -380,6 +386,7 @@ static void delete_rec(tBT *bt_ptr, tNode *parent_ptr, tNode *RootPtr, size_t ha
                     while (found != NULL){
                         if (strcmp(found->nextptr->identifier, key) == 0){
                             Data_t *tmp_next = found->nextptr->nextptr;
+                            id_queue_free(&found->nextptr->func_params);
                             free(found->nextptr->identifier);
                             free(found->nextptr);
 
@@ -415,6 +422,7 @@ static void delete_rec(tBT *bt_ptr, tNode *parent_ptr, tNode *RootPtr, size_t ha
                             parent_ptr->RPtr = RootPtr->RPtr;
                         }
                     }
+                    id_queue_free(&RootPtr->data->func_params);
                     free(RootPtr->data->identifier);
                     free(RootPtr->data);
 
@@ -429,6 +437,7 @@ static void delete_rec(tBT *bt_ptr, tNode *parent_ptr, tNode *RootPtr, size_t ha
                     while (found != NULL){
                         if (strcmp(found->nextptr->identifier, key) == 0){
                             Data_t *tmp_next = found->nextptr->nextptr;
+                            id_queue_free(&found->nextptr->func_params);
                             free(found->nextptr->identifier);
                             free(found->nextptr);
 
@@ -459,6 +468,7 @@ static void delete_rec(tBT *bt_ptr, tNode *parent_ptr, tNode *RootPtr, size_t ha
                     while (found != NULL){
                         if (strcmp(found->nextptr->identifier, key) == 0){
                             Data_t *tmp_next = found->nextptr->nextptr;
+                            id_queue_free(&found->nextptr->func_params);
                             free(found->nextptr->identifier);
                             free(found->nextptr);
 
@@ -509,6 +519,7 @@ static void dispose_rec(tNode *root_ptr){
         tmp = Element;
         Element = Element->nextptr;
         //UVOLNENIE 
+        id_queue_free(&tmp->func_params);
         free(tmp->identifier);
         free(tmp);
     }
