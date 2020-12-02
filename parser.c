@@ -839,7 +839,7 @@ int body()
           int result_expr = expression(&data,&non_det);
           data.check_type = false;
 
-          //printf("EXPR RESULT = TYPE = %d -------------\n",result_expr);
+          printf("EXPR RESULT = TYPE = %d -------------\n",result_expr);
           if (non_det == false){
             if (check_token() == LEX_ERR){
               return LEX_ERR;
@@ -929,14 +929,15 @@ int body()
             if (check_type(T_TYPE_EOL) == SYN_OK ){
               return SYN_OK;
             } 
-            if (check_token() == LEX_ERR){
-              return LEX_ERR;
-            }
+            //if (check_token() == LEX_ERR){
+            //  return LEX_ERR; //////////////////////////toto bolo zakomentovane za ucelom fixu 10. test-sem
+            //}
             //printf("----------------2. TOKEN EXPRESSION,VALUE NEXT TYPE = %d -------------\n",data.token.type);
             if (check_type(T_TYPE_COMMA) == SYN_ERR ){ 
               return SYN_ERR;
             }
             int exit_values_n = values_n();
+            //printf("----------------2. TOKEN EXPRESSION,VALUE NEXT TYPE = %d -------------\n",exit_values_n);
             if (exit_values_n != SYN_OK){
               return exit_values_n;
             }
@@ -963,7 +964,7 @@ int body()
             }            
             return SYN_OK;
           }
-
+          //return SYN_OK;
           //printf("expression = TYPE = %d -------------\n",data.token.type);
           
         }
@@ -971,7 +972,7 @@ int body()
           // pravidlo <body> -> <ids> = <expression>,<values_n> EOL <eol> <body> ???????
           //printf("---------------- -0. else if = TYPE = %d -------------\n",data.token.type);
           int tmp_vys = values();
-          //printf("---------------- -0. TYPE = %d -------------\n",tmp_vys);
+          printf("---------------- -0. TYPE = %d -------------\n",tmp_vys);
 
           //ak fronta nieje prazdna, musi byt na lavej strane viac idciek ako vyrazov na pravej
           if (id_queue_top(&data.ID_queue) != NULL){
@@ -1225,7 +1226,7 @@ int values()
 
   //printf("VYSLEDOK EXPRESSION VO <VALUES> = %d\n", result_exp);
   //printf("TOKEN Z EXPRESSION TYPE = %d -------------\n",data.token.type);
-  if( result_exp != SYN_ERR ){
+  if( result_exp == SYN_OK){
     //printf("----------------0.7 VALUES TYPE = %d -------------\n",data.token.type);
     if( check_type(T_TYPE_RIGHT_VINCULUM) == SYN_OK ) {
       return SYN_ERR;
@@ -1236,7 +1237,7 @@ int values()
       return SYN_OK;
     }
 
-    //printf("----------------1. VALUES TYPE = %d -------------\n",data.token.type);
+    //printf("----------------1. VALUES TYPE = %d -------------\n",result_exp);
     int vys_values_n = values_n();
     //printf("----------------VYS VN VALUES TYPE = %d -------------\n",vys_values_n);
     if ( vys_values_n != SYN_OK){ 
@@ -1261,6 +1262,7 @@ int values()
 int values_n()
 {
     // pravidlo <values_n> -> ,<expression> <values_n>
+    int exit_values_n;
     if (bad_returns == true){
       return SYN_ERR;
     }
@@ -1297,10 +1299,14 @@ int values_n()
       if (check_type(T_TYPE_COMMA) == SYN_OK ){
           if (bad_returns == false){ 
             //printf("----------------VOLAAAAAAAAAAAAAAAAAAAAAAAA VALUES NEXT TYPE = %d -------------\n",data.token.type);
-            values_n();
+            exit_values_n = values_n();
           }
           else{
             return SYN_ERR;
+          }
+
+          if ( exit_values_n != SYN_OK){
+            return exit_values_n;
           }
       }
       //printf("----------------BAD RETURNS TYPE = %d -------------\n",bad_returns);
