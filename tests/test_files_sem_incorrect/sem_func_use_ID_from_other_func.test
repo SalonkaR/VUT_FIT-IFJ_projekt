@@ -1,11 +1,11 @@
 package main
 
-func foo () {
+func foo () (int) {
     tmp := 0
 }
 
 
 
 func main () {
-    tmp = 4
+    tmp1 := 4
 }

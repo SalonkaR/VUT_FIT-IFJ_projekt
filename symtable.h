@@ -41,7 +41,6 @@ typedef struct data
     struct data *nextptr;
 } Data_t;
 
-
 typedef struct Node {
 	size_t hashKey;			                             //klíč, hash z identifikatoru
 	Data_t *data;                                        /* užitečný obsah uzlu */
