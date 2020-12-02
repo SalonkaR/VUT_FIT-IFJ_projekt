@@ -1,5 +1,6 @@
 package main
 func mak () {
+    a := 0
     if a==0 {
         if a==0 {
             return a>a
@@ -17,5 +18,8 @@ func mak () {
     } else{
 
     }
+
+}
+func main(){
 
 }

@@ -622,7 +622,7 @@ int body()
         return LEX_ERR;
       }
       //printf("----------------1. TOKEN IDENTIFIER TYPE = %d -------------\n",data.token.type);  
-      int exit_ids = ids();
+      int exit_ids;
       if (check_type(T_TYPE_LEFT_BRACKET) != SYN_ERR ){
         // pravidlo <body> -> ID ( <argument> ) EOL <eol> <body>
         //printf("----------------0. TOKEN BODY MAM ID-TYPE = %d -------------\n",data.token.type);
@@ -705,7 +705,7 @@ int body()
       }
       // pravidlo <body> -> <ids> = ID(<argument>) EOL <eol> <body>
       // pravidlo <body> -> <ids> = <values> EOL <eol> <body>
-      else if( exit_ids == SYN_OK){                                                            //////////////////////////////////////////////////////////////
+      else if( (exit_ids = ids()) == SYN_OK){                                                            //////////////////////////////////////////////////////////////
         //printf("----------------0. BODY = TYPE = %d -------------\n",data.token.type);
         if (check_type(T_TYPE_ASSIGN) == SYN_ERR ){
           return SYN_ERR;

@@ -4,3 +4,6 @@ func return_value_misstake () {
     jozo := 3 + 1
     return ,jozo
 }
+func main(){
+
+}

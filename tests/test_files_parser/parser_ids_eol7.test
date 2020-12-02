@@ -2,6 +2,9 @@ package main
 
 
 func foo () {
-    id1 = 
+    id1 := 
     1+1
+}
+func main(){
+
 }

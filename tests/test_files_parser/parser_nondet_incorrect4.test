@@ -1,7 +1,8 @@
 package main
 
 func main (){
-    id = a+2
+    id := a+2
+    id1 := 0
     id1 = jozko(
         
     )

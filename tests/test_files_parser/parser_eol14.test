@@ -5,3 +5,6 @@ func foo (a int, b string
     jozo := 3 + 1
 
 }
+func main(){
+
+}

@@ -1,6 +1,10 @@
 package main
 
 func mamtodobre () {
+    kokot := 0
+    pica := 0
+    u := 0
+    holica := 0
     if 1==1 {
 
     } else{
@@ -8,4 +12,7 @@ func mamtodobre () {
     }
 
     return kokot, pica, u, holica
+}
+func main (){
+
 }

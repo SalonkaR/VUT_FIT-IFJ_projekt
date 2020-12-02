@@ -2,5 +2,9 @@ package main
 
 func params_misstake (int, float64) {
     jozo := 3 + 1
-    return jozo
+    return jozo, jozo
+}
+
+func main(){
+
 }

@@ -1,5 +1,10 @@
 package main
 func mak (sa int) {
     skap := 3 + 1
+    sa = 5
+
+}
+
+func main(){
 
 }

@@ -1,8 +1,15 @@
 package main
 
+func madar (){
+    
+}
 
 func foo () {
     madar(
         
     )
+}
+
+func main(){
+
 }

@@ -2,11 +2,16 @@ package main
 func kotlebik () {
 
 
-
+    a := 0
+    b := 0
     for ;a; {
         if b {} else {
             return 
             
         }
     }
+}
+
+func main(){
+
 }

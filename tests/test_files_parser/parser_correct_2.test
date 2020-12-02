@@ -7,15 +7,15 @@ package main
 
 
 
-func kotlebovec (mazurek string, a int) {
+func kotlebovec (mazurcek2 int, kotlebik2 int) {
     
     
-    
+    a := 0
     if a==1 {
-        
+            mazurcek := 0
+            kotlebik := 0
             mazurcek, kotlebik = 14, 88
             mazurcek2, kotlebik2 = 142, 882
-            mazurcek3, kotlebik3 = 143, 883
         
     } else{
 
@@ -26,4 +26,8 @@ func kotlebovec (mazurek string, a int) {
     }
 
     return 
+}
+
+func main(){
+
 }

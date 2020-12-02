@@ -1,9 +1,12 @@
 package main
 func mak () (float64) {
-    
+    return 
 }
 
 func brasko () (int,string) {
-    
+    return
 }
 
+func main(){
+
+}

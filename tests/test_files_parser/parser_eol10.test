@@ -6,3 +6,6 @@ func foo ()(int
 
 }
 
+func main(){
+
+}

@@ -1,15 +1,22 @@
 package main
 
-func mamtodobre (mazurek string) (string, string, string) {
-    if 1==1 {
+func mamtodobre (mazurek int) (string, string, string) {
+    if mazurek==1 {
         if 6 < 7 {
 
         } else {
 
         }
     } else{
+        ss := 0
         return 14 + 88, ss
     }
-
+    ko := 0
+    tle := 2
+    bik := 1
     return ko, tle, bik
+}
+
+func main (){
+
 }
