@@ -24,6 +24,8 @@ struct str_struct *func_id;
 bool internal_error = false;
 bool non_det = false;
 bool bad_returns = false;
+bool return_included = false;
+Data_t *actual_func = NULL;
 
 int result;
 
@@ -193,6 +195,7 @@ int prog()
       str_copy(data.token.attribute.string, func_id);
       
       Data_t *func_insert_global = BT_insert(&data.BT_global, data.token.attribute.string->str, &internal_error);
+      actual_func = func_insert_global;
       if (internal_error == true) return ERROR_INTERNAL;
       if (func_insert_global == NULL){
         return SEM_ERR_UNDEFINED_VAR;
@@ -291,6 +294,9 @@ int prog()
             if (exit_eol2 != SYN_OK){ 
               return exit_eol2;
             }
+            //funkcia, ktora ma return values, musi obsahovat return
+            if(id_queue_top(&actual_func->func_params) != NULL && return_included == false) return SEM_ERR_NO_PARAMS;
+            return_included = false;
             bt_stack_pop(&data.BT_stack);
             //printf("----------------VOLAM PROG- TYPE = %d -------------\n",data.token.type);
             int exit_prog = prog();
@@ -307,6 +313,9 @@ int prog()
       if (check_type(T_TYPE_RIGHT_VINCULUM) == SYN_ERR ){
         return SYN_ERR;
       }
+      //funkcia, ktora ma return values, musi obsahovat return
+      if(id_queue_top(&actual_func->func_params) != NULL && return_included == false) return SEM_ERR_NO_PARAMS;
+      return_included = false;
       //konci funkcia tak popnem stack frame
       bt_stack_pop(&data.BT_stack);
 
@@ -648,6 +657,8 @@ int body()
       // pravidlo <body> ->  return <list_of_return_values> EOL <eol> <body>
       else if (check_keyword(KWORD_RETURN) != SYN_ERR ){
         //printf("----------------0. TOKEN body MAM IF if-TYPE = %d -------------\n",data.token.type);
+        //return je obsiahnuty
+        return_included = true;
         if (check_token() == LEX_ERR){
           return LEX_ERR;
         }
@@ -1229,7 +1240,7 @@ int values()
   //printf("TOKEN Z EXPRESSION TYPE = %d -------------\n",data.token.type);
   if( result_exp == SYN_OK){
     //printf("----------------0.7 VALUES TYPE = %d -------------\n",data.token.type);
-    if( check_type(T_TYPE_RIGHT_VINCULUM) == SYN_OK ) {
+    if (check_type(T_TYPE_RIGHT_VINCULUM) == SYN_OK ) {
       return SYN_ERR;
     }
 
