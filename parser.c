@@ -723,7 +723,7 @@ int body()
         // pravidlo <body> -> ID ( <argument> ) EOL <eol> <body>
 
         //funkcia main nemoze byt volana
-        if(str_cmp_const_str(temp_string, "main") == 0) return SEM_ERR_OTHER;
+        if(str_cmp_const_str(&top_queue->id, "main") == 0) return SEM_ERR_OTHER;
 
         
 		//ulozim si toto volanie funkcie
@@ -895,6 +895,10 @@ int body()
             if (check_token() == LEX_ERR){
               return LEX_ERR;
             }
+
+
+			//funckia main nemoze byt volana
+			if(str_cmp_const_str(&called_func, "main") == 0) return SEM_ERR_OTHER;
 
             //tu treba si poznacit pri volani danej funkcie ci vracia dane typy ake su na lavej strane
 			//ulozim si toto volanie funkcie
@@ -1917,7 +1921,7 @@ int parse()
         bad_returns = false;
         Print_tree(data.BT_global.root_ptr);
         //funkcia s ID main musi byt obsiahnuta
-        //if(BT_search(&data.BT_global, "main", &internal_error) == NULL) result = SEM_ERR_UNDEFINED_VAR;
+        if(BT_search(&data.BT_global, "main", &internal_error) == NULL) result = SEM_ERR_UNDEFINED_VAR;
     }
 
 	if (result == SYN_OK){
