@@ -13,7 +13,7 @@
 
 #define FILE_COUNT_CORRECT 5
 #define FILE_COUNT_INCORRECT 16
-#define FILE_COUNT_UJEBANE 0//139
+#define FILE_COUNT_UJEBANE 139
 
 void reset() {
   printf("\033[0m");
@@ -155,7 +155,7 @@ void kontrola_sem(){
                             "sem/builtin/substr_1.go",
                             "sem/builtin/substr_2.go",
                             "sem/builtin/substr_3.go",
-                            "sem/declaration/multiple_funcions.go",
+                            "sem/declaration/multiple_functions.go",
                             "sem/declaration/multiple_vars_1.go",
                             "sem/declaration/multiple_vars_2.go",
                             "sem/declaration/multiple_vars_3.go",

@@ -2,6 +2,7 @@ package main
 
 func foo () (int) {
     tmp := 0
+    return tmp
 }
 
 

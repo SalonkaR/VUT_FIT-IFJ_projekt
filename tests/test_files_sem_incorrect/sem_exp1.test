@@ -6,7 +6,7 @@ func main (){
     jebko := 10.5
     if 1 != 2{
         id := jebo - 10 * (1+2)
-        for i:= 1; i < 10; i = jebko + 1{
+        for i:= 1; i < 10; i = jebo + 1{
 
         }
     }else{

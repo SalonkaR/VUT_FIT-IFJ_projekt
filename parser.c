@@ -1858,7 +1858,7 @@ bool init_variables()
     //func inputf() (float64,int)
     temp = BT_insert(&data.BT_global, "inputf", &internal_error);
     temp2 = id_queue_push(&temp->func_params);
-    str_add_const_str(&temp2->id, "float64");
+    str_add_const_str(&temp2->id, "double");
     temp2 = id_queue_push(&temp->func_params);
     str_add_const_str(&temp2->id, "int");
     //func print ( term1 , term2 , …, term𝑛 )
@@ -1868,11 +1868,11 @@ bool init_variables()
     temp2 = id_queue_push(&temp->input_params);
     str_add_const_str(&temp2->id, "int");
     temp2 = id_queue_push(&temp->func_params);
-    str_add_const_str(&temp2->id, "float64");
+    str_add_const_str(&temp2->id, "double");
     //func float2int(f float64) (int)
     temp = BT_insert(&data.BT_global, "float2int", &internal_error);
     temp2 = id_queue_push(&temp->input_params);
-    str_add_const_str(&temp2->id, "float64");
+    str_add_const_str(&temp2->id, "double");
     temp2 = id_queue_push(&temp->func_params);
     str_add_const_str(&temp2->id, "int");
     //func len(𝑠 string) (int)
@@ -1988,7 +1988,7 @@ int parse()
     {
         result = start(&data);
         bad_returns = false;
-        Print_tree(data.BT_global.root_ptr);
+        //Print_tree(data.BT_global.root_ptr);
         //funkcia s ID main musi byt obsiahnuta
         if(BT_search(&data.BT_global, "main", &internal_error) == NULL) result = SEM_ERR_UNDEFINED_VAR;
     }

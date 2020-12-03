@@ -1,13 +1,12 @@
 package main
 
-
-
 func foo () {
+    id := 0
     id = defined() 
 }
 
 
-func defined() {
+func defined() (int) {
     return 5
 }
 
