@@ -730,6 +730,12 @@ int body()
         //funkcia main nemoze byt volana
         if(str_cmp_const_str(&top_queue->id, "main") == 0) return SEM_ERR_OTHER;
 
+		//ak je definovana premena nad tym
+		Data_t *found = bt_stack_search(&data.BT_stack, top_queue->id.str, &internal_error);
+		if (found != NULL){
+			return SEM_ERR_OTHER;
+		}
+
         
 		//ulozim si toto volanie funkcie
 		tFunc_calls *first_in_ll = data.check_func_calls;
@@ -905,6 +911,12 @@ int body()
 			//funckia main nemoze byt volana
 			if(str_cmp_const_str(&called_func, "main") == 0) return SEM_ERR_OTHER;
 
+			//nemoze byt uz definovana dana premena s rovnakym id
+			Data_t *found = bt_stack_search(&data.BT_stack, called_func.str, &internal_error);
+			if (found != NULL){
+				return SEM_ERR_OTHER;
+			}
+
             //tu treba si poznacit pri volani danej funkcie ci vracia dane typy ake su na lavej strane
 			//ulozim si toto volanie funkcie
 			tFunc_calls *first_in_ll = data.check_func_calls;
@@ -924,6 +936,11 @@ int body()
 			tID_queue_item *tmp = data.ID_queue.top;
 			while (tmp != NULL){
 				tID_queue_item *new_item = id_queue_push(&new_item_ll->ls);
+
+				if (str_cmp_const_str(&tmp->id, "_") == 0){
+					str_add_const_str(&new_item->id, "_");
+					break;
+				}
 
 				Data_t *found = bt_stack_search(&data.BT_stack, tmp->id.str, &internal_error);
 				if (found == NULL){
@@ -1924,9 +1941,11 @@ int parse()
     {
         result = start(&data);
         bad_returns = false;
-        Print_tree(data.BT_global.root_ptr);
+        //Print_tree(data.BT_global.root_ptr);
         //funkcia s ID main musi byt obsiahnuta
-        if(BT_search(&data.BT_global, "main", &internal_error) == NULL) result = SEM_ERR_UNDEFINED_VAR;
+		if (result == SYN_OK){
+        	if(BT_search(&data.BT_global, "main", &internal_error) == NULL) result = SEM_ERR_UNDEFINED_VAR;
+		}
     }
 
 	if (result == SYN_OK){
@@ -1955,8 +1974,6 @@ int parse()
 			
 			tID_queue_item *ls_btglobal = func_check->func_params.top;
 			tID_queue_item *ls_tocheck = tmp->ls.top;
-			print_queue(&func_check->func_params);
-			print_queue(&tmp->ls);
 			while (ls_btglobal != NULL && ls_tocheck != NULL){
 				
 				ls_btglobal = n_item(&func_check->func_params, ls_counter);
@@ -1966,9 +1983,11 @@ int parse()
 					break;
 				}
 
-				if ((str_cmp_const_str(&ls_btglobal->id, ls_tocheck->id.str)) != 0){
-					result = SEM_ERR_NO_PARAMS;
-					goto error_func_call;
+				if ((str_cmp_const_str(&ls_btglobal->id, ls_tocheck->id.str)) != 0 ){
+					if (str_cmp_const_str(&ls_tocheck->id, "_") != 0){
+						result = SEM_ERR_NO_PARAMS;
+						goto error_func_call;
+					}
 				}
 
 				ls_counter++;
