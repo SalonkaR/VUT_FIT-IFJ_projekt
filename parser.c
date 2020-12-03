@@ -1865,8 +1865,6 @@ bool init_variables()
     data.BT_global.definded = false;  //som retard a musim to spravit
     if(BT_init(&data.BT_global) == false) return false;
 
-<<<<<<< HEAD
-=======
     //func inputs() (string,int)
     Data_t *temp = BT_insert(&data.BT_global, "inputs", &internal_error);
     tID_queue_item *temp2 = id_queue_push(&temp->func_params);
@@ -1936,7 +1934,6 @@ bool init_variables()
     temp2 = id_queue_push(&temp->func_params);
     str_add_const_str(&temp2->id, "int");
 
->>>>>>> tmp-branch
     //inicializacia boolovsky hodnot v parser_data
     data.in_if_for = false;
     data.set_type_id = false;
