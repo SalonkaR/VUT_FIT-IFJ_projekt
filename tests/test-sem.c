@@ -13,7 +13,7 @@
 
 #define FILE_COUNT_CORRECT 5
 #define FILE_COUNT_INCORRECT 16
-#define FILE_COUNT_UJEBANE 0//139
+#define FILE_COUNT_UJEBANE 139
 
 void reset() {
   printf("\033[0m");
