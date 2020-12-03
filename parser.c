@@ -26,6 +26,9 @@ bool non_det = false;
 bool bad_returns = false;
 bool saving_return_types = false;
 bool return_included = false;
+bool set_param_type = false;
+
+Data_t *actual_parameter = NULL;
 
 
 int result;
@@ -223,7 +226,9 @@ int prog()
 
     	if (check_type(T_TYPE_RIGHT_BRACKET) == SYN_ERR ){
         //printf("VOLAM PARAMS -----------\n");
+        set_param_type = true;
         int exit_params = params();
+        set_param_type = false;
         if (exit_params != SYN_OK){ 
           return exit_params;
         }
@@ -298,8 +303,9 @@ int prog()
               return exit_eol2;
             }
             //funkcia, ktora ma return values, musi obsahovat return
-            if(id_queue_top(&data.actual_func->func_params) != NULL && return_included == false) return SEM_ERR_NO_PARAMS;
+            if((data.actual_func->func_params.top) != NULL && return_included == false) return SEM_ERR_OTHER;
             return_included = false;
+
             bt_stack_pop(&data.BT_stack);
             data.actual_func = NULL;
             //printf("----------------VOLAM PROG- TYPE = %d -------------\n",data.token.type);
@@ -318,8 +324,11 @@ int prog()
         return SYN_ERR;
       }
       //funkcia, ktora ma return values, musi obsahovat return
-      if(id_queue_top(&data.actual_func->func_params) != NULL && return_included == false) return SEM_ERR_NO_PARAMS;
+      if((data.actual_func->func_params.top) != NULL && return_included == false) return SEM_ERR_OTHER;
+
+
       return_included = false;
+
       //konci funkcia tak popnem stack frame
       bt_stack_pop(&data.BT_stack);
       data.actual_func = NULL;
@@ -1224,16 +1233,18 @@ int list_of_return_values()
   data.check_returns = false;
 
   //ak bolo malo vyrazov v returne ako je navreatovych hodnot funkcie vratim error
-  if (data.checked_returns != data.actual_func->no_ret_values){
-    return SEM_ERR_NO_PARAMS;
-  }
   //nastavim spat pocitadlo checknutych returnov
-  data.checked_returns = 0;
+  
   if( exit_values != SYN_OK ){
     //printf("----------------SYN ERR LORV TYPE = %d -------------\n",exit_values);
     // to do tu sa to jebe  pri rekurzii 
     return exit_values;
   }
+
+  if (data.checked_returns != data.actual_func->no_ret_values){
+    return SEM_ERR_NO_PARAMS;
+  }
+  data.checked_returns = 0;
 
   // pravidlo <list_of_return_values> -> epsilon
   //printf("----------------SYN OK LORV TYPE = %d -------------\n",data.token.type);
@@ -1380,7 +1391,7 @@ int params()
     if (str_cmp_const_str(data.token.attribute.string, tmp) == 0){
         return SEM_ERR_OTHER;
     }
-    BT_insert(&top_of_the_stack->local_bt, data.token.attribute.string->str, &internal_error);
+    actual_parameter = BT_insert(&top_of_the_stack->local_bt, data.token.attribute.string->str, &internal_error);
     
     if (check_token() == LEX_ERR){
       return LEX_ERR;
@@ -1430,7 +1441,8 @@ int params_n()
 
     tBT_stack_item* top_of_the_stack = bt_stack_top(&data.BT_stack);
     //kontrola ci IDcka vstupnych parametrov nie su rovnake
-    if (BT_insert(&top_of_the_stack->local_bt, data.token.attribute.string->str, &internal_error) == NULL) return SEM_ERR_UNDEFINED_VAR;
+    actual_parameter = BT_insert(&top_of_the_stack->local_bt, data.token.attribute.string->str, &internal_error);
+    if (actual_parameter == NULL) return SEM_ERR_UNDEFINED_VAR;
 
     if (check_token() == LEX_ERR){
       return LEX_ERR;
@@ -1558,6 +1570,20 @@ int type()
        ( check_keyword(KWORD_FLOAT64) != SYN_ERR )  ||
        ( check_keyword(KWORD_STRING) != SYN_ERR )) {
       //printf("  ----> SOM V TYPE OK = %d  <---- \n",data.token.type);
+
+      if (set_param_type == true){
+        if (data.token.type == T_TYPE_KEYWORD && data.token.attribute.keyword == KWORD_INT){
+            actual_parameter->type = TYPE_INT;
+        }
+        else if (data.token.type == T_TYPE_KEYWORD && data.token.attribute.keyword == KWORD_FLOAT64){
+            actual_parameter->type = TYPE_DOUBLE;
+        } 
+        else if (data.token.type == T_TYPE_KEYWORD && data.token.attribute.keyword == KWORD_STRING){
+            actual_parameter->type = TYPE_STRING;
+        }
+      }
+
+
       if (saving_return_types == true){
         if (data.token.type == T_TYPE_KEYWORD && data.token.attribute.keyword == KWORD_INT){
 
