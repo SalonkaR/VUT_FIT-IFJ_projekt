@@ -35,6 +35,8 @@ bool id_queue_pop(tID_queue* queue);
 
 void id_queue_free(tID_queue* queue);
 
+tID_queue_item *n_item(tID_queue* queue, int n);
+
 void print_queue(tID_queue* queue);
 
 #endif

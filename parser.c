@@ -26,7 +26,7 @@ bool non_det = false;
 bool bad_returns = false;
 bool saving_return_types = false;
 bool return_included = false;
-Data_t *actual_func = NULL;
+
 
 int result;
 
@@ -196,7 +196,7 @@ int prog()
       str_copy(data.token.attribute.string, func_id);
       
       Data_t *func_insert_global = BT_insert(&data.BT_global, data.token.attribute.string->str, &internal_error);
-      actual_func = func_insert_global;
+      data.actual_func = func_insert_global;
       if (internal_error == true) return ERROR_INTERNAL;
       if (func_insert_global == NULL){
         return SEM_ERR_UNDEFINED_VAR;
@@ -298,10 +298,10 @@ int prog()
               return exit_eol2;
             }
             //funkcia, ktora ma return values, musi obsahovat return
-            if(id_queue_top(&actual_func->func_params) != NULL && return_included == false) return SEM_ERR_NO_PARAMS;
+            if(id_queue_top(&data.actual_func->func_params) != NULL && return_included == false) return SEM_ERR_NO_PARAMS;
             return_included = false;
             bt_stack_pop(&data.BT_stack);
-            actual_func = NULL;
+            data.actual_func = NULL;
             //printf("----------------VOLAM PROG- TYPE = %d -------------\n",data.token.type);
             int exit_prog = prog();
             if (exit_prog != SYN_OK){ 
@@ -318,11 +318,11 @@ int prog()
         return SYN_ERR;
       }
       //funkcia, ktora ma return values, musi obsahovat return
-      if(id_queue_top(&actual_func->func_params) != NULL && return_included == false) return SEM_ERR_NO_PARAMS;
+      if(id_queue_top(&data.actual_func->func_params) != NULL && return_included == false) return SEM_ERR_NO_PARAMS;
       return_included = false;
       //konci funkcia tak popnem stack frame
       bt_stack_pop(&data.BT_stack);
-      actual_func = NULL;
+      data.actual_func = NULL;
 
       if (check_token() == LEX_ERR){
     	  return LEX_ERR;
@@ -773,6 +773,10 @@ int body()
         //checknem ci este id neni definovane
         tBT_stack_item *top_bt_stack = bt_stack_top(&data.BT_stack);
         tID_queue_item *top_queue_def = id_queue_top(&data.ID_queue);
+        hKey_t tmp = "_";
+        if (str_cmp_const_str(&top_queue_def->id, tmp) == 0){
+            return SEM_ERR_OTHER;
+        }
         Data_t *search_found = BT_search(&top_bt_stack->local_bt, top_queue_def->id.str, &internal_error);
         if (internal_error == true){
           return ERROR_INTERNAL;
@@ -1053,6 +1057,11 @@ int definition()
 
   //printf("----------------0. TOKEN DEFINITION TYPE = %d -------------\n",data.token.type);
   if (check_type(T_TYPE_IDENTIFIER) != SYN_ERR ){
+
+      hKey_t tmp = "_";
+      if (str_cmp_const_str(data.token.attribute.string, tmp) == 0){
+          return SEM_ERR_OTHER;
+      }
       
       tID_queue_item *top_queue = id_queue_push(&data.ID_queue);
 
@@ -1215,7 +1224,7 @@ int list_of_return_values()
   data.check_returns = false;
 
   //ak bolo malo vyrazov v returne ako je navreatovych hodnot funkcie vratim error
-  if (data.checked_returns != actual_func->no_ret_values){
+  if (data.checked_returns != data.actual_func->no_ret_values){
     return SEM_ERR_NO_PARAMS;
   }
   //nastavim spat pocitadlo checknutych returnov
@@ -1367,6 +1376,10 @@ int params()
   if (check_type(T_TYPE_IDENTIFIER) != SYN_ERR ){
     
     tBT_stack_item* top_of_the_stack = bt_stack_top(&data.BT_stack);
+    hKey_t tmp = "_";
+    if (str_cmp_const_str(data.token.attribute.string, tmp) == 0){
+        return SEM_ERR_OTHER;
+    }
     BT_insert(&top_of_the_stack->local_bt, data.token.attribute.string->str, &internal_error);
     
     if (check_token() == LEX_ERR){
@@ -1408,6 +1421,11 @@ int params_n()
     //printf("----------------1. TOKEN PARAMSNEXT TYPE = %d -------------\n",data.token.type);
     if (check_type(T_TYPE_IDENTIFIER) == SYN_ERR ){
       return SYN_ERR;
+    }
+
+    hKey_t tmp = "_";
+    if (str_cmp_const_str(data.token.attribute.string, tmp) == 0){
+        return SEM_ERR_OTHER;
     }
 
     tBT_stack_item* top_of_the_stack = bt_stack_top(&data.BT_stack);
@@ -1543,24 +1561,24 @@ int type()
       if (saving_return_types == true){
         if (data.token.type == T_TYPE_KEYWORD && data.token.attribute.keyword == KWORD_INT){
 
-          tID_queue_item *pushnuta = id_queue_push(&actual_func->func_params);
+          tID_queue_item *pushnuta = id_queue_push(&data.actual_func->func_params);
           
           hKey_t tmp = "int";
           str_add_const_str(&pushnuta->id, tmp);
         }
         else if (data.token.type == T_TYPE_KEYWORD && data.token.attribute.keyword == KWORD_FLOAT64){
 
-          tID_queue_item *pushnuta = id_queue_push(&actual_func->func_params);
+          tID_queue_item *pushnuta = id_queue_push(&data.actual_func->func_params);
           hKey_t tmp = "double";
           str_add_const_str(&pushnuta->id, tmp);
         }
         else if (data.token.type == T_TYPE_KEYWORD && data.token.attribute.keyword == KWORD_STRING){
 
-          tID_queue_item *pushnuta= id_queue_push(&actual_func->func_params);
+          tID_queue_item *pushnuta= id_queue_push(&data.actual_func->func_params);
           hKey_t string = "string";
           str_add_const_str(&pushnuta->id, string);
         }
-        actual_func->no_ret_values++;
+        data.actual_func->no_ret_values++;
       }
       
       return SYN_OK;
@@ -1678,6 +1696,7 @@ bool init_variables()
     data.check_type = false;
     data.check_returns = false;
     data.checked_returns = 0;
+    data.actual_func = NULL;
 
     bt_stack_init(&data.BT_stack);
 

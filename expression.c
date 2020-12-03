@@ -520,7 +520,15 @@ int expression(struct parser_data* data, bool *nondetermism){
             free_resources();
             return SEM_ERR_OTHER;
         }
+
+
+
         tID_queue_item *top_queue = id_queue_top(&data->ID_queue);
+        //pri definicii nemoze byt _
+        hKey_t tmp = "_";
+        if (str_cmp_const_str(&top_queue->id, tmp) == 0){
+            return SEM_ERR_OTHER;
+        }
 
         tBT_stack_item *top_bt_stack = bt_stack_top(&data->BT_stack);
         bool internal_err;
@@ -548,6 +556,11 @@ int expression(struct parser_data* data, bool *nondetermism){
             free_resources();
             return SEM_ERR_OTHER;
         }
+        hKey_t tmp = "_";
+        if (str_cmp_const_str(&top_queue_def->id, tmp) == 0){
+            return SYN_OK;
+        }
+
         Data_t *search_found = bt_stack_search(&data->BT_stack, top_queue_def->id.str, &internal_err);
         if (internal_err == true){
             free_resources();
@@ -562,6 +575,45 @@ int expression(struct parser_data* data, bool *nondetermism){
             free_resources();
             return SEM_ERR_OTHER;
         }
+    }
+    else if (data->check_returns == true){
+        if (expression_result->data_type == TYPE_BOOL){
+            free_resources();
+            return SEM_ERR_OTHER;
+        }
+
+        tID_queue_item *n_id = n_item(&data->actual_func->func_params, data->checked_returns);
+        if (n_id == NULL){
+            free_resources();
+            return SEM_ERR_NO_PARAMS;
+        }
+        if (expression_result->data_type == TYPE_INT){
+            hKey_t tmp = "int";
+            if (str_cmp_const_str(&n_id->id, tmp) != 0){
+                free_resources();
+                return SEM_ERR_NO_PARAMS;
+            }
+        }
+        else if (expression_result->data_type == TYPE_DOUBLE){
+            hKey_t tmp = "double";
+            if (str_cmp_const_str(&n_id->id, tmp) != 0){
+                free_resources();
+                return SEM_ERR_NO_PARAMS;
+            }
+
+        }
+        else if (expression_result->data_type == TYPE_STRING){
+            hKey_t tmp = "string";
+            if (str_cmp_const_str(&n_id->id, tmp) != 0){
+                free_resources();
+                return SEM_ERR_NO_PARAMS;
+            }
+        }
+        else if (expression_result->data_type == TYPE_UNDEFINED){
+            free_resources();
+            return SEM_ERR_OTHER;
+        }
+
     }
 
 

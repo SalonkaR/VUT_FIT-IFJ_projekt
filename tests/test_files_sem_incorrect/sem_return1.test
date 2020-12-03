@@ -5,5 +5,5 @@ func main (){
 }
 
 func jozko()(int, string, float64){
-
+    return 1 , "kkt", 0.9, 
 }

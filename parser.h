@@ -28,6 +28,7 @@ struct parser_data
 
     int checked_returns; //pomocne pocitadlo pre expression pri checkovani return values
     tID_queue ID_queue;
+    Data_t *actual_func;
 };
 
 int parse();

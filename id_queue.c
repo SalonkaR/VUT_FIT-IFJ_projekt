@@ -61,6 +61,7 @@ tID_queue_item *id_queue_push(tID_queue* queue){
             return new_item;
         }
     } 
+    return NULL;
 }
 
 
@@ -90,6 +91,22 @@ void id_queue_free(tID_queue* queue){
     }
 	return;
 }
+
+tID_queue_item *n_item(tID_queue* queue, int n){
+    int counter = 0;
+    tID_queue_item *tmp = queue->top;
+    for (; counter < n; counter++){
+        if (tmp != NULL){
+
+            tmp = tmp->next;
+        }
+        else {
+            return NULL;
+        }
+    }
+    return tmp;
+}
+
 
 //used for debug
 void print_queue(tID_queue* queue){
