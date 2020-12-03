@@ -1735,6 +1735,75 @@ bool init_variables()
     data.BT_global.definded = false;  //som retard a musim to spravit
     if(BT_init(&data.BT_global) == false) return false;
 
+    //func inputs() (string,int)
+    Data_t *temp = BT_insert(&data.BT_global, "inputs", &internal_error);
+    tID_queue_item *temp2 = id_queue_push(&temp->func_params);
+    str_add_const_str(&temp2->id, "string");
+    temp2 = id_queue_push(&temp->func_params);
+    str_add_const_str(&temp2->id, "int");
+    //func inputi() (int,int)
+    temp = BT_insert(&data.BT_global, "inputi", &internal_error);
+    temp2 = id_queue_push(&temp->func_params);
+    str_add_const_str(&temp2->id, "int");
+    temp2 = id_queue_push(&temp->func_params);
+    str_add_const_str(&temp2->id, "int");
+    //func inputf() (float64,int)
+    temp = BT_insert(&data.BT_global, "inputf", &internal_error);
+    temp2 = id_queue_push(&temp->func_params);
+    str_add_const_str(&temp2->id, "float64");
+    temp2 = id_queue_push(&temp->func_params);
+    str_add_const_str(&temp2->id, "int");
+    //func print ( term1 , term2 , …, term𝑛 )
+    temp = BT_insert(&data.BT_global, "print", &internal_error);
+    //func int2float(i int) (float64)
+    temp = BT_insert(&data.BT_global, "int2float", &internal_error);
+    temp2 = id_queue_push(&temp->input_params);
+    str_add_const_str(&temp2->id, "int");
+    temp2 = id_queue_push(&temp->func_params);
+    str_add_const_str(&temp2->id, "float64");
+    //func float2int(f float64) (int)
+    temp = BT_insert(&data.BT_global, "float2int", &internal_error);
+    temp2 = id_queue_push(&temp->input_params);
+    str_add_const_str(&temp2->id, "float64");
+    temp2 = id_queue_push(&temp->func_params);
+    str_add_const_str(&temp2->id, "int");
+    //func len(𝑠 string) (int)
+    temp = BT_insert(&data.BT_global, "len", &internal_error);
+    temp2 = id_queue_push(&temp->input_params);
+    str_add_const_str(&temp2->id, "string");
+    temp2 = id_queue_push(&temp->func_params);
+    str_add_const_str(&temp2->id, "int");
+    //func substr(s string, i int, n int) (string, int)
+    temp = BT_insert(&data.BT_global, "substr", &internal_error);
+    temp2 = id_queue_push(&temp->input_params);
+    str_add_const_str(&temp2->id, "string");
+    temp2 = id_queue_push(&temp->input_params);
+    str_add_const_str(&temp2->id, "int");
+    temp2 = id_queue_push(&temp->input_params);
+    str_add_const_str(&temp2->id, "int");
+    temp2 = id_queue_push(&temp->func_params);
+    str_add_const_str(&temp2->id, "string");
+    temp2 = id_queue_push(&temp->func_params);
+    str_add_const_str(&temp2->id, "int");
+    //func ord(s string, i int) (int, int)
+    temp = BT_insert(&data.BT_global, "ord", &internal_error);
+    temp2 = id_queue_push(&temp->input_params);
+    str_add_const_str(&temp2->id, "string");
+    temp2 = id_queue_push(&temp->input_params);
+    str_add_const_str(&temp2->id, "int");
+    temp2 = id_queue_push(&temp->func_params);
+    str_add_const_str(&temp2->id, "int");
+    temp2 = id_queue_push(&temp->func_params);
+    str_add_const_str(&temp2->id, "int");
+    //func chr(i int) (string, int)
+    temp = BT_insert(&data.BT_global, "chr", &internal_error);
+    temp2 = id_queue_push(&temp->input_params);
+    str_add_const_str(&temp2->id, "int");
+    temp2 = id_queue_push(&temp->func_params);
+    str_add_const_str(&temp2->id, "string");
+    temp2 = id_queue_push(&temp->func_params);
+    str_add_const_str(&temp2->id, "int");
+
     //inicializacia boolovsky hodnot v parser_data
     data.in_if_for = false;
     data.set_type_id = false;
@@ -1795,7 +1864,7 @@ int parse()
         bad_returns = false;
         Print_tree(data.BT_global.root_ptr);
         //funkcia s ID main musi byt obsiahnuta
-        //if(BT_search(&data.BT_global, "main", &internal_error) == NULL) result = SEM_ERR_UNDEFINED_VAR;
+        if(BT_search(&data.BT_global, "main", &internal_error) == NULL) result = SEM_ERR_UNDEFINED_VAR;
     }
     //uvolnenie pamate 
     free_variables();
