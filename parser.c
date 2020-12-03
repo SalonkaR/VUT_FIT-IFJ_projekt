@@ -1570,20 +1570,39 @@ int type()
        ( check_keyword(KWORD_FLOAT64) != SYN_ERR )  ||
        ( check_keyword(KWORD_STRING) != SYN_ERR )) {
       //printf("  ----> SOM V TYPE OK = %d  <---- \n",data.token.type);
-
+      
+      //anastavim si typy vstupnych parametrov v aktualnom stacku
+      //tu si ukladam do fronty k aktualnej funkcii, typy parametrov danej funkcie
       if (set_param_type == true){
         if (data.token.type == T_TYPE_KEYWORD && data.token.attribute.keyword == KWORD_INT){
+
+            tID_queue_item *pushnuta = id_queue_push(&data.actual_func->input_params);
+          
+            hKey_t tmp = "int";
+            str_add_const_str(&pushnuta->id, tmp);
+
             actual_parameter->type = TYPE_INT;
         }
         else if (data.token.type == T_TYPE_KEYWORD && data.token.attribute.keyword == KWORD_FLOAT64){
+            tID_queue_item *pushnuta = id_queue_push(&data.actual_func->input_params);
+          
+            hKey_t tmp = "double";
+            str_add_const_str(&pushnuta->id, tmp);
+
             actual_parameter->type = TYPE_DOUBLE;
         } 
         else if (data.token.type == T_TYPE_KEYWORD && data.token.attribute.keyword == KWORD_STRING){
+
+            tID_queue_item *pushnuta = id_queue_push(&data.actual_func->input_params);
+          
+            hKey_t tmp = "string";
+            str_add_const_str(&pushnuta->id, tmp);
+
             actual_parameter->type = TYPE_STRING;
         }
       }
 
-
+      //tu si ukladam do fronty k aktualnej funkcii, navrtove hodnoty danej funkcie
       if (saving_return_types == true){
         if (data.token.type == T_TYPE_KEYWORD && data.token.attribute.keyword == KWORD_INT){
 

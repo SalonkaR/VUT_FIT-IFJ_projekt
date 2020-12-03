@@ -34,7 +34,8 @@ enum data_types
 typedef struct data
 {
     enum data_types type;
-	tID_queue func_params;
+	tID_queue func_params; //return values(typy)
+	tID_queue input_params; // vstupne parametre(typy)
 	int no_ret_values;
     hKey_t identifier;	 
 	bool defined;

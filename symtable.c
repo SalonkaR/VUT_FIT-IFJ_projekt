@@ -153,6 +153,7 @@ static Data_t *insert_rec (tBT *bt_ptr, tNode *parent_ptr, tNode* root_ptr,size_
         }
         //nakopirovanie indentifikatoru do dat
         id_queue_init(&newPtr_data->func_params);
+        id_queue_init(&newPtr_data->input_params);
         newPtr_data->no_ret_values =0;
         strcpy(newPtr_data->identifier, key);
         //data
@@ -215,6 +216,7 @@ static Data_t *insert_rec (tBT *bt_ptr, tNode *parent_ptr, tNode* root_ptr,size_
 
                 //data
                 Data_t *tmp = root_ptr->data->nextptr;
+                id_queue_init(&newPtr_data->input_params);
                 id_queue_init(&newPtr_data->func_params);
                 newPtr_data->no_ret_values =0;
                 newPtr_data->nextptr = tmp;
@@ -260,6 +262,7 @@ static void ReplaceByRightmost (tBT *bt_ptr, tNode *parent_ptr, tNode *PtrReplac
         //vymazem data
         Data_t *dataToDelete =  PtrReplaced->data;
         id_queue_free(&dataToDelete->func_params);
+        id_queue_free(&dataToDelete->input_params);
         free(dataToDelete->identifier);
         free(dataToDelete);
         PtrReplaced->data = NULL;
@@ -314,6 +317,7 @@ static void delete_rec(tBT *bt_ptr, tNode *parent_ptr, tNode *RootPtr, size_t ha
                 //ked v linked liste sa nachadza len 1 prvok
                 if (count ==1){
                     id_queue_free(&RootPtr->data->func_params);
+                    id_queue_free(&RootPtr->data->input_params);
                     free(RootPtr->data->identifier);
                     free(RootPtr->data);
                     free(RootPtr);
@@ -339,6 +343,7 @@ static void delete_rec(tBT *bt_ptr, tNode *parent_ptr, tNode *RootPtr, size_t ha
                         if (strcmp(found->nextptr->identifier, key) == 0){
                             Data_t *tmp_next = found->nextptr->nextptr;
                             id_queue_free(&found->nextptr->func_params);
+                            id_queue_free(&found->nextptr->input_params);
                             free(found->nextptr->identifier);
                             free(found->nextptr);
 
@@ -374,6 +379,7 @@ static void delete_rec(tBT *bt_ptr, tNode *parent_ptr, tNode *RootPtr, size_t ha
                         }
                     }
                     id_queue_free(&RootPtr->data->func_params);
+                    id_queue_free(&RootPtr->data->input_params);
                     free(RootPtr->data->identifier);
                     free(RootPtr->data);
 
@@ -389,6 +395,7 @@ static void delete_rec(tBT *bt_ptr, tNode *parent_ptr, tNode *RootPtr, size_t ha
                         if (strcmp(found->nextptr->identifier, key) == 0){
                             Data_t *tmp_next = found->nextptr->nextptr;
                             id_queue_free(&found->nextptr->func_params);
+                            id_queue_free(&found->nextptr->input_params);
                             free(found->nextptr->identifier);
                             free(found->nextptr);
 
@@ -425,6 +432,7 @@ static void delete_rec(tBT *bt_ptr, tNode *parent_ptr, tNode *RootPtr, size_t ha
                         }
                     }
                     id_queue_free(&RootPtr->data->func_params);
+                    id_queue_free(&RootPtr->data->input_params);
                     free(RootPtr->data->identifier);
                     free(RootPtr->data);
 
@@ -440,6 +448,7 @@ static void delete_rec(tBT *bt_ptr, tNode *parent_ptr, tNode *RootPtr, size_t ha
                         if (strcmp(found->nextptr->identifier, key) == 0){
                             Data_t *tmp_next = found->nextptr->nextptr;
                             id_queue_free(&found->nextptr->func_params);
+                            id_queue_free(&found->nextptr->input_params);
                             free(found->nextptr->identifier);
                             free(found->nextptr);
 
@@ -471,6 +480,7 @@ static void delete_rec(tBT *bt_ptr, tNode *parent_ptr, tNode *RootPtr, size_t ha
                         if (strcmp(found->nextptr->identifier, key) == 0){
                             Data_t *tmp_next = found->nextptr->nextptr;
                             id_queue_free(&found->nextptr->func_params);
+                            id_queue_free(&found->nextptr->input_params);
                             free(found->nextptr->identifier);
                             free(found->nextptr);
 
@@ -522,6 +532,7 @@ static void dispose_rec(tNode *root_ptr){
         Element = Element->nextptr;
         //UVOLNENIE 
         id_queue_free(&tmp->func_params);
+        id_queue_free(&tmp->input_params);
         free(tmp->identifier);
         free(tmp);
     }
