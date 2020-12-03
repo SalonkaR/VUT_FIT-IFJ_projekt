@@ -1,7 +1,7 @@
 package main
 
-func defined() {
-    return 5
+func defined() (int) {
+    return 420
 }
 
 func foo (i int, j int) {

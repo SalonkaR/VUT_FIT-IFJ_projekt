@@ -9,7 +9,7 @@ func jozko(a int, b float64)(int, string, float64){
     a = 1
     id := 10
     if id >= 10{
-        kkt = main()
+        /*kkt = main()*/
 
     }else{
         return id / a, "kkt" + "k"+ "ok", 122.122 * b
