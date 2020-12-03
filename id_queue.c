@@ -108,6 +108,20 @@ tID_queue_item *n_item(tID_queue* queue, int n){
 }
 
 
+void id_queue_copy(tID_queue* src, tID_queue* dst){
+    id_queue_free(dst);
+    id_queue_init(dst);
+    
+    tID_queue_item *tmp = src->top;
+    while (tmp != NULL){
+        tID_queue_item *new_item = id_queue_push(dst);
+        str_copy(&tmp->id, &new_item->id);
+
+        tmp = tmp->next;
+    }
+}
+
+
 //used for debug
 void print_queue(tID_queue* queue){
     printf("QUEUE-> ");

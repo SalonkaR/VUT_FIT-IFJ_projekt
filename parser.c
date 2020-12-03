@@ -2,7 +2,8 @@
 //IFJ20 - projekt(varianta I.)
 //parser.c
 //Matus Tvarozny, xtvaro00
-//Filip Brna, dopis si login autik
+//Filip Brna, xbrnaf00
+//Matej Hornik, xhorni20
 */
 
 #include <stdio.h>
@@ -19,6 +20,8 @@ struct parser_data data;
 
 struct str_struct *temp_string;
 
+struct str_struct called_func;
+
 struct str_struct *func_id;
 
 bool internal_error = false;
@@ -27,6 +30,7 @@ bool bad_returns = false;
 bool saving_return_types = false;
 bool return_included = false;
 bool set_param_type = false;
+bool saving_arguments = false;
 
 Data_t *actual_parameter = NULL;
 
@@ -721,16 +725,26 @@ int body()
         //funkcia main nemoze byt volana
         if(str_cmp_const_str(temp_string, "main") == 0) return SEM_ERR_OTHER;
 
-        bool result_internal_error = false;
-        Data_t *result_bt_search = BT_search(&data.BT_global, temp_string->str, &result_internal_error);
-        if(result_internal_error == true){
-            return ERROR_INTERNAL;
-        }
-        if(result_bt_search == NULL)
-        {
-            return SEM_ERR_UNDEFINED_VAR;
-        }
         
+		//ulozim si toto volanie funkcie
+		tFunc_calls *first_in_ll = data.check_func_calls;
+		tFunc_calls *new_item_ll = malloc(sizeof(struct func_calls));
+		if (new_item_ll == NULL){
+			return ERROR_INTERNAL;
+		}
+		id_queue_init(&new_item_ll->ls);
+		id_queue_init(&new_item_ll->rs);
+		str_init(&new_item_ll->called_func);
+		//nakopirujeme nazov volanej funkcie
+		tID_queue_item *top_queue = id_queue_top(&data.ID_queue);
+      	str_copy(&top_queue->id, &new_item_ll->called_func);
+		//pripojim novu polozku k linked listu
+		new_item_ll->next = first_in_ll;
+		data.check_func_calls = new_item_ll;
+
+
+
+
 
         //printf("----------------0. TOKEN BODY MAM ID-TYPE = %d -------------\n",data.token.type);
         
@@ -741,11 +755,14 @@ int body()
           return LEX_ERR;
         }
         if (check_type(T_TYPE_RIGHT_BRACKET) == SYN_ERR ){
-          int exit_argument = argument();
-          if (exit_argument != SYN_OK){ 
-            return exit_argument;
-          }
+			saving_arguments = true;
+			int exit_argument = argument();
+			saving_arguments = false;
+			if (exit_argument != SYN_OK){ 
+			return exit_argument;
+			}
         }
+
         //printf("----------------2. TOKEN BODY MAM IF ID ( TYPE = %d -------------\n",data.token.type);
         if (check_type(T_TYPE_RIGHT_BRACKET) == SYN_ERR ){
           return SYN_ERR;
@@ -862,6 +879,10 @@ int body()
           
           //main nemoze byt volany a nema ziadne navratove hodnoty, cize nemoze byt priradzovane do ziadneho ID
           //TODO
+
+		  //ulozim si nazov funckie
+		  str_clear(&called_func);
+		  str_add_const_str(&called_func, data.token.attribute.string->str);
           
           non_det = true;
 
@@ -869,13 +890,51 @@ int body()
           int result_expr = expression(&data,&non_det);
           data.check_type = false;
 
-          printf("EXPR RESULT = TYPE = %d -------------\n",result_expr);
+          //printf("EXPR RESULT = TYPE = %d -------------\n",result_expr);
           if (non_det == false){
             if (check_token() == LEX_ERR){
               return LEX_ERR;
             }
 
             //tu treba si poznacit pri volani danej funkcie ci vracia dane typy ake su na lavej strane
+			//ulozim si toto volanie funkcie
+			tFunc_calls *first_in_ll = data.check_func_calls;
+			tFunc_calls *new_item_ll = malloc(sizeof(struct func_calls));
+			if (new_item_ll == NULL){
+				return ERROR_INTERNAL;
+			}
+			id_queue_init(&new_item_ll->ls);
+			id_queue_init(&new_item_ll->rs);
+			str_init(&new_item_ll->called_func);
+			//nakopirujeme nazov volanej funkcie
+			str_copy(&called_func, &new_item_ll->called_func);
+			//pripojim novu polozku k linked listu
+			new_item_ll->next = first_in_ll;
+			data.check_func_calls = new_item_ll;
+			//nakopirujem lavu stranu(jej typy)
+			tID_queue_item *tmp = data.ID_queue.top;
+			while (tmp != NULL){
+				tID_queue_item *new_item = id_queue_push(&new_item_ll->ls);
+
+				Data_t *found = bt_stack_search(&data.BT_stack, tmp->id.str, &internal_error);
+				if (found == NULL){
+					return SEM_ERR_UNDEFINED_VAR;
+				}
+				if (found->type == TYPE_INT){
+					hKey_t tmp = "int";
+					str_add_const_str(&new_item->id, tmp);
+				}
+				else if (found->type == TYPE_DOUBLE){
+					hKey_t tmp = "double";
+					str_add_const_str(&new_item->id, tmp);
+				}
+				else if (found->type == TYPE_STRING){
+					hKey_t tmp = "string";
+					str_add_const_str(&new_item->id, tmp);
+				}
+				tmp = tmp->next;
+			}
+
             id_queue_free(&data.ID_queue);
             id_queue_init(&data.ID_queue);
 
@@ -907,7 +966,9 @@ int body()
               return SYN_OK;
             }
             //printf("----------------7. BODY = TYPE = %d -------------\n",data.token.type);
+			saving_arguments = true;
             int exit_argument = argument();
+			saving_arguments = false;
             if( exit_argument != SYN_OK){ 
               return exit_argument;
             }
@@ -1261,7 +1322,6 @@ int values()
   data.check_type = true;
   
   int result_exp = expression(&data,&non_det);
-  printf("SOM VO VALUES A expression vratilo = '%d'\n", result_exp);
   data.check_type = false;
 
   if (data.check_returns == true){
@@ -1325,7 +1385,6 @@ int values_n()
       data.check_type = true;
     
       int result_exp = expression(&data,&non_det);
-      printf("SOM VO VALUES_N A expression vratilo = '%d'\n", result_exp);
       data.check_type = true;
 
     if (data.check_returns == true){
@@ -1720,6 +1779,50 @@ int value()
        ( check_type(T_TYPE_DOUBLE) != SYN_ERR )  ||
        ( check_type(T_TYPE_STRING) != SYN_ERR )  ||
        ( check_type(T_TYPE_IDENTIFIER) != SYN_ERR )  ) {
+
+		if (saving_arguments == true){
+			if (data.token.type == T_TYPE_INTEGER){
+				tID_queue_item *pushnuta = id_queue_push(&data.check_func_calls->rs);
+          
+				hKey_t tmp = "int";
+				str_add_const_str(&pushnuta->id, tmp);
+			}
+			else if (data.token.type == T_TYPE_DOUBLE){
+				tID_queue_item *pushnuta = id_queue_push(&data.check_func_calls->rs);
+          
+				hKey_t tmp = "double";
+				str_add_const_str(&pushnuta->id, tmp);
+			}
+			else if (data.token.type == T_TYPE_STRING){
+				tID_queue_item *pushnuta = id_queue_push(&data.check_func_calls->rs);
+          
+				hKey_t tmp = "string";
+				str_add_const_str(&pushnuta->id, tmp);
+			}
+			else if (data.token.type == T_TYPE_IDENTIFIER){
+
+				Data_t *found = bt_stack_search(&data.BT_stack, data.token.attribute.string->str, &internal_error);
+				if (found == NULL){
+					return SEM_ERR_UNDEFINED_VAR;
+				}
+
+				tID_queue_item *pushnuta = id_queue_push(&data.check_func_calls->rs);
+
+				if (found->type == TYPE_INT){
+					hKey_t tmp = "int";
+					str_add_const_str(&pushnuta->id, tmp);
+				}
+				else if (found->type == TYPE_DOUBLE){
+					hKey_t tmp = "double";
+					str_add_const_str(&pushnuta->id, tmp);
+				}
+				else if (found->type == TYPE_STRING){
+					hKey_t tmp = "string";
+					str_add_const_str(&pushnuta->id, tmp);
+				}
+			}
+		}
+
       //printf("----------------1. TOKEN VALUE TYPE = %d -------------\n",data.token.type);
       return SYN_OK;
   }
@@ -1732,6 +1835,7 @@ int value()
 
 bool init_variables()
 {
+	str_init(&called_func);
     data.BT_global.definded = false;  //som retard a musim to spravit
     if(BT_init(&data.BT_global) == false) return false;
 
@@ -1742,6 +1846,7 @@ bool init_variables()
     data.check_returns = false;
     data.checked_returns = 0;
     data.actual_func = NULL;
+    data.check_func_calls = NULL;
 
     bt_stack_init(&data.BT_stack);
 
@@ -1764,6 +1869,23 @@ bool init_variables()
 
 void free_variables()
 {
+    //vymazanie linked listu pre kontrolovanie volani funkcii
+	str_free(&called_func);
+	tFunc_calls *Element = data.check_func_calls;
+    tFunc_calls *tmp;
+
+    while  (Element != NULL){
+        tmp = Element;
+        Element = Element->next;
+        //UVOLNENIE 
+        id_queue_free(&tmp->ls);
+        id_queue_free(&tmp->rs);
+        str_free(&tmp->called_func);
+        free(tmp);
+    }
+   	data.check_func_calls = NULL;
+	//koniec
+
     BT_dispose(&data.BT_global);
     bt_stack_free(&data.BT_stack);
     id_queue_free(&data.ID_queue);
@@ -1797,6 +1919,95 @@ int parse()
         //funkcia s ID main musi byt obsiahnuta
         //if(BT_search(&data.BT_global, "main", &internal_error) == NULL) result = SEM_ERR_UNDEFINED_VAR;
     }
+
+	if (result == SYN_OK){
+		//skontrolujem volania funckii
+		tFunc_calls *tmp = data.check_func_calls;
+		while (tmp != NULL){
+
+			//TODO print - special case
+			if ((str_cmp_const_str(&tmp->called_func, "print")) == 0){
+				if (tmp->ls.top != NULL){
+					result = SEM_ERR_NO_PARAMS;
+					goto error_func_call;
+				}
+
+				break;
+			}
+			//najdem si funkciu ktoru chcem skontrolovat
+			Data_t *func_check = BT_search(&data.BT_global, tmp->called_func.str, &internal_error);
+			if (func_check == NULL){
+				result = SEM_ERR_UNDEFINED_VAR;
+				goto error_func_call;
+			}
+
+			//LAVA STRANA
+			int ls_counter = 0;
+			
+			tID_queue_item *ls_btglobal = func_check->func_params.top;
+			tID_queue_item *ls_tocheck = tmp->ls.top;
+			print_queue(&func_check->func_params);
+			print_queue(&tmp->ls);
+			while (ls_btglobal != NULL && ls_tocheck != NULL){
+				
+				ls_btglobal = n_item(&func_check->func_params, ls_counter);
+				ls_tocheck = n_item(&tmp->ls, ls_counter);
+
+				if (ls_btglobal == NULL || ls_tocheck == NULL){
+					break;
+				}
+
+				if ((str_cmp_const_str(&ls_btglobal->id, ls_tocheck->id.str)) != 0){
+					result = SEM_ERR_NO_PARAMS;
+					goto error_func_call;
+				}
+
+				ls_counter++;
+			}
+			//kontrola poctu
+			if (ls_btglobal != NULL && ls_tocheck == NULL){
+				result = SEM_ERR_NO_PARAMS;
+				goto error_func_call;
+			}
+			if (ls_btglobal == NULL && ls_tocheck != NULL){
+				result = SEM_ERR_NO_PARAMS;
+				goto error_func_call;
+			}
+			//PRAVA STRANA
+			int rs_counter = 0;
+			tID_queue_item *rs_btglobal = func_check->input_params.top;
+			tID_queue_item *rs_tocheck = tmp->rs.top;
+			while (rs_btglobal != NULL && rs_tocheck != NULL){
+				
+				rs_btglobal = n_item(&func_check->input_params, rs_counter);
+				rs_tocheck = n_item(&tmp->rs, rs_counter);
+
+				if (rs_btglobal == NULL || rs_tocheck == NULL){
+					break;
+				}
+				if ((str_cmp_const_str(&rs_btglobal->id, rs_tocheck->id.str)) != 0){
+					result = SEM_ERR_NO_PARAMS;
+					goto error_func_call;
+				}
+
+				rs_counter++;
+			}
+			//kontrola poctu
+			if (rs_btglobal != NULL && rs_tocheck == NULL){
+				result = SEM_ERR_NO_PARAMS;
+				goto error_func_call;
+			}
+			if (rs_btglobal == NULL && rs_tocheck != NULL){
+				result = SEM_ERR_NO_PARAMS;
+				goto error_func_call;
+			}
+
+			tmp = tmp->next;
+		}
+	}
+	error_func_call:
+
+
     //uvolnenie pamate 
     free_variables();
     //vratenie exit code

@@ -3,6 +3,7 @@
 //hlavickovy subor pre pracu s parserom
 //Matus Tvarozny, xtvaro00
 //Filip Brna, xbrnaf00
+//Matej Hornik, xhorni20
 */
 #ifndef PARSER_H
 #define PARSER_H
@@ -14,6 +15,13 @@
 #include "scanner.h"
 #include "bt_stack.h"
 #include "id_queue.h"
+
+typedef struct func_calls{
+    struct str_struct called_func;
+    tID_queue rs;       //prava strana, cize vstupne parametry(typy)
+    tID_queue ls;       //lava strana, cize vystupne hodnoty funkie(typy)
+    struct func_calls *next;
+}tFunc_calls;
 
 struct parser_data
 {
@@ -29,6 +37,8 @@ struct parser_data
     int checked_returns; //pomocne pocitadlo pre expression pri checkovani return values
     tID_queue ID_queue;
     Data_t *actual_func;
+
+    tFunc_calls *check_func_calls; //pre konotrlovanie volani funckii, linked list
 };
 
 int parse();
