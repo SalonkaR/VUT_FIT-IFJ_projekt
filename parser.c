@@ -290,6 +290,12 @@ int prog()
             if (check_token() == LEX_ERR){
               return LEX_ERR;
             }
+            if ( check_type( T_TYPE_RIGHT_VINCULUM) == SYN_ERR ){
+              return SYN_ERR;
+            }
+            if (check_token() == LEX_ERR){
+              return LEX_ERR;
+            }
           }    
           //printf("---------------- 2 VOLAM BODY - TYPE = %d -------------\n",data.token.type);        
           if (check_type( T_TYPE_EOL) == SYN_ERR){
@@ -1087,7 +1093,7 @@ int body()
         }
         else{
           // pravidlo <body> -> <ids> = <expression>,<values_n> EOL <eol> <body> ???????
-          //printf("---------------- -0. else if = TYPE = %d -------------\n",data.token.type);
+          printf("---------------- -0. else if = TYPE = %d -------------\n",data.token.type);
           int tmp_vys = values();
           //printf("---------------- -0. TYPE = %d -------------\n",tmp_vys);
 
