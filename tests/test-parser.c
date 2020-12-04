@@ -10,7 +10,7 @@
 #include "../expression.h"
 
 
-#define FILE_COUNT_CORRECT 22
+#define FILE_COUNT_CORRECT 20//22
 #define FILE_COUNT_INCORRECT 135
 #define FILE_COUNT_UJEBANE 71
 

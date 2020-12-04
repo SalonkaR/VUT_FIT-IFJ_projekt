@@ -16,3 +16,7 @@ func kotlebovec (mazurek string, a int) {
     }
     return mazurek
 }
+
+func main(){
+    
+}

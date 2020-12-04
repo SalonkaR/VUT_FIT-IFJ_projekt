@@ -1,18 +1,19 @@
 package main
 
-func mamtodobre () {
+func mamtodobre ()(int,int,int,int) {
     kokot := 0
     pica := 0
     u := 0
     holica := 0
+    
     if 1==1 {
 
     } else{
-        return 
+        return 0,0,0,0
     }
 
     return kokot, pica, u, holica
 }
 func main (){
-
+    return
 }

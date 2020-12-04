@@ -1,8 +1,8 @@
 package main
 
 
-func jozko(a int , b int ){
-    return 
+func jozko(a int , b int )(int,int){
+    return a+b,a
 }
 
 func main (){
