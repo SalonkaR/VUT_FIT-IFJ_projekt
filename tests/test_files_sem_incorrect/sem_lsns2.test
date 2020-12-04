@@ -1,0 +1,22 @@
+package main
+
+func mamtodobre (mazurek int){
+    if mazurek==1 {
+        if 6 < 7 {
+
+        } else {
+
+        }
+    } else{
+        ss := 0
+        return
+    }
+    ko := 0
+    tle := 2
+    bik := 1
+    return 
+}
+
+func main (){
+
+}

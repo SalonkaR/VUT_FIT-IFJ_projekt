@@ -406,8 +406,6 @@ int body()
             return SYN_ERR;
           }
 
-          bt_stack_push(&data.BT_stack);
-
           if (check_token() == LEX_ERR){
             return LEX_ERR;
           }
@@ -451,7 +449,6 @@ int body()
           //vychadzam z ifu tak popnem jeden frame zo stacku pre premenne
           bt_stack_pop(&data.BT_stack);
           
-          bt_stack_pop(&data.BT_stack);
 
           if (check_token() == LEX_ERR){
             return LEX_ERR;
@@ -513,7 +510,6 @@ int body()
           //vychadzam z elsu tak popnem stack pre premmenne
           bt_stack_pop(&data.BT_stack);
           
-          bt_stack_pop(&data.BT_stack);
 
           if (check_token() == LEX_ERR){
             return LEX_ERR;
@@ -1320,6 +1316,7 @@ int list_of_return_values()
 {
   // pravidlo <list_of_return_values> -> <values>
   //printf("----------------LORV TYPE = %d -------------\n",data.token.type);
+
 
   data.check_returns = true;
   int exit_values = values();

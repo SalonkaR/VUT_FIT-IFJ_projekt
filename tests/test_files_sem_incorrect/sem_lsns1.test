@@ -1,0 +1,22 @@
+package main
+
+func mazurcek () {
+    return
+}
+
+func harabinik () {
+    return 
+}
+
+func kotlebovec (mazurek string, a int) {
+    if a==1 {
+        
+    } else{
+
+    }
+    return mazurek
+}
+
+func main(){
+    
+}

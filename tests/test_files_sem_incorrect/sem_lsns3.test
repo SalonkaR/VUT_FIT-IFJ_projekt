@@ -1,0 +1,21 @@
+package main
+
+func resttjeslabykkt (a int, b int)(int,int,int){
+    return a,b,a+b 
+}
+
+
+func kobylamamalybok () {
+    kapn := 0
+    kap := 0
+    coconut := 0
+    gadze := 0
+    neminaju := 0
+
+    kapn ,kap , coconut = resttjeslabykkt (50,7)
+
+
+} 
+func main(){
+
+}

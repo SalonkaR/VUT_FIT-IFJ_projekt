@@ -12,8 +12,8 @@
 
 
 #define FILE_COUNT_CORRECT 5
-#define FILE_COUNT_INCORRECT 16
-#define FILE_COUNT_UJEBANE 139
+#define FILE_COUNT_INCORRECT 19
+#define FILE_COUNT_UJEBANE 0//139
 
 void reset() {
   printf("\033[0m");
@@ -113,7 +113,10 @@ void kontrola_sem(){
                             "tests/test_files_sem_incorrect/sem_zero_div3.test",
                             "tests/test_files_sem_incorrect/sem_zero_div4.test",
                             "tests/test_files_sem_incorrect/sem_return1.test",
-                            "tests/test_files_sem_incorrect/sem_nols_funcall1.test",};
+                            "tests/test_files_sem_incorrect/sem_nols_funcall1.test",
+                            "tests/test_files_sem_incorrect/sem_lsns1.test",
+                            "tests/test_files_sem_incorrect/sem_lsns2.test",
+                            "tests/test_files_sem_incorrect/sem_lsns3.test",};
     
     printf("\n\n TESTY NA SUBOROCH KTORE BY MALI VRACAT SYN_ERR\n");
     for (int i = 0; i < FILE_COUNT_INCORRECT; i++){
