@@ -8,7 +8,7 @@ func harabinik () {
     return 
 }
 
-func kotlebovec (mazurek string, a int) {
+func kotlebovec (mazurek string, a int) (string) {
     if a==1 {
         
     } else{

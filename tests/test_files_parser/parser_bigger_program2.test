@@ -1,8 +1,8 @@
 package main //jedu do mexika pico
 
 
-func kkt (ab string,bc int){
-
+func kkt (ab string,bc int)(int){
+    return bc
 }
 
 
@@ -17,7 +17,7 @@ func jozko(b int)(string){
         a:= "chod ddpc" 
         b = 1 +2 * (4+9/1)
     }
-    for ak := kkt; ak < 190; ak = 1{
+    for ak := 0; ak < 190; ak = 1{
         jebem = kkt("choddpc", kkt)
     }
     ahoj, mnam, tri = 1, 2, 3
@@ -25,22 +25,21 @@ func jozko(b int)(string){
 }
 
 func main (){
-    return 1
 }
 
-func foo (){
-    ap := 0
+func foo ()(int){
+    ap := "a"
     jebo := 0
-    ap = jozko()
-    if ap != 1{
+    ap = jozko(jebo)
+    if jebo != 1{
 
     }else {
         if 1 == 2{
-            return "kkt"
+            return 0
         } else {
             c := 2
         }
         kkt := jebo
     }
-    return 1, 2, "chod dopici"
+    return kkt
 }

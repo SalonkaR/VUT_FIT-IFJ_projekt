@@ -3,6 +3,6 @@ package main
 func main () 
 {
     skap := 3 + 1
-
+    return 
 }
 

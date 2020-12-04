@@ -6,6 +6,7 @@ func foo () {
     id2 := 0
     id3 := 0
     id4 := 0
+    jozko := 0
     id1, id2, id3, id4 = 1+1, 2, 3, jozko}
 
 func main(){

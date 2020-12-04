@@ -3,7 +3,7 @@ package main
 
 func foo () {
     if 1==1 {
-        if 1 + 1 {
+        if 1 == 1 {
 
         } else {
             
@@ -12,7 +12,7 @@ func foo () {
 
     }
 
-    if 2 / 3 {
+    if 1 == 1 {
 
     } else
     {

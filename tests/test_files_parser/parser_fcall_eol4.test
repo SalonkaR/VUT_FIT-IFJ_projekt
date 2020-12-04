@@ -4,6 +4,7 @@ func madar(jozko int, zdenko int){
 }
 
 func foo () {
+    jozko := 0
     madar(jozko, 5
     )
 }
