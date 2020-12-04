@@ -1089,7 +1089,7 @@ int body()
         }
         else{
           // pravidlo <body> -> <ids> = <expression>,<values_n> EOL <eol> <body> ???????
-          printf("---------------- -0. else if = TYPE = %d -------------\n",data.token.type);
+          //printf("---------------- -0. else if = TYPE = %d -------------\n",data.token.type);
           int tmp_vys = values();
           //printf("---------------- -0. TYPE = %d -------------\n",tmp_vys);
 

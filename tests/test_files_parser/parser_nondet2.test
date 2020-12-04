@@ -1,7 +1,7 @@
 package main
 
-func jozko(id int){
-    return
+func jozko(id int)(int){
+    return id+id
 }
 
 

@@ -1,8 +1,8 @@
 package main
 
 
-func jozko(){
-    return
+func jozko()(int){
+    return 5
 }
 
 

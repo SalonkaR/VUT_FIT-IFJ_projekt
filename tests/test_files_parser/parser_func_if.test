@@ -1,9 +1,9 @@
 package main
-func mak () {
+func mak ()(int) {
     a := 0
-    if a==0 {
-        if a==0 {
-            return a>a
+    if 0==0 {
+        if 0==0 {
+            return 2
         } else{
 
         }
@@ -13,13 +13,14 @@ func mak () {
 
     }
 
-    if a==0 {
+    if 1==0 {
 
     } else{
 
     }
-
+    return 2
 }
+
 func main(){
 
 }

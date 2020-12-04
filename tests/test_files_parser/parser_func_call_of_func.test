@@ -1,16 +1,16 @@
 package main
 
 func ferovi (abc int) {
-
+    return
 }
 func kuruje (a int, b int,c int,d int) {
-
+    return
 }
 func na (skap int) {
-
+    return
 }
 func hlavu () {
-
+    return
 }
 
 func mak () {
@@ -21,7 +21,7 @@ func mak () {
     na(idcko)
 
     hlavu()
-
+    return
 }
 
 func main(){

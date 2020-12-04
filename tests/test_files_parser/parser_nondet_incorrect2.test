@@ -1,8 +1,14 @@
 package main
 
+
+func jozko(){
+    return
+}
+
+
 func main (){
     id := 0
     a := 1
-    id = a<1 ,1+
-    id1 = jozko()
+    id = a<1 ,1
+    id1 := jozko()
 }
