@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "str.h"
 #include "scanner.h"
@@ -223,10 +224,11 @@ int prog()
       if (check_token() == LEX_ERR){
     	  return LEX_ERR;
       }
+	  
       //printf("----------------3. TOKEN PROG TYPE = %d -------------\n",data.token.type);
 
       //main nemoze mat ziadne vstupne parametre
-      if (check_type(T_TYPE_RIGHT_BRACKET) == SYN_ERR && str_cmp_const_str(func_id, "main") == 0) return SEM_ERR_NO_PARAMS;
+      //if (check_type(T_TYPE_RIGHT_BRACKET) == SYN_ERR && str_cmp_const_str(func_id, "main") == 0) return SEM_ERR_NO_PARAMS;
 
     	if (check_type(T_TYPE_RIGHT_BRACKET) == SYN_ERR ){
         //printf("VOLAM PARAMS -----------\n");
@@ -242,8 +244,7 @@ int prog()
     	  return LEX_ERR;
       }
 
-      //main nemoze mat ziadne vystupne parametre
-      if (check_type(T_TYPE_LEFT_VINCULUM) == SYN_ERR && str_cmp_const_str(func_id, "main") == 0) return SEM_ERR_NO_PARAMS;
+      
 
       //printf("----------------4.5. TOKEN PROG MAM IF-TYPE = %d -------------\n",data.token.type);
     	if (check_type(T_TYPE_LEFT_VINCULUM) == SYN_ERR ){
@@ -262,16 +263,27 @@ int prog()
       //printf("----------------5. TOKEN PROG MAM IF-TYPE = %d -------------\n",data.token.type);
       if (check_type( T_TYPE_EOL) == SYN_ERR){
         return SYN_ERR;
-      }      
+      }
     	if (check_type(T_TYPE_RIGHT_VINCULUM) == SYN_ERR ){
         //printf("----------------VOLAM EOl- TYPE = %d -------------\n",data.token.type);
         int exit_eol = eol();
         if (exit_eol != SYN_OK){ 
           return exit_eol;
         }
+
         //printf("-------------------------------5.5. TOKEN PROG MAM IF-TYPE = %d -------------\n",data.token.type);
         if (check_type(T_TYPE_RIGHT_VINCULUM) == SYN_ERR ){
           //printf("---------------- 1 VOLAM BODY - TYPE = %d -------------\n",data.token.type);
+
+		
+		if ((strcmp(data.actual_func->identifier, "main")) == 0){
+			
+			if (data.actual_func->func_params.top != NULL || data.actual_func->input_params.top != NULL){
+				return SEM_ERR_NO_PARAMS;
+			}
+		}
+
+
           int exit_body = body();
           if (exit_body != SYN_OK){ 
             return exit_body;
@@ -329,6 +341,13 @@ int prog()
           return SYN_ERR;
         }
       }
+
+	  if ((strcmp(data.actual_func->identifier, "main")) == 0){
+			
+			if (data.actual_func->func_params.top != NULL || data.actual_func->input_params.top != NULL){
+				return SEM_ERR_NO_PARAMS;
+			}
+		}
       //printf("-------------------------------5.5 TOKEN PROG MAM IF-TYPE = %d -------------\n",data.token.type);
       if (check_type(T_TYPE_RIGHT_VINCULUM) == SYN_ERR ){
         return SYN_ERR;
@@ -808,7 +827,6 @@ int body()
         // pravidlo <body> -> ID := <expression> EOL <eol> <body>
 
 
-
         //checknem ci este id neni definovane
         tBT_stack_item *top_bt_stack = bt_stack_top(&data.BT_stack);
         tID_queue_item *top_queue_def = id_queue_top(&data.ID_queue);
@@ -836,7 +854,7 @@ int body()
         
         data.set_type_id = true;
         int result_exp_if = expression(&data,&non_det);
-        //printf("VYSLEDOK EXPRESSION VO <BODY> - IF = \"%d\"\n", result_exp_if);
+        //printf("VYSLEDOK EXPRESSION VO <BODY> - := = \"%d\"\n", result_exp_if);
         if (result_exp_if != SYN_OK){ 
             return result_exp_if;
         }
@@ -2021,6 +2039,7 @@ int parse()
     }
 
 	if (result == SYN_OK){
+
 		//skontrolujem volania funckii
 		tFunc_calls *tmp = data.check_func_calls;
 		while (tmp != NULL){
