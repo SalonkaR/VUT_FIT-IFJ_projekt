@@ -3,7 +3,7 @@
 //
 package main
 
-func alpha (a int) () {
+func alpha (a int) {
 	return 6.7
 }
 

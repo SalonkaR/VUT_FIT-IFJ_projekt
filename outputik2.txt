@@ -1,0 +1,3000 @@
+Testy pre parser
+==================================
+==================================
+
+Testy funkcii v parser.c 
+==================================
+
+[TEST1]
+Testovanie semantiky parseru na subore: "tests/test_files_sem_correct/sem_main.test"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+package main
+
+
+func main () {
+    
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST2]
+Testovanie semantiky parseru na subore: "tests/test_files_sem_correct/sem_func_change_ID_values.test"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+package main
+
+func main () {
+    a := 32
+    b := 10
+    a,b = 9,2
+}
+-------------------------------------------------------
+koniec suboru
+---------------- -0. else if = TYPE = 4 -------------
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST3]
+Testovanie semantiky parseru na subore: "tests/test_files_sem_correct/sem_func_change_ID_value.test"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+package main
+
+func main () {
+    a := 32
+    b := 10
+    a = a+b
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST4]
+Testovanie semantiky parseru na subore: "tests/test_files_sem_correct/sem_func_call_defined_func.test"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+package main
+
+func defined() (int) {
+    return 420
+}
+
+func foo (i int, j int) {
+    tmp := 1 
+    tmp = defined()
+}
+
+func main () {
+
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST5]
+Testovanie semantiky parseru na subore: "tests/test_files_sem_correct/sem_builtin_func.test"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+package main
+
+func main(){
+    a := 0
+    b := "mampici"
+    a = len(b)
+}
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+
+ TESTY NA SUBOROCH KTORE BY MALI VRACAT SYN_ERR
+
+[TEST1]
+Testovanie semantiky parseru na subore: "tests/test_files_sem_incorrect/sem_func_call_nondefined_func.test"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+package main
+
+func foo () {
+    id := 0
+    id = defined() 
+}
+
+
+func defined() (int) {
+    return 5
+}
+
+func main () {
+
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST2]
+Testovanie semantiky parseru na subore: "tests/test_files_sem_incorrect/sem_no_main.test"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+package main
+
+
+func foo () {
+    
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------3
+
+[TEST3]
+Testovanie semantiky parseru na subore: "tests/test_files_sem_incorrect/sem_func_use_nonexist_ID_value.test"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+package main
+
+func main () {
+    a := 32
+    a,b = 9,2
+}
+-------------------------------------------------------
+koniec suboru
+---------------- -0. else if = TYPE = 4 -------------
+EXIT CODE JE : --------------------------------------------------------------------3
+
+[TEST4]
+Testovanie semantiky parseru na subore: "tests/test_files_sem_incorrect/sem_func_use_ID_from_other_func.test"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+package main
+
+func foo () (int) {
+    tmp := 0
+    return tmp
+}
+
+
+
+func main () {
+    tmp1 := 4
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST5]
+Testovanie semantiky parseru na subore: "tests/test_files_sem_incorrect/sem_func_change_toomany_ID_values.test"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+package main
+
+func main () {
+    a := 32
+    b := 10
+    a,b = 9,2,5
+}
+-------------------------------------------------------
+koniec suboru
+---------------- -0. else if = TYPE = 4 -------------
+EXIT CODE JE : --------------------------------------------------------------------7
+
+[TEST6]
+Testovanie semantiky parseru na subore: "tests/test_files_sem_incorrect/sem_func_change_nondef_ID_value.test"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+package main
+
+func main () {
+    a = a+b
+    a := 32
+    b := 10
+}
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------3
+
+[TEST7]
+Testovanie semantiky parseru na subore: "tests/test_files_sem_incorrect/sem_redef_var.test"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+package main
+
+
+func main (){
+    id := 1.5
+    id = "jozinko" + id
+}
+
+-------------------------------------------------------
+koniec suboru
+---------------- -0. else if = TYPE = 6 -------------
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST8]
+Testovanie semantiky parseru na subore: "tests/test_files_sem_incorrect/sem_exp1.test"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+package main
+
+
+func main (){
+    jebo := 1 * 4
+    jebko := 10.5
+    if 1 != 2{
+        id := jebo - 10 * (1+2)
+        for i:= 1; i < 10; i = jebo + 1{
+
+        }
+    }else{
+
+    }
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST9]
+Testovanie semantiky parseru na subore: "tests/test_files_sem_incorrect/sem_exp_mul_ass1.test"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+package main
+
+
+func main (){
+    jebo := 1 * 4
+    jebko := 10.5
+    jebo , jebko = 100, 3.1415
+
+}
+
+-------------------------------------------------------
+koniec suboru
+---------------- -0. else if = TYPE = 4 -------------
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST10]
+Testovanie semantiky parseru na subore: "tests/test_files_sem_incorrect/sem_moreright1.test"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+package main
+
+func main () {
+    a := 32
+    b := 10
+    a, b, c = a+90, 2
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------7
+
+[TEST11]
+Testovanie semantiky parseru na subore: "tests/test_files_sem_incorrect/sem_zero_div1.test"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+package main
+
+func main () {
+    a := 32
+    b := 10
+    a = b / 0
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------9
+
+[TEST12]
+Testovanie semantiky parseru na subore: "tests/test_files_sem_incorrect/sem_zero_div2.test"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+package main
+
+func main () {
+    a := 32
+    b := 10
+    a = b / (0) + 1
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------7
+
+[TEST13]
+Testovanie semantiky parseru na subore: "tests/test_files_sem_incorrect/sem_zero_div3.test"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+package main
+
+func main () {
+    a := 32
+    b := 10
+    a = (b + 10) / 0
+}
+
+-------------------------------------------------------
+koniec suboru
+---------------- -0. else if = TYPE = 19 -------------
+EXIT CODE JE : --------------------------------------------------------------------9
+
+[TEST14]
+Testovanie semantiky parseru na subore: "tests/test_files_sem_incorrect/sem_zero_div4.test"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+package main
+
+func main () {
+    a := 32
+    b := 10
+    a = b + 4 / 0
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------9
+
+[TEST15]
+Testovanie semantiky parseru na subore: "tests/test_files_sem_incorrect/sem_return1.test"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+package main 
+
+func main (){
+    tmp := 10
+}
+
+func jozko(a int, b float64)(int, string, float64){
+    //return 1 , "kkt", 0.9
+    a = 1
+    id := 10
+    if id >= 10{
+        /*kkt = main()*/
+
+    }else{
+        return id / a, "kkt" + "k"+ "ok", 122.122 * b
+    }
+}
+-------------------------------------------------------
+koniec suboru
+---------------- -0. else if = TYPE = 4 -------------
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST16]
+Testovanie semantiky parseru na subore: "tests/test_files_sem_incorrect/sem_nols_funcall1.test"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+package main
+
+func main(){
+    id := 1
+    id2 := 2
+    id3 := "string"
+    id, id2, id3 = jozko(id2, "jebat", 1.5, 420420)
+
+}
+
+func jozko(a int, b string, c float64, d int)(int, int , string){
+    return a, a, b
+}
+
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+
+ TESTY NA SUBOROCH KTORE sme ujebali 
+
+[TEST1]
+Testovanie semantiky parseru na subore: "sem/builtin/cast_1.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//nogo
+//
+package main
+
+func main () {
+	a:= 0
+	b:=0.0
+	b = int2float(a)
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST2]
+Testovanie semantiky parseru na subore: "sem/builtin/cast_2.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 6
+//
+package main
+
+func main () {
+	a:= "457"
+	b:=0.0
+	b = int2float(a)
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------6
+
+[TEST3]
+Testovanie semantiky parseru na subore: "sem/builtin/cast_3.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//nogo
+//
+package main
+
+func main () {
+	a:= 0
+	b:=0.0
+	a = float2int(b)
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST4]
+Testovanie semantiky parseru na subore: "sem/builtin/cast_4.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5 6 7
+//
+package main
+
+func main () {
+	a:=0.0
+	b:=0.0
+	a = float2int(b)
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------6
+
+[TEST5]
+Testovanie semantiky parseru na subore: "sem/builtin/cast_1.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//nogo
+//
+package main
+
+func main () {
+	a:= 0
+	b:=0.0
+	b = int2float(a)
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST6]
+Testovanie semantiky parseru na subore: "sem/builtin/chr_1.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//nogo
+//
+package main
+
+func main () {
+	a := 0
+	b := ""
+	b,a = chr(32)
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST7]
+Testovanie semantiky parseru na subore: "sem/builtin/chr_2.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 6
+//
+package main
+
+func main () {
+	chr(32.6)
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------6
+
+[TEST8]
+Testovanie semantiky parseru na subore: "sem/builtin/inputf_1.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//nogo
+//
+package main
+
+func main () {
+	a:= 0.0
+	b:= 0
+	a,b = inputf()
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST9]
+Testovanie semantiky parseru na subore: "sem/builtin/inputf_2.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 6 7
+//
+package main
+
+func main () {
+	a:= 0.0
+	a = inputf()
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------6
+
+[TEST10]
+Testovanie semantiky parseru na subore: "sem/builtin/inputi_1.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//nogo
+//
+package main
+
+func main () {
+	a:= 0
+	b:= 0
+	a,b = inputi()
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST11]
+Testovanie semantiky parseru na subore: "sem/builtin/inputi_2.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5 6 7
+//
+package main
+
+func main () {
+	b:= ""
+	a:= 0
+	a,b = inputi()
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------6
+
+[TEST12]
+Testovanie semantiky parseru na subore: "sem/builtin/inputs_1.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//nogo
+//
+package main
+
+func main () {
+	a:= ""
+	b:= 0
+	a,b = inputs()
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST13]
+Testovanie semantiky parseru na subore: "sem/builtin/inputs_2.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5 6 7
+//
+package main
+
+func main () {
+	b:= ""
+	a:= 0
+	a,b = inputs()
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------6
+
+[TEST14]
+Testovanie semantiky parseru na subore: "sem/builtin/len_1.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//nogo
+//
+package main
+
+func main () {
+	a := 0
+	b := "help"
+	a = len(b)
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST15]
+Testovanie semantiky parseru na subore: "sem/builtin/len_2.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 6
+//
+package main
+
+func main () {
+	a := 0
+	len(a)
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------6
+
+[TEST16]
+Testovanie semantiky parseru na subore: "sem/builtin/ord_1.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//nogo
+//
+package main
+
+func main () {
+	a := 0
+	b := 0
+	b,a = ord("help", 2)
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST17]
+Testovanie semantiky parseru na subore: "sem/builtin/ord_2.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 6
+//
+package main
+
+func main () {
+	a := 0
+	b := 0
+	b,a = ord("help", "e")
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------6
+
+[TEST18]
+Testovanie semantiky parseru na subore: "sem/builtin/ord_3.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 6 7
+//
+package main
+
+func main () {
+	a := 0
+	a = ord("help", 2)
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------6
+
+[TEST19]
+Testovanie semantiky parseru na subore: "sem/builtin/print_all.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//
+package main
+
+func main () {
+	print(5, 5.7, "help", 0.0, "nic", 7)
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST20]
+Testovanie semantiky parseru na subore: "sem/builtin/print_bad.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 6 7
+//
+package main
+
+func main () {
+	a:=0
+	a = print(5)
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------6
+
+[TEST21]
+Testovanie semantiky parseru na subore: "sem/builtin/print_empty.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//
+package main
+
+func main () {
+	print()
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST22]
+Testovanie semantiky parseru na subore: "sem/builtin/print_float.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//
+package main
+
+func main () {
+	print(5.1e+7)
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST23]
+Testovanie semantiky parseru na subore: "sem/builtin/print_int.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//
+package main
+
+func main () {
+	print(5)
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST24]
+Testovanie semantiky parseru na subore: "sem/builtin/print_string.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//
+package main
+
+func main () {
+	print("test print")
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST25]
+Testovanie semantiky parseru na subore: "sem/builtin/substr_1.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//nogo
+//
+package main
+
+func main () {
+	a := 0
+	b := ""
+	b,a = substr("help", 2, 1)
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST26]
+Testovanie semantiky parseru na subore: "sem/builtin/substr_2.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 6
+//
+package main
+
+func main () {
+	substr(50, 2, 1)
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------6
+
+[TEST27]
+Testovanie semantiky parseru na subore: "sem/builtin/substr_3.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 6
+//
+package main
+
+func main () {
+	a := 0
+	b := ""
+	b,a = substr("help", 2, 2.7)
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------6
+
+[TEST28]
+Testovanie semantiky parseru na subore: "sem/declaration/multiple_functions.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 3
+//
+package main
+
+func alpha() {
+}
+
+func alpha(a int) (float64) {
+	return 0.6
+}
+
+func main () {
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------3
+
+[TEST29]
+Testovanie semantiky parseru na subore: "sem/declaration/multiple_vars_1.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 3
+//
+package main
+
+func main () {
+	a := 0
+	a := 5
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------3
+
+[TEST30]
+Testovanie semantiky parseru na subore: "sem/declaration/multiple_vars_2.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//nogo
+//
+package main
+
+func main () {
+	a := 0
+	if 0==0 {
+		a:=1
+	}else {
+		a:=2
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST31]
+Testovanie semantiky parseru na subore: "sem/declaration/multiple_vars_3.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//nogo
+//
+package main
+
+func a (){
+}
+
+func main () {
+	a := 0
+	a = 5
+}
+
+-------------------------------------------------------
+koniec suboru
+---------------- -0. else if = TYPE = 4 -------------
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST32]
+Testovanie semantiky parseru na subore: "sem/declaration/multiple_vars_4.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 3 6 7
+//
+package main
+
+func a (){
+}
+
+func main () {
+	a := 0
+	a()
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------7
+
+[TEST33]
+Testovanie semantiky parseru na subore: "sem/declaration/multiple_vars_5.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//nogo
+//
+package main
+
+func main () {
+	a:=3.6
+	for a:=0;0!=0;{
+		a:="help"
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST34]
+Testovanie semantiky parseru na subore: "sem/declaration/nondefined_var_1.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 3
+//
+package main
+
+func main () {
+	a = 5
+}
+
+-------------------------------------------------------
+koniec suboru
+---------------- -0. else if = TYPE = 4 -------------
+EXIT CODE JE : --------------------------------------------------------------------3
+
+[TEST35]
+Testovanie semantiky parseru na subore: "sem/declaration/nondefined_var_2.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 3
+//
+package main
+
+func alpha () {
+	a := 0
+}
+
+func main () {
+	a = 5
+}
+
+-------------------------------------------------------
+koniec suboru
+---------------- -0. else if = TYPE = 4 -------------
+EXIT CODE JE : --------------------------------------------------------------------3
+
+[TEST36]
+Testovanie semantiky parseru na subore: "sem/declaration/nondefined_var_3.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 3
+//
+package main
+
+func alpha(){
+	a = 5
+}
+
+func main () {
+	a := 5
+	alpha()
+}
+
+-------------------------------------------------------
+koniec suboru
+---------------- -0. else if = TYPE = 4 -------------
+EXIT CODE JE : --------------------------------------------------------------------3
+
+[TEST37]
+Testovanie semantiky parseru na subore: "sem/declaration/nondefined_var_4.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 3
+//
+package main
+
+func main () {
+	a = 0
+	a := 5
+}
+
+-------------------------------------------------------
+koniec suboru
+---------------- -0. else if = TYPE = 4 -------------
+EXIT CODE JE : --------------------------------------------------------------------3
+
+[TEST38]
+Testovanie semantiky parseru na subore: "sem/expresion/add_1.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	a := 5 + "string"
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST39]
+Testovanie semantiky parseru na subore: "sem/expresion/add_2.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	a := 5 + 5.9
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST40]
+Testovanie semantiky parseru na subore: "sem/expresion/add_3.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	a := 5.4 + "string"
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST41]
+Testovanie semantiky parseru na subore: "sem/expresion/add_4.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	a := 5 + (5==5)
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST42]
+Testovanie semantiky parseru na subore: "sem/expresion/add_5.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+// TODO consider extensions
+//
+package main
+
+func main () {
+	a := 5 + (5==5)
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST43]
+Testovanie semantiky parseru na subore: "sem/expresion/add_6.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+// TODO consider extensions
+//
+package main
+
+func main () {
+	a := (0>0) + (5==5)
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST44]
+Testovanie semantiky parseru na subore: "sem/expresion/add_7.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//nogo
+//
+package main
+
+func main () {
+	a := 5+5
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST45]
+Testovanie semantiky parseru na subore: "sem/expresion/add_8.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//nogo
+//
+package main
+
+func main () {
+	a := 5.7+5.4
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST46]
+Testovanie semantiky parseru na subore: "sem/expresion/add_9.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//nogo
+//
+package main
+
+func main () {
+	a := "hello " + "world!"
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST47]
+Testovanie semantiky parseru na subore: "sem/expresion/div_1.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	a := "string" / 5
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST48]
+Testovanie semantiky parseru na subore: "sem/expresion/div_2.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	a := 5.9 / 1
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST49]
+Testovanie semantiky parseru na subore: "sem/expresion/div_3.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	a := "string" / 4
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST50]
+Testovanie semantiky parseru na subore: "sem/expresion/div_4.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	a := 5.9 / (5!=5)
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST51]
+Testovanie semantiky parseru na subore: "sem/expresion/div_5.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	a := "abc" / "dfg"
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST52]
+Testovanie semantiky parseru na subore: "sem/expresion/div_6.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//nogo
+//
+package main
+
+func main () {
+	a := 5/1
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST53]
+Testovanie semantiky parseru na subore: "sem/expresion/div_7.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//nogo
+//
+package main
+
+func main () {
+	a := 68.4 / 5e-2
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST54]
+Testovanie semantiky parseru na subore: "sem/expresion/div_zero.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 9
+//
+package main
+
+func main () {
+	a := 5 / 0
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------9
+
+[TEST55]
+Testovanie semantiky parseru na subore: "sem/expresion/div_zero_complex.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 0 9
+//interpret 9
+//
+package main
+
+func main () {
+	b := 0
+	a := 5 / b
+	print(a)
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST56]
+Testovanie semantiky parseru na subore: "sem/expresion/eq_1.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	if (0==0.8) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST57]
+Testovanie semantiky parseru na subore: "sem/expresion/eq_2.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	if (0=="test") {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST58]
+Testovanie semantiky parseru na subore: "sem/expresion/eq_3.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	if ("help"==0.8) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST59]
+Testovanie semantiky parseru na subore: "sem/expresion/eq_4.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+// TODO consider extensions
+//
+package main
+
+func main () {
+	if (0==(5==5)) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST60]
+Testovanie semantiky parseru na subore: "sem/expresion/eq_5.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//
+package main
+
+func main () {
+	if (5==5) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST61]
+Testovanie semantiky parseru na subore: "sem/expresion/eq_6.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//
+package main
+
+func main () {
+	if (5.7==5.6) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST62]
+Testovanie semantiky parseru na subore: "sem/expresion/eq_7.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//
+package main
+
+func main () {
+	if ("help"=="pleh") {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST63]
+Testovanie semantiky parseru na subore: "sem/expresion/gt_1.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	if (5>86.4e5) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST64]
+Testovanie semantiky parseru na subore: "sem/expresion/gt_2.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	if ("test">657) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST65]
+Testovanie semantiky parseru na subore: "sem/expresion/gt_3.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	if ("help">0.8) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST66]
+Testovanie semantiky parseru na subore: "sem/expresion/gt_4.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+// TODO consider extensions
+//
+package main
+
+func main () {
+	if (0>(5==5)) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST67]
+Testovanie semantiky parseru na subore: "sem/expresion/gt_5.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//
+package main
+
+func main () {
+	if (5>5) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST68]
+Testovanie semantiky parseru na subore: "sem/expresion/gt_6.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//
+package main
+
+func main () {
+	if (5.7>5.6) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST69]
+Testovanie semantiky parseru na subore: "sem/expresion/gt_7.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//
+package main
+
+func main () {
+	if ("help">"pleh") {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST70]
+Testovanie semantiky parseru na subore: "sem/expresion/gte_1.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	if (5>=86.4e5) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST71]
+Testovanie semantiky parseru na subore: "sem/expresion/gte_2.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	if ("test">=657) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST72]
+Testovanie semantiky parseru na subore: "sem/expresion/gte_3.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	if ("help">=0.8) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST73]
+Testovanie semantiky parseru na subore: "sem/expresion/gte_4.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+// TODO consider extensions
+//
+package main
+
+func main () {
+	if (0>=(5==5)) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST74]
+Testovanie semantiky parseru na subore: "sem/expresion/gte_5.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//
+package main
+
+func main () {
+	if (5>=5) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST75]
+Testovanie semantiky parseru na subore: "sem/expresion/gte_6.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//
+package main
+
+func main () {
+	if (5.7>=5.6) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST76]
+Testovanie semantiky parseru na subore: "sem/expresion/gte_7.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//
+package main
+
+func main () {
+	if ("help">="pleh") {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST77]
+Testovanie semantiky parseru na subore: "sem/expresion/lt_1.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	if (0.7<5) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST78]
+Testovanie semantiky parseru na subore: "sem/expresion/lt_2.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	if (0<"test") {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST79]
+Testovanie semantiky parseru na subore: "sem/expresion/lt_3.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	if ("help"<0.8) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST80]
+Testovanie semantiky parseru na subore: "sem/expresion/lt_4.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+// TODO consider extensions
+//
+package main
+
+func main () {
+	if (0<(5==5)) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST81]
+Testovanie semantiky parseru na subore: "sem/expresion/lt_5.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//
+package main
+
+func main () {
+	if (5<5) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST82]
+Testovanie semantiky parseru na subore: "sem/expresion/lt_6.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//
+package main
+
+func main () {
+	if (5.7<5.6) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST83]
+Testovanie semantiky parseru na subore: "sem/expresion/lt_7.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//
+package main
+
+func main () {
+	if ("help"<"pleh") {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST84]
+Testovanie semantiky parseru na subore: "sem/expresion/lte_1.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	if (0.7<=5) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST85]
+Testovanie semantiky parseru na subore: "sem/expresion/lte_2.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	if (0<="test") {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST86]
+Testovanie semantiky parseru na subore: "sem/expresion/lte_3.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	if ("help"<=0.8) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST87]
+Testovanie semantiky parseru na subore: "sem/expresion/lte_4.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+// TODO consider extensions
+//
+package main
+
+func main () {
+	if (0<=(5==5)) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST88]
+Testovanie semantiky parseru na subore: "sem/expresion/lte_5.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//
+package main
+
+func main () {
+	if (5<=5) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST89]
+Testovanie semantiky parseru na subore: "sem/expresion/lte_6.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//
+package main
+
+func main () {
+	if (5.7<=5.6) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST90]
+Testovanie semantiky parseru na subore: "sem/expresion/lte_7.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//
+package main
+
+func main () {
+	if ("help"<="pleh") {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST91]
+Testovanie semantiky parseru na subore: "sem/expresion/mul_1.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	a := "string" * 5
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST92]
+Testovanie semantiky parseru na subore: "sem/expresion/mul_2.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	a := 5.9 * 1
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST93]
+Testovanie semantiky parseru na subore: "sem/expresion/mul_3.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	a := 5.4 * "string"
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST94]
+Testovanie semantiky parseru na subore: "sem/expresion/mul_4.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	a := 5.9 * (5!=5)
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST95]
+Testovanie semantiky parseru na subore: "sem/expresion/mul_5.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	a := "abc" * "dfg"
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST96]
+Testovanie semantiky parseru na subore: "sem/expresion/mul_6.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//nogo
+//
+package main
+
+func main () {
+	a := 5*1
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST97]
+Testovanie semantiky parseru na subore: "sem/expresion/mul_7.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//nogo
+//
+package main
+
+func main () {
+	a := 68.4 * 5e-2
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST98]
+Testovanie semantiky parseru na subore: "sem/expresion/neq_1.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	if (0!=0.8) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST99]
+Testovanie semantiky parseru na subore: "sem/expresion/neq_2.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	if ("test" != 0) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST100]
+Testovanie semantiky parseru na subore: "sem/expresion/neq_3.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	if ("help"!=0.8) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST101]
+Testovanie semantiky parseru na subore: "sem/expresion/neq_4.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+// TODO consider extensions
+//
+package main
+
+func main () {
+	if ((5!=5)!=9.4) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST102]
+Testovanie semantiky parseru na subore: "sem/expresion/neq_5.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//
+package main
+
+func main () {
+	if (5!=5) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST103]
+Testovanie semantiky parseru na subore: "sem/expresion/neq_6.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//
+package main
+
+func main () {
+	if (5.7!=5.6) {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST104]
+Testovanie semantiky parseru na subore: "sem/expresion/neq_7.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//
+package main
+
+func main () {
+	if ("help"!="pleh") {
+	} else {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST105]
+Testovanie semantiky parseru na subore: "sem/expresion/sub_1.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	a := 5 - "string"
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST106]
+Testovanie semantiky parseru na subore: "sem/expresion/sub_2.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	a := 5 - 5.9
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST107]
+Testovanie semantiky parseru na subore: "sem/expresion/sub_3.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	a := 5.4 - "string"
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST108]
+Testovanie semantiky parseru na subore: "sem/expresion/sub_4.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	a := (5!=5) - 7
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST109]
+Testovanie semantiky parseru na subore: "sem/expresion/sub_5.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	a := "abc" - "dfg"
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------5
+
+[TEST110]
+Testovanie semantiky parseru na subore: "sem/expresion/sub_6.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//nogo
+//
+package main
+
+func main () {
+	a := 5-1
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST111]
+Testovanie semantiky parseru na subore: "sem/expresion/sub_7.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//nogo
+//
+package main
+
+func main () {
+	a := 68.4 - 5e-2
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST112]
+Testovanie semantiky parseru na subore: "sem/other/bad_prolog_id.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 2 7
+//
+package alpha
+
+func main () {
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------2
+
+[TEST113]
+Testovanie semantiky parseru na subore: "sem/other/case_sensitive.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 3 4
+//
+package main
+
+func main () {
+	a:=0
+	b:=A
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------3
+
+[TEST114]
+Testovanie semantiky parseru na subore: "sem/other/main_params.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 6
+//
+package main
+
+func main (a int) {
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------6
+
+[TEST115]
+Testovanie semantiky parseru na subore: "sem/other/main_params_returns.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 6
+//
+package main
+
+func main (a string) (float64) {
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------6
+
+[TEST116]
+Testovanie semantiky parseru na subore: "sem/other/main_returns.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 6
+//
+package main
+
+func main () (int) {
+	return 0
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------6
+
+[TEST117]
+Testovanie semantiky parseru na subore: "sem/other/no_main.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 3
+//
+package main
+
+func alpha (a int) {
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------3
+
+[TEST118]
+Testovanie semantiky parseru na subore: "sem/statement/assign_dont_match_1.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 7
+//
+package main
+
+func main () {
+	a := 0
+	b:=0
+
+	a,b = 8, 9, 10
+}
+
+-------------------------------------------------------
+koniec suboru
+---------------- -0. else if = TYPE = 4 -------------
+EXIT CODE JE : --------------------------------------------------------------------7
+
+[TEST119]
+Testovanie semantiky parseru na subore: "sem/statement/assign_dont_match_2.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 7
+//
+package main
+
+func main () {
+	a := 0
+	b:=0
+
+	a,b = 8
+}
+
+-------------------------------------------------------
+koniec suboru
+---------------- -0. else if = TYPE = 4 -------------
+EXIT CODE JE : --------------------------------------------------------------------7
+
+[TEST120]
+Testovanie semantiky parseru na subore: "sem/statement/assign_dont_match_3.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5 7
+//
+package main
+
+func main () {
+	a := 0
+	b:=0
+
+	a,b = "help", 9.4
+}
+
+-------------------------------------------------------
+koniec suboru
+---------------- -0. else if = TYPE = 6 -------------
+EXIT CODE JE : --------------------------------------------------------------------7
+
+[TEST121]
+Testovanie semantiky parseru na subore: "sem/statement/bad_return_1.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 0 6
+//interpret 6
+//
+package main
+
+func alpha (a int) (int) {
+	return 6.7
+}
+
+func main () {
+	alpha()
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------6
+
+[TEST122]
+Testovanie semantiky parseru na subore: "sem/statement/bad_return_2.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 0 6
+//interpret 6
+//
+package main
+
+func alpha (a int) (int,float64,string) {
+	return 6.7, "alpha", 0
+}
+
+func main () {
+	alpha()
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------6
+
+[TEST123]
+Testovanie semantiky parseru na subore: "sem/statement/bad_return_3.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 0 6
+//interpret 6
+//
+package main
+
+func alpha (a int) {
+	return 6.7
+}
+
+func main () {
+	alpha()
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------6
+
+[TEST124]
+Testovanie semantiky parseru na subore: "sem/statement/bad_return_4.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 0 6
+//interpret 6
+//
+package main
+
+func alpha (a int) (string) {
+	return
+}
+
+func main () {
+	alpha()
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------6
+
+[TEST125]
+Testovanie semantiky parseru na subore: "sem/statement/call_bad_params_1.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 6
+//
+package main
+
+func alpha() {
+}
+
+func main () {
+	alpha(8)
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------6
+
+[TEST126]
+Testovanie semantiky parseru na subore: "sem/statement/call_bad_params_2.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 6
+//
+package main
+
+func alpha(a int, b float64) {
+}
+
+func main () {
+	alpha("string", 0)
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------6
+
+[TEST127]
+Testovanie semantiky parseru na subore: "sem/statement/call_bad_return_1.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 6 7
+//
+package main
+
+func alpha() {
+}
+
+func main () {
+	a:=0
+	a = alpha()
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------6
+
+[TEST128]
+Testovanie semantiky parseru na subore: "sem/statement/call_bad_return_2.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5 6 7
+//
+package main
+
+func alpha()(float64) {
+	return 0.0
+}
+
+func main () {
+	a:=0
+	a = alpha()
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------6
+
+[TEST129]
+Testovanie semantiky parseru na subore: "sem/statement/call_bad_return_3.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 6 7
+//
+package main
+
+func alpha() (int,int) {
+	return 1,2
+}
+
+func main () {
+	a:=0
+	b:=0
+	c:=0
+	a,b,c = alpha()
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------6
+
+[TEST130]
+Testovanie semantiky parseru na subore: "sem/statement/call_undefined.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 3
+//
+package main
+
+func alpha()(string) {
+	return "hello"
+}
+
+func main () {
+	a = alpha()
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------3
+
+[TEST131]
+Testovanie semantiky parseru na subore: "sem/statement/for_nonbool.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	for ;5; {
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------7
+
+[TEST132]
+Testovanie semantiky parseru na subore: "sem/statement/for_scope_1.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//
+package main
+
+func main () {
+	for a:=0;a!=1;a=a+1 {
+		b:= 0
+		a = b
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST133]
+Testovanie semantiky parseru na subore: "sem/statement/for_scope_2.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 3
+//
+package main
+
+func main () {
+	for a:=0;a!=5;a=b {
+		b:= 0
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------3
+
+[TEST134]
+Testovanie semantiky parseru na subore: "sem/statement/if_nonbool.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 5
+//
+package main
+
+func main () {
+	if 5 {
+	} else{
+	}
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------7
+
+[TEST135]
+Testovanie semantiky parseru na subore: "sem/statement/no_return.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 0 6
+//interpret 6
+//
+package main
+
+func alpha (a int) (int) {
+}
+
+func main () {
+	alpha()
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------7
+
+[TEST136]
+Testovanie semantiky parseru na subore: "sem/statement/underscore_usage_1.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//
+package main
+
+func alpha () (float64) {
+	return 6.7
+}
+
+func main () {
+	_ = alpha()
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST137]
+Testovanie semantiky parseru na subore: "sem/statement/underscore_usage_2.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//
+package main
+
+func main () {
+	_ = 5+5
+}
+
+-------------------------------------------------------
+koniec suboru
+---------------- -0. else if = TYPE = 4 -------------
+EXIT CODE JE : --------------------------------------------------------------------0
+
+[TEST138]
+Testovanie semantiky parseru na subore: "sem/statement/underscore_usage_3.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 2 7
+//
+package main
+
+func main () {
+	a := _ + 6
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------3
+
+[TEST139]
+Testovanie semantiky parseru na subore: "sem/statement/underscore_usage_4.go"
+~~~~~~~~~~~~~~~~~~~~
+zaciatok suboru
+-------------------------------------------------------
+//compiler 7
+//
+package main
+
+func alpha (a int) (int) {
+	return 6
+}
+
+func main () {
+	alpha(_)
+}
+
+-------------------------------------------------------
+koniec suboru
+EXIT CODE JE : --------------------------------------------------------------------3
+
+Koniec testov funkcii v parser.c 
+==================================
+==================================
