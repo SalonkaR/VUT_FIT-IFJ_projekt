@@ -11,6 +11,7 @@
 
 #define FILE_COUNT_CORRECT 31
 #define FILE_COUNT_INCORRECT 22
+#define FILE_COUNT_UJEBANE 44
 
 void reset () {
   printf("\033[0m");
@@ -386,7 +387,68 @@ void kontrola_scanner(){
 
         test_scanner(filenames_incorrect[i]);
         test_count++;
-    }   
+    } 
+
+    // UJEBANE SUBORY
+
+    char *filenames_ujebane[FILE_COUNT_UJEBANE] =  
+                            {"lex/characters/amp.go",
+                            "lex/characters/bracket.go",
+                            "lex/characters/dolar.go",
+                            "lex/characters/dot.go",
+                            "lex/characters/question.go",
+                            "lex/characters/sharp.go",
+                            "lex/comments/block_line.go",
+                            "lex/comments/line_block.go",
+                            "lex/comments/line_nested.go",
+                            "lex/comments/multiline.go",
+                            //"lex/comments/unending.go",
+                            "lex/ids/id_all.go",
+                            "lex/ids/id_numbers.go",
+                            "lex/ids/id_starting_underscore.go",
+                            "lex/ids/underscore_id.go",
+                            "lex/numbers/float_dot_zero.go",
+                            "lex/numbers/float_dot_zeroes.go",
+                            "lex/numbers/float_dot.go",
+                            "lex/numbers/float_exp_1.go",
+                            "lex/numbers/float_exp_2.go",
+                            "lex/numbers/float_exp_3.go",
+                            "lex/numbers/float_exp_4.go",
+                            "lex/numbers/float_exp_dot_1.go",
+                            "lex/numbers/float_exp_dot_2.go",
+                            "lex/numbers/float_exp_zero_1.go",
+                            "lex/numbers/float_exp_zero_2.go",
+                            "lex/numbers/float_exp_zeroes.go",
+                            "lex/numbers/float_space.go",
+                            "lex/numbers/int.go",
+                            "lex/numbers/leading_zeroes_float.go",
+                            "lex/numbers/leading_zeroes_int.go",
+                            "lex/numbers/zero_float.go",
+                            "lex/numbers/zero_int.go",
+                            "lex/numbers/zeroes.go",
+                            "lex/strings/empty_string.go",
+                            "lex/strings/string_bad_escape_1.go",
+                            "lex/strings/string_bad_escape_2.go",
+                            "lex/strings/string_bad_escape_3.go",
+                            "lex/strings/string_bad_escape_4.go",
+                            "lex/strings/string_escape_hex.go",
+                            "lex/strings/string_escape.go",
+                            "lex/strings/string.go",
+                            "lex/strings/unfinished_string_1.go",
+                            "lex/strings/unfinished_string_2.go",
+                             };
+    
+    printf("\n\n TESTY NA SUBOROCH KTORE sme ujebali(1)\n");
+    for (int i = 0; i < FILE_COUNT_UJEBANE; i++){
+        blue_color();
+        printf("\n[TEST%d]\n", test_count);
+        printf("Testovanie scanneru na subore: \"%s\"\n",filenames_ujebane[i]);
+        printf("~~~~~~~~~~~~~~~~~~~~\n");
+        reset();
+
+        test_scanner(filenames_ujebane[i]);
+        test_count++;
+    }     
 }
 
 
