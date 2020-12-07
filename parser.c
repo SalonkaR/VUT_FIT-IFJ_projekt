@@ -16,6 +16,7 @@
 #include "error.h"
 #include "expression.h"
 #include "bt_stack.h"
+#include "gen_code.h"
 
 struct parser_data data;
 
@@ -211,6 +212,12 @@ int prog()
       }
 
       bt_stack_push(&data.BT_stack);
+	  if (str_cmp_const_str(data.token.attribute.string, "main") == 0){
+		  main_func();
+	  }
+	  else {
+	  	func_beg(data.token.attribute.string->str);
+	  }
       
       if (check_token() == LEX_ERR){
     	  return LEX_ERR;
@@ -359,6 +366,9 @@ int prog()
       return_included = false;
 
       //konci funkcia tak popnem stack frame
+	  if (strcmp(data.actual_func->identifier, "main") != 0){
+	  	func_fin(data.actual_func->identifier);
+	  }
       bt_stack_pop(&data.BT_stack);
       data.actual_func = NULL;
 
@@ -408,8 +418,12 @@ int body()
             return LEX_ERR;
           }
 
+			//gen_if_start
+
           //pushnem novy frame pre premmenne
           bt_stack_push(&data.BT_stack);
+		  gen_if_start();
+		  data.no_ifs++;
 
 
           data.in_if_for = true;
@@ -419,6 +433,8 @@ int body()
             return result_exp_if;
           }
           data.in_if_for = false;
+
+		  gen_if(data.actual_func->identifier, data.no_ifs, data.no_ifs);
 
           //printf("----------------2. TOKEN body MAM IF if-TYPE = %d -------------\n",data.token.type);
           if (check_type(T_TYPE_LEFT_VINCULUM) == SYN_ERR ){
@@ -465,6 +481,7 @@ int body()
             return SYN_ERR;
           }
 
+			gen_if_else(data.actual_func->identifier, data.no_ifs, data.no_ifs);
           //vychadzam z ifu tak popnem jeden frame zo stacku pre premenne
           bt_stack_pop(&data.BT_stack);
           
@@ -477,6 +494,8 @@ int body()
           if (check_keyword(KWORD_ELSE) == SYN_ERR ){
             return SYN_ERR;
           }  
+
+
 
           //vchadzam do elsu tak pushnem novy stack na premenne
           bt_stack_push(&data.BT_stack);
@@ -526,6 +545,8 @@ int body()
             return SYN_ERR;
           }
 
+
+			gen_if_end(data.actual_func->identifier, data.no_ifs, data.no_ifs);
           //vychadzam z elsu tak popnem stack pre premmenne
           bt_stack_pop(&data.BT_stack);
           
@@ -562,6 +583,8 @@ int body()
           if (check_token() == LEX_ERR){
             return LEX_ERR;
           }
+
+			//gen_for_start
 
           //vytvorim si temporary frame pre for defiuniton(1. vo fore)
           bt_stack_push(&data.BT_stack);
@@ -757,6 +780,8 @@ int body()
 			return SEM_ERR_OTHER;
 		}
 
+		
+
         
 		//ulozim si toto volanie funkcie
 		tFunc_calls *first_in_ll = data.check_func_calls;
@@ -775,25 +800,30 @@ int body()
 		data.check_func_calls = new_item_ll;
 
 
+		
 
 
 
         //printf("----------------0. TOKEN BODY MAM ID-TYPE = %d -------------\n",data.token.type);
         
-        //popnem z queue pretoze tento id je volanie funkcie
-        id_queue_pop(&data.ID_queue);
-
+        
         if (check_token() == LEX_ERR){
           return LEX_ERR;
         }
         if (check_type(T_TYPE_RIGHT_BRACKET) == SYN_ERR ){
 			saving_arguments = true;
 			int exit_argument = argument();
+
 			saving_arguments = false;
 			if (exit_argument != SYN_OK){ 
 			return exit_argument;
 			}
         }
+
+		call_func(top_queue->id.str);
+		//popnem z queue pretoze tento id je volanie funkcie
+        id_queue_pop(&data.ID_queue);
+
 
         //printf("----------------2. TOKEN BODY MAM IF ID ( TYPE = %d -------------\n",data.token.type);
         if (check_type(T_TYPE_RIGHT_BRACKET) == SYN_ERR ){
@@ -981,8 +1011,7 @@ int body()
 				tmp = tmp->next;
 			}
 
-            id_queue_free(&data.ID_queue);
-            id_queue_init(&data.ID_queue);
+			
 
 
             //printf("----------------2 BODY = TYPE = %d -------------\n",data.token.type);
@@ -1018,6 +1047,11 @@ int body()
             if( exit_argument != SYN_OK){ 
               return exit_argument;
             }
+
+			call_func(called_func.str);
+
+            id_queue_free(&data.ID_queue);
+            id_queue_init(&data.ID_queue);
 
             //printf("----------------8. BODY = TYPE = %d -------------\n",data.token.type);
             if (check_type(T_TYPE_RIGHT_BRACKET) == SYN_ERR ){
@@ -1828,6 +1862,11 @@ int value()
        ( check_type(T_TYPE_IDENTIFIER) != SYN_ERR )  ) {
 
 		if (saving_arguments == true){
+			
+			
+			before_call_func_params(&data.token, data.argument_counter);
+			data.argument_counter++;
+
 			if (data.token.type == T_TYPE_INTEGER){
 				tID_queue_item *pushnuta = id_queue_push(&data.check_func_calls->rs);
           
@@ -1963,6 +2002,8 @@ bool init_variables()
     data.checked_returns = 0;
     data.actual_func = NULL;
     data.check_func_calls = NULL;
+	data.argument_counter = 0;
+	data.no_ifs = 0;
 
     bt_stack_init(&data.BT_stack);
 
@@ -2030,6 +2071,7 @@ int parse()
     if((result = get_token(&data.token)) == LEX_TOKEN_OK)
     {
         result = start(&data);
+		gen_code_start();
         bad_returns = false;
         //Print_tree(data.BT_global.root_ptr);
         //funkcia s ID main musi byt obsiahnuta

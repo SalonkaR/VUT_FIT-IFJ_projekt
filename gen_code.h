@@ -17,7 +17,7 @@ void func_fin(char func_name[]);
 
 void call_func(char func_name[]);
 
-void before_call_func_params(char value[], int index);
+void before_call_func_params(struct token *token, int index);
 
 void after_func_beg_params(int index);
 
@@ -45,6 +45,8 @@ void gen_for_end(char func_name[], int index, int depth);
 
 void gen_arithmetic(symb);
 
+void push_value(struct token *token);
 
+void concat_strings();
 
-#endif gen_code_h
+#endif 

@@ -340,6 +340,14 @@ static int reduce(){
 			return result;
         }
 
+        //generovanie kodu
+        if (rule == E_PLUS_E && type_after_reduce == TYPE_STRING){
+            void concat_strings();
+		}
+		else {
+            gen_arithmetic(rule);
+        }
+
         //popnem count+1 znakov
         for (int i = 0; i < count + 1; i++){
             stack_pop(&stack);
@@ -436,6 +444,13 @@ int expression(struct parser_data* data, bool *nondetermism){
                     free_resources();
                     return ERROR_INTERNAL;
                 }
+
+                if (actual_symbol == IDENTIFIER || actual_symbol == INT_NUMBER 
+                    || actual_symbol == DOUBLE_NUMBER || actual_symbol == STRING){
+                    
+                    push_value(&data->token);
+                }
+
 
                 if (last4_c == 3){
                     last4_c = 0;

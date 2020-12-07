@@ -13,7 +13,11 @@ static void gen_code_start()
 	str_add_const_str(&code20, "#Zacatek programu\n");
 	str_add_const_str(&code20, ".IFJcode20\n");
 	str_add_const_str(&code20, "DEFVAR GF@y");
-	str_add_const_str(&code20, "JUMP main\n");	
+	str_add_const_str(&code20, "DEFVAR GF@strA");
+    str_add_const_str(&code20, "DEFVAR GF@strB");
+    str_add_const_str(&code20, "DEFVAR GF@strC");
+	str_add_const_str(&code20, "JUMP main\n");
+
 }
 
 
@@ -63,14 +67,14 @@ void call_func(char func_name[])
 }
 
 
-void before_call_func_params(char value[], int index)
+void before_call_func_params(struct token *token, int index)
 {
 	str_add_const_str(&code20, "DEFVAR TF@%");
-	str_add_const_str(&code20, index);
+	str_add_const_str(&code20, token);
 	str_add_const_str(&code20, "\n");
 
 	str_add_const_str(&code20, "MOVE TF@%");
-	str_add_const_str(&code20, index);
+	str_add_const_str(&code20, token);
 	str_add_const_str(&code20, " ");
 	str_add_const_str(&code20, value);
 	str_add_const_str(&code20, "\n");	
@@ -217,28 +221,40 @@ void gen_for_end(char func_name[], int index, int depth)
 }
 
 
-void gen_arithmetic(symb)
+void gen_arithmetic(Prec_rules symb)
 {
 	switch(symb){
-		case plus:
+		case E_PLUS_E:
 			str_add_const_str(&code20, "ADDS\n");
 			break;
-		case minus:
+		case E_MINUS_E:
 			str_add_const_str(&code20, "SUBS\n");
 			break;
-		case multi:
+		case E_MUL_E:
 			str_add_const_str(&code20, "MULS\n");
 			break;
-		case divide:
+		case E_DIV_E:
 			str_add_const_str(&code20, "DIVS\n");
 			break;
 	}
 }
 
+void push_value(struct token *token)
+{
+    str_add_const_str(&code20, "PUSHS\n");
+    str_add_const_str(&code20, " ");
+    str_add_const_str(&code20, gen_value(token));
+    str_add_const_str(&code20, "\n");
+}
 
 
-
-
+void concat_strings()
+{
+    ADD_INST("POPS GF@strC");
+    ADD_INST("POPS GF@strB");
+    ADD_INST("CONCAT GF@strA GF@strB GF@strC");
+    ADD_INST("PUSHS GF@strA");
+}
 
 
 
