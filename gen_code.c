@@ -32,19 +32,21 @@ void gen_value(struct token *token)
 	switch(token->type){
 		case T_TYPE_INTEGER:
 			str_add_const_str(&code20, "int@");
-			sprintf(act_value, "%d", token->atribute.int_literal);
+			sprintf(act_value, "%d", token->attribute.int_literal);
 			str_add_const_str(&code20, act_value);
 			break;
 		case T_TYPE_DOUBLE:
 			str_add_const_str(&code20, "float@");
-			sprintf(act_value, "%g", token->atribute.double_literal);
+			sprintf(act_value, "%g", token->attribute.double_literal);
 			str_add_const_str(&code20, act_value);
 			break;
 		case T_TYPE_STRING:
 			break;
 		case T_TYPE_IDENTIFIER:
 			str_add_const_str(&code20, "TF@");			
-			str_add_const_str(&code20, token->atribute.string);
+			str_add_const_str(&code20, token->attribute.string->str);
+			break;
+		default:
 			break;
 	}
 }
@@ -286,6 +288,8 @@ void gen_arithmetic(Prec_rules symb)
 		case E_DIV_E:
 			str_add_const_str(&code20, "DIVS\n");
 			break;
+		default:
+		break;
 	}
 }
 
