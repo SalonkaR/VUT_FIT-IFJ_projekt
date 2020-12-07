@@ -7,7 +7,7 @@
 #include "scanner.h"
 #include "expression.h"
 
-static void gen_code_start();
+void gen_code_start();
 
 void main_func();
 
@@ -43,7 +43,7 @@ void gen_for(char func_name[], int index, int depth, char ee[]);
 
 void gen_for_end(char func_name[], int index, int depth);
 
-void gen_arithmetic(symb);
+void gen_arithmetic(Prec_rules rule);
 
 void push_value(struct token *token);
 

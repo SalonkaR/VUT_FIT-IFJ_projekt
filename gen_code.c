@@ -6,9 +6,13 @@
 #include "scanner.h"
 #include "str.h"
 
+
+#define LENGTH 50
+
+
 struct str_struct code20;
 
-static void gen_code_start()
+void gen_code_start()
 {
 	str_add_const_str(&code20, "#Zacatek programu\n");
 	str_add_const_str(&code20, ".IFJcode20\n");
@@ -18,6 +22,31 @@ static void gen_code_start()
     str_add_const_str(&code20, "DEFVAR GF@strC");
 	str_add_const_str(&code20, "JUMP main\n");
 
+}
+
+
+void gen_value(struct token *token)
+{
+	char act_value[LENGTH];
+
+	switch(token->type){
+		case T_TYPE_INTEGER:
+			str_add_const_str(&code20, "int@");
+			sprintf(act_value, "%d", token->atribute.int_literal);
+			str_add_const_str(&code20, act_value);
+			break;
+		case T_TYPE_DOUBLE:
+			str_add_const_str(&code20, "float@");
+			sprintf(act_value, "%g", token->atribute.double_literal);
+			str_add_const_str(&code20, act_value);
+			break;
+		case T_TYPE_STRING:
+			break;
+		case T_TYPE_IDENTIFIER:
+			str_add_const_str(&code20, "TF@");			
+			str_add_const_str(&code20, token->atribute.string);
+			break;
+	}
 }
 
 
@@ -69,41 +98,50 @@ void call_func(char func_name[])
 
 void before_call_func_params(struct token *token, int index)
 {
+	char tmp[LENGTH];
+
 	str_add_const_str(&code20, "DEFVAR TF@%");
-	str_add_const_str(&code20, token);
+	sprintf(tmp, "%d", index);
+	str_add_const_str(&code20, tmp);
 	str_add_const_str(&code20, "\n");
 
-	str_add_const_str(&code20, "MOVE TF@%");
-	str_add_const_str(&code20, token);
-	str_add_const_str(&code20, " ");
-	str_add_const_str(&code20, value);
+	str_add_const_str(&code20, "MOVE TF@%");	
+	str_add_const_str(&code20, tmp);	
+	str_add_const_str(&code20, " ");	
+	gen_value(token);
 	str_add_const_str(&code20, "\n");	
 }
 
 
 void after_func_beg_params(int index)
 {
+	char tmp[LENGTH];
+
 	str_add_const_str(&code20, "DEFVAR LF@param");
-	str_add_const_str(&code20, index);
+	sprintf(tmp, "%d", index);
+	str_add_const_str(&code20, tmp);	
 	str_add_const_str(&code20, "\n");	
 
 	str_add_const_str(&code20, "MOVE LF@param");
-	str_add_const_str(&code20, index);
+	str_add_const_str(&code20, tmp);	
 	str_add_const_str(&code20, " ");
 	str_add_const_str(&code20, "LF@%");
-	str_add_const_str(&code20, index);
+	str_add_const_str(&code20, tmp);	
 	str_add_const_str(&code20, "\n");	
 }
 
 
 void func_retval(char value[], int index)
 {
+	char tmp[LENGTH];
+	sprintf(tmp, "%d", index);
+
 	str_add_const_str(&code20, "DEFVAR LF@%retval");
-	str_add_const_str(&code20, index);
+	str_add_const_str(&code20, tmp);
 	str_add_const_str(&code20, "\n");
 
 	str_add_const_str(&code20, "MOVE LF@%retval");
-	str_add_const_str(&code20, index);
+	str_add_const_str(&code20, tmp);
 	str_add_const_str(&code20, " ");
 	str_add_const_str(&code20, value);
 	str_add_const_str(&code20, "\n");	
@@ -137,14 +175,17 @@ void gen_if_start()
 
 void gen_if(char func_name[], int index, int depth)
 {
+	char tmp[LENGTH];
+	sprintf(tmp, "%d", index);
+
 	str_add_const_str(&code20, "JUMPIFNEQ $");
 	str_add_const_str(&code20, func_name);
 
 	str_add_const_str(&code20, "$");
-	str_add_const_str(&code20, index);
+	str_add_const_str(&code20, tmp);
 
 	str_add_const_str(&code20, "$");
-	str_add_const_str(&code20, depth);
+	str_add_const_str(&code20, tmp);
 
 	str_add_const_str(&code20, "$else\n");	
 }
@@ -152,20 +193,23 @@ void gen_if(char func_name[], int index, int depth)
 
 void gen_if_else(char func_name[], int index, int depth)
 {
+	char tmp[LENGTH];
+	sprintf(tmp, "%d", index);
+
 	str_add_const_str(&code20, "JUMP $");
 	str_add_const_str(&code20, func_name);
 
 	str_add_const_str(&code20, "$");
-	str_add_const_str(&code20, index);
+	str_add_const_str(&code20, tmp);
 
 	str_add_const_str(&code20, "$");
-	str_add_const_str(&code20, depth);
+	str_add_const_str(&code20, tmp);
 
 	str_add_const_str(&code20, "$end\n");
 
 	str_add_const_str(&code20, "#Else cast\n");
 	
-	gen_label(func_name, index, depth, "else");
+	gen_label(func_name, index, index, "else");
 }
 
 
@@ -183,21 +227,24 @@ void gen_for_start()
 
 void gen_for(char func_name[], int index, int depth, char ee[])
 {
+	char tmp[LENGTH];
+	sprintf(tmp, "%d", index);
+
 	str_add_const_str(&code20, "JUMPIFNEQ $");
 	str_add_const_str(&code20, func_name);
 
 	str_add_const_str(&code20, "$");
-	str_add_const_str(&code20, index);
+	str_add_const_str(&code20, tmp);
 
 	str_add_const_str(&code20, "$");
-	str_add_const_str(&code20, depth);
+	str_add_const_str(&code20, tmp);
 
 	str_add_const_str(&code20, "$");
 	str_add_const_str(&code20, ee);
 
 	str_add_const_str(&code20, " ");
 	str_add_const_str(&code20, "TF@RES$");
-	str_add_const_str(&code20, index);
+	str_add_const_str(&code20, tmp);
 
 	str_add_const_str(&code20, " ");
 	str_add_const_str(&code20, "bool@true\n");	
@@ -206,14 +253,17 @@ void gen_for(char func_name[], int index, int depth, char ee[])
 
 void gen_for_end(char func_name[], int index, int depth)
 {
+	char tmp[LENGTH];
+	sprintf(tmp, "%d", index);
+
 	str_add_const_str(&code20, "JUMP $");
 	str_add_const_str(&code20, func_name);
 
 	str_add_const_str(&code20, "$");
-	str_add_const_str(&code20, index);
+	str_add_const_str(&code20, tmp);
 
 	str_add_const_str(&code20, "$");
-	str_add_const_str(&code20, depth);
+	str_add_const_str(&code20, tmp);
 
 	str_add_const_str(&code20, "$FOR\n");
 	
@@ -242,18 +292,18 @@ void gen_arithmetic(Prec_rules symb)
 void push_value(struct token *token)
 {
     str_add_const_str(&code20, "PUSHS\n");
-    str_add_const_str(&code20, " ");
-    str_add_const_str(&code20, gen_value(token));
+    str_add_const_str(&code20, " ");    
+    gen_value(token);
     str_add_const_str(&code20, "\n");
 }
 
 
 void concat_strings()
 {
-    ADD_INST("POPS GF@strC");
-    ADD_INST("POPS GF@strB");
-    ADD_INST("CONCAT GF@strA GF@strB GF@strC");
-    ADD_INST("PUSHS GF@strA");
+	str_add_const_str(&code20, "POPS GF@strC\n");
+	str_add_const_str(&code20, "POPS GF@strB\n");
+	str_add_const_str(&code20, "CONCAT GF@strA GF@strB GF@strC\n");
+	str_add_const_str(&code20, "PUSHS GF@strA\n");	
 }
 
 
