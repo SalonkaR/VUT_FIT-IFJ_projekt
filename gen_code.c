@@ -29,7 +29,7 @@ void gen_code_start()
 }
 
 
-void gen_value(struct token *token)
+void gen_value(struct token *token, struct str_struct *to_which)
 {
 	char act_value[LENGTH];
 
@@ -38,30 +38,30 @@ void gen_value(struct token *token)
 
 	switch(token->type){
 		case T_TYPE_INTEGER:
-			str_add_const_str(&code20, "int@");
+			str_add_const_str(to_which, "int@");
 			sprintf(act_value, "%d", token->attribute.int_literal);
-			str_add_const_str(&code20, act_value);
+			str_add_const_str(to_which, act_value);
 			break;
 		case T_TYPE_DOUBLE:
-			str_add_const_str(&code20, "float@");
+			str_add_const_str(to_which, "float@");
 			sprintf(act_value, "%g", token->attribute.double_literal);
-			str_add_const_str(&code20, act_value);
+			str_add_const_str(to_which, act_value);
 			break;
 		case T_TYPE_STRING:
 			for(long unsigned int i = 0; i <= strlen(token->attribute.string->str);i++){
 				if(token->attribute.string->str[i] == '#' || token->attribute.string->str[i] == '\\' || token->attribute.string->str[i] <= 32){
 					str_add_char(&h_str, '\\');
 					sprintf(h_str.str, "%03d", token->attribute.string->str[i]);
-					str_add_const_str(&code20, h_str.str);
+					str_add_const_str(to_which, h_str.str);
 				} else{
-					str_add_const_str(&code20, "string@");
-					str_add_const_str(&code20, h_str.str);
+					str_add_const_str(to_which, "string@");
+					str_add_const_str(to_which, h_str.str);
 				}
 			}
 			break;
 		case T_TYPE_IDENTIFIER:
-			str_add_const_str(&code20, "TF@");			
-			str_add_const_str(&code20, token->attribute.string->str);
+			str_add_const_str(to_which, "TF@");			
+			str_add_const_str(to_which, token->attribute.string->str);
 			break;
 		default:
 			break;
@@ -135,7 +135,7 @@ void call_func(char func_name[])
 void before_call_func_params(struct token *token)
 {
 	str_add_const_str(&code20, "PUSHS TF@");
-	gen_value(token);
+	gen_value(token, &code20);
 	str_add_const_str(&code20, "\n");
 }
 
@@ -358,10 +358,10 @@ void gen_arithmetic(Prec_rules symb)
 
 void push_value(struct token *token)
 {
-    str_add_const_str(&code20, "PUSHS");
-    str_add_const_str(&code20, " ");    
-    gen_value(token);
-    str_add_const_str(&code20, "\n");
+    str_add_const_str(&tmp, "PUSHS");
+    str_add_const_str(&tmp, " ");    
+    gen_value(token, &tmp);
+    str_add_const_str(&tmp, "\n");
 }
 
 
@@ -373,14 +373,17 @@ void concat_strings()
 	str_add_const_str(&code20, "PUSHS GF@strA\n");	
 }
 
+
 void print_ifjcode20(){
 	printf("%s", code20.str);
+	str_free(&tmp);
 	str_free(&code20);
 }
 
-void hej()
-{
-	str_add_const_str(&code20, "hej\n");
+
+void push_confirm(){
+	 str_add_const_str(&code20, tmp.str);
+	 str_clear(&tmp);
 }
 
 

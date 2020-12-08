@@ -453,6 +453,14 @@ int expression(struct parser_data* data, bool *nondetermism){
                 else {
                     last4_c++;
                 }
+
+                if (actual_symbol == IDENTIFIER || actual_symbol == INT_NUMBER 
+                    || actual_symbol == DOUBLE_NUMBER || actual_symbol == STRING){
+                
+                    push_value(&data->token);
+                }
+
+
                 //TU POSLAT INFO PARSERU 
                 result_exp = get_token(&data->token);
                 last4[last4_c] = get_symbol_from_token(&data->token);
@@ -467,10 +475,10 @@ int expression(struct parser_data* data, bool *nondetermism){
 
                 if (actual_symbol == IDENTIFIER || actual_symbol == INT_NUMBER 
                     || actual_symbol == DOUBLE_NUMBER || actual_symbol == STRING){
-                    
-                    push_value(&data->token);
+                
+                    push_confirm();
                 }
-
+                
 
                 if ((result_exp)){
                     free_resources();

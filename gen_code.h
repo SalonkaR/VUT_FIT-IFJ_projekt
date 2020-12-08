@@ -45,7 +45,7 @@ void gen_for_end(char func_name[], int index, int depth);
 
 void gen_arithmetic(Prec_rules rule);
 
-void push_value(struct token *token);
+void gen_value(struct token *token, struct str_struct *to_which);
 
 void concat_strings();
 
@@ -55,6 +55,6 @@ void pop_value(char var_name[]);
 
 void main_func_end();
 
-void hej();
+void push_confirm();
 
 #endif 
