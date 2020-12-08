@@ -295,18 +295,34 @@ int prog()
           if (exit_body != SYN_OK){ 
             return exit_body;
           }
-          printf("  tu3\n");
           //printf("---------------- 1.5 VOLAM BODY - TYPE = %d -------------\n",data.token.type);
           if ( check_type( T_TYPE_RIGHT_VINCULUM) == SYN_OK ){
             if (check_token() == LEX_ERR){
               return LEX_ERR;
             }
             //printf("----------------EOF- TYPE = %d -------------\n",data.token.type);
+			
+			//funkcia, ktora ma return values, musi obsahovat return
+            if((data.actual_func->func_params.top) != NULL && return_included == false) return SEM_ERR_OTHER;
+            return_included = false;
+
+            //konci funkcia tak popnem stack frame
+            if (strcmp(data.actual_func->identifier, "main") != 0){      
+              func_fin(data.actual_func->identifier);
+            }else{      
+              main_func_end();
+            }
+
+            bt_stack_pop(&data.BT_stack);
+            data.actual_func = NULL;
+
+
             if (check_type( T_TYPE_EOF) == SYN_OK){
               return SYN_OK;
             }
+			
           } 
-          else{          
+          else{        
             if (check_token() == LEX_ERR){
               return LEX_ERR;
             }
@@ -316,8 +332,7 @@ int prog()
             if (check_token() == LEX_ERR){
               return LEX_ERR;
             }
-          }   
-          printf("  tu4\n"); 
+          }
           //printf("---------------- 2 VOLAM BODY - TYPE = %d -------------\n",data.token.type);        
           if (check_type( T_TYPE_EOL) == SYN_ERR){
             return SYN_ERR;
@@ -338,13 +353,10 @@ int prog()
             return_included = false;
 
             //konci funkcia tak popnem stack frame
-            printf("huvbidaub\n");
             if (strcmp(data.actual_func->identifier, "main") != 0){      
               func_fin(data.actual_func->identifier);
-              hej();
             }else{      
               main_func_end();
-              hej();
             }
 
             bt_stack_pop(&data.BT_stack);
@@ -360,7 +372,6 @@ int prog()
           return SYN_ERR;
         }
       }
-      printf("  tu1\n");
 	  if ((strcmp(data.actual_func->identifier, "main")) == 0){
 			
 			if (data.actual_func->func_params.top != NULL || data.actual_func->input_params.top != NULL){
@@ -377,14 +388,11 @@ int prog()
 
       return_included = false;
 
-      printf("  tu\n");
       //konci funkcia tak popnem stack frame
 	  if (strcmp(data.actual_func->identifier, "main") != 0){      
 	  	func_fin(data.actual_func->identifier);
-      hej();
 	  }else{      
-      main_func_end();
-      hej();
+      	main_func_end();
     }
       bt_stack_pop(&data.BT_stack);
       data.actual_func = NULL;
