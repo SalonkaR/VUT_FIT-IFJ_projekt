@@ -29,6 +29,9 @@ void gen_value(struct token *token)
 {
 	char act_value[LENGTH];
 
+	struct str_struct h_str;
+	str_init(&h_str);	
+
 	switch(token->type){
 		case T_TYPE_INTEGER:
 			str_add_const_str(&code20, "int@");
@@ -41,6 +44,16 @@ void gen_value(struct token *token)
 			str_add_const_str(&code20, act_value);
 			break;
 		case T_TYPE_STRING:
+			for(long unsigned int i = 0; i <= strlen(token->attribute.string->str);i++){
+				if(token->attribute.string->str[i] == '#' || token->attribute.string->str[i] == '\\' || token->attribute.string->str[i] <= 32){
+					str_add_char(&h_str, '\\');
+					sprintf(h_str, "%03d", token->attribute.string->str[i]);
+					str_add_const_str(&code20, h_str);
+				}
+			}else{
+				str_add_const_str(&code20, "string@");
+				str_add_const_str(&code20, h_str);
+			}
 			break;
 		case T_TYPE_IDENTIFIER:
 			str_add_const_str(&code20, "TF@");			
@@ -49,6 +62,7 @@ void gen_value(struct token *token)
 		default:
 			break;
 	}
+	str_clear(&h_str);
 }
 
 
@@ -56,7 +70,13 @@ void main_func()
 {
 	str_add_const_str(&code20, "#Hlavni funcke main\n");
 	str_add_const_str(&code20, "LABEL main\n");
-	str_add_const_str(&code20, "CREATEFRAME\n");		
+	str_add_const_str(&code20, "CREATEFRAME\n");
+}
+
+void main_func_end()
+{
+	str_add_const_str(&code20, "#Konec hlavni funcke main\n");
+	str_add_const_str(&code20, "CLEARS\n");
 }
 
 
@@ -70,7 +90,7 @@ void func_beg(char func_name[])
 	str_add_const_str(&code20, func_name);
 	str_add_const_str(&code20, "\n");
 
-	str_add_const_str(&code20, "PUSHFRAME\n");	
+	str_add_const_str(&code20, "PUSHFRAME\n");			
 }
 
 
@@ -162,10 +182,20 @@ void make_var(char var_name[], char loc[], int depth)
 }
 
 
-void gen_label(char func_name[], int index, int depth, char ee[])
+void gen_label(char func_name[], int index, char ee[])
 {
-	str_add_const_str(&code20, "");
-	printf("LABEL $%s$%d$%d$%s\n", func_name, index, depth, ee);
+	char tmp[LENGTH];
+	sprintf(tmp, "%d", index);
+
+	str_add_const_str(&code20, "LABEL $");
+	str_add_const_str(&code20, func_name);
+
+	str_add_const_str(&code20, "$");
+	str_add_const_str(&code20, tmp);
+
+	str_add_const_str(&code20, ee);
+
+	str_add_const_str(&code20, "\n");	
 }
 
 
@@ -175,7 +205,7 @@ void gen_if_start()
 }
 
 
-void gen_if(char func_name[], int index, int depth)
+void gen_if(char func_name[], int index)
 {
 	char tmp[LENGTH];
 	sprintf(tmp, "%d", index);
@@ -184,16 +214,13 @@ void gen_if(char func_name[], int index, int depth)
 	str_add_const_str(&code20, func_name);
 
 	str_add_const_str(&code20, "$");
-	str_add_const_str(&code20, tmp);
-
-	str_add_const_str(&code20, "$");
-	str_add_const_str(&code20, tmp);
+	str_add_const_str(&code20, tmp);	
 
 	str_add_const_str(&code20, "$else\n");	
 }
 
 
-void gen_if_else(char func_name[], int index, int depth)
+void gen_if_else(char func_name[], int index)
 {
 	char tmp[LENGTH];
 	sprintf(tmp, "%d", index);
@@ -202,22 +229,19 @@ void gen_if_else(char func_name[], int index, int depth)
 	str_add_const_str(&code20, func_name);
 
 	str_add_const_str(&code20, "$");
-	str_add_const_str(&code20, tmp);
+	str_add_const_str(&code20, tmp);	
 
-	str_add_const_str(&code20, "$");
-	str_add_const_str(&code20, tmp);
-
-	str_add_const_str(&code20, "$end\n");
+	str_add_const_str(&code20, "$if_end\n");
 
 	str_add_const_str(&code20, "#Else cast\n");
 	
-	gen_label(func_name, index, index, "else");
+	gen_label(func_name, index, "else");
 }
 
 
-void gen_if_end(char func_name[], int index, int depth)
+void gen_if_end(char func_name[], int index)
 {	
-	gen_label(func_name, index, depth, "if_end");
+	gen_label(func_name, index, "if_end");
 }
 
 
@@ -275,7 +299,42 @@ void gen_for_end(char func_name[], int index, int depth)
 
 void gen_arithmetic(Prec_rules symb)
 {
-	switch(symb){
+	switch(symb){		
+		case E_EQ_E:
+			str_add_const_str(&code20, "EQS\n");
+			break;
+		case E_NEQ_E:
+			str_add_const_str(&code20, "EQS\n");
+			str_add_const_str(&code20, "NOTS\n");
+			break;
+		case E_MEQ_E:
+			str_add_const_str(&code20, "POPS GF@strA\n");
+			str_add_const_str(&code20, "POPS GF@strB\n");
+			str_add_const_str(&code20, "PUSHS GF@strB\n");
+			str_add_const_str(&code20, "PUSHS GF@strA\n");
+			str_add_const_str(&code20, "GTS\n");
+			str_add_const_str(&code20, "PUSHS GF@strB\n");
+			str_add_const_str(&code20, "PUSHS GF@strA\n");
+			str_add_const_str(&code20, "EQS\n");			
+			str_add_const_str(&code20, "ORS\n");
+			break;
+		case E_M_E:
+			str_add_const_str(&code20, "GTS\n");
+			break;
+		case E_LEQ_E:
+			str_add_const_str(&code20, "POPS GF@strA\n");
+			str_add_const_str(&code20, "POPS GF@strB\n");
+			str_add_const_str(&code20, "PUSHS GF@strB\n");
+			str_add_const_str(&code20, "PUSHS GF@strA\n");
+			str_add_const_str(&code20, "LTS\n");
+			str_add_const_str(&code20, "PUSHS GF@strB\n");
+			str_add_const_str(&code20, "PUSHS GF@strA\n");
+			str_add_const_str(&code20, "EQS\n");			
+			str_add_const_str(&code20, "ORS\n");
+			break;
+		case E_L_E:
+			str_add_const_str(&code20, "LTS\n");
+			break;
 		case E_PLUS_E:
 			str_add_const_str(&code20, "ADDS\n");
 			break;
@@ -289,7 +348,7 @@ void gen_arithmetic(Prec_rules symb)
 			str_add_const_str(&code20, "DIVS\n");
 			break;
 		default:
-		break;
+			break;
 	}
 }
 
