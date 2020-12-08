@@ -14,6 +14,8 @@ struct str_struct code20;
 
 void gen_code_start()
 {
+	str_init(&code20);
+
 	str_add_const_str(&code20, "#Zacatek programu\n");
 	str_add_const_str(&code20, ".IFJcode20\n");
 	str_add_const_str(&code20, "DEFVAR GF@y");
@@ -62,7 +64,7 @@ void gen_value(struct token *token)
 		default:
 			break;
 		}
-	str_clear(&h_str);
+	str_free(&h_str);
 }
 
 
