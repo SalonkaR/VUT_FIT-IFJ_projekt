@@ -49,4 +49,6 @@ void push_value(struct token *token);
 
 void concat_strings();
 
+void print_ifjcode20();
+
 #endif 

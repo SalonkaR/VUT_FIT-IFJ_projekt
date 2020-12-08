@@ -47,12 +47,12 @@ void gen_value(struct token *token)
 			for(long unsigned int i = 0; i <= strlen(token->attribute.string->str);i++){
 				if(token->attribute.string->str[i] == '#' || token->attribute.string->str[i] == '\\' || token->attribute.string->str[i] <= 32){
 					str_add_char(&h_str, '\\');
-					sprintf(h_str, "%03d", token->attribute.string->str[i]);
-					str_add_const_str(&code20, h_str);
+					sprintf(h_str.str, "%03d", token->attribute.string->str[i]);
+					str_add_const_str(&code20, h_str.str);
+				} else{
+					str_add_const_str(&code20, "string@");
+					str_add_const_str(&code20, h_str.str);
 				}
-			}else{
-				str_add_const_str(&code20, "string@");
-				str_add_const_str(&code20, h_str);
 			}
 			break;
 		case T_TYPE_IDENTIFIER:
@@ -61,7 +61,7 @@ void gen_value(struct token *token)
 			break;
 		default:
 			break;
-	}
+		}
 	str_clear(&h_str);
 }
 
@@ -293,7 +293,7 @@ void gen_for_end(char func_name[], int index, int depth)
 
 	str_add_const_str(&code20, "$FOR\n");
 	
-	gen_label(func_name, index, depth, "for_end");	
+	gen_label(func_name, index, "for_end");	
 }
 
 
@@ -369,6 +369,9 @@ void concat_strings()
 	str_add_const_str(&code20, "PUSHS GF@strA\n");	
 }
 
-
+void print_ifjcode20(){
+	printf("%s", code20.str);
+	str_free(&code20);
+}
 
 

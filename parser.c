@@ -434,7 +434,7 @@ int body()
           }
           data.in_if_for = false;
 
-		  gen_if(data.actual_func->identifier, data.no_ifs, data.no_ifs);
+		  gen_if(data.actual_func->identifier, data.no_ifs);
 
           //printf("----------------2. TOKEN body MAM IF if-TYPE = %d -------------\n",data.token.type);
           if (check_type(T_TYPE_LEFT_VINCULUM) == SYN_ERR ){
@@ -481,7 +481,7 @@ int body()
             return SYN_ERR;
           }
 
-			gen_if_else(data.actual_func->identifier, data.no_ifs, data.no_ifs);
+			gen_if_else(data.actual_func->identifier, data.no_ifs);
           //vychadzam z ifu tak popnem jeden frame zo stacku pre premenne
           bt_stack_pop(&data.BT_stack);
           
@@ -546,7 +546,7 @@ int body()
           }
 
 
-			gen_if_end(data.actual_func->identifier, data.no_ifs, data.no_ifs);
+			gen_if_end(data.actual_func->identifier, data.no_ifs);
           //vychadzam z elsu tak popnem stack pre premmenne
           bt_stack_pop(&data.BT_stack);
           
@@ -2070,8 +2070,8 @@ int parse()
     
     if((result = get_token(&data.token)) == LEX_TOKEN_OK)
     {
-        result = start(&data);
-		gen_code_start();
+        gen_code_start();
+		result = start(&data);
         bad_returns = false;
         //Print_tree(data.BT_global.root_ptr);
         //funkcia s ID main musi byt obsiahnuta

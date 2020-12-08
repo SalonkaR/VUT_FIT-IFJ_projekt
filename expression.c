@@ -13,6 +13,7 @@
 #include "error.h"
 #include "bt_stack.h"
 #include "parser.h"
+#include "gen_code.h"
 
 
 #define TABLE_SIZE 17
@@ -342,7 +343,7 @@ static int reduce(){
 
         //generovanie kodu
         if (rule == E_PLUS_E && type_after_reduce == TYPE_STRING){
-            void concat_strings();
+            concat_strings();
 		}
 		else {
             gen_arithmetic(rule);

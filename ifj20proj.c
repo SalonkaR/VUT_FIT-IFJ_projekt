@@ -10,6 +10,7 @@
 
 #include "parser.h"
 #include "scanner.h"
+#include "gen_code.h"
 
 int main (){
 
@@ -23,7 +24,8 @@ int main (){
     if ((error_code = parse())){
 		return error_code;
 	}
-    
+
+    print_ifjcode20();
 
     return 0;
 }
