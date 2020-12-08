@@ -301,24 +301,26 @@ int prog()
               return LEX_ERR;
             }
             //printf("----------------EOF- TYPE = %d -------------\n",data.token.type);
-			
-			//funkcia, ktora ma return values, musi obsahovat return
-            if((data.actual_func->func_params.top) != NULL && return_included == false) return SEM_ERR_OTHER;
-            return_included = false;
-
-            //konci funkcia tak popnem stack frame
-            if (strcmp(data.actual_func->identifier, "main") != 0){      
-              func_fin(data.actual_func->identifier);
-            }else{      
-              main_func_end();
-            }
-
-            bt_stack_pop(&data.BT_stack);
-            data.actual_func = NULL;
 
 
             if (check_type( T_TYPE_EOF) == SYN_OK){
-              return SYN_OK;
+				
+				//funkcia, ktora ma return values, musi obsahovat return
+            	if((data.actual_func->func_params.top) != NULL && return_included == false) return SEM_ERR_OTHER;
+            	return_included = false;
+
+            	//konci funkcia tak popnem stack frame
+            	if (strcmp(data.actual_func->identifier, "main") != 0){      
+              		func_fin(data.actual_func->identifier);
+            	}else{      
+              		main_func_end();
+            	}
+
+				bt_stack_pop(&data.BT_stack);
+				data.actual_func = NULL;
+
+
+             	return SYN_OK;
             }
 			
           } 
