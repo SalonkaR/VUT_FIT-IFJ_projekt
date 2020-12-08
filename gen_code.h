@@ -25,7 +25,7 @@ void func_retval(char value[], int index);
 
 void retval_to_y(int index);
 
-void make_var(char var_name[], char loc[], int depth);
+void make_var(char var_name[], char loc[]);
 
 void gen_label(char func_name[], int index, char ee[]);
 
@@ -50,5 +50,11 @@ void push_value(struct token *token);
 void concat_strings();
 
 void print_ifjcode20();
+
+void pop_value(char var_name[]);
+
+void main_func_end();
+
+void hej();
 
 #endif 

@@ -295,6 +295,7 @@ int prog()
           if (exit_body != SYN_OK){ 
             return exit_body;
           }
+          printf("  tu3\n");
           //printf("---------------- 1.5 VOLAM BODY - TYPE = %d -------------\n",data.token.type);
           if ( check_type( T_TYPE_RIGHT_VINCULUM) == SYN_OK ){
             if (check_token() == LEX_ERR){
@@ -315,7 +316,8 @@ int prog()
             if (check_token() == LEX_ERR){
               return LEX_ERR;
             }
-          }    
+          }   
+          printf("  tu4\n"); 
           //printf("---------------- 2 VOLAM BODY - TYPE = %d -------------\n",data.token.type);        
           if (check_type( T_TYPE_EOL) == SYN_ERR){
             return SYN_ERR;
@@ -335,6 +337,16 @@ int prog()
             if((data.actual_func->func_params.top) != NULL && return_included == false) return SEM_ERR_OTHER;
             return_included = false;
 
+            //konci funkcia tak popnem stack frame
+            printf("huvbidaub\n");
+            if (strcmp(data.actual_func->identifier, "main") != 0){      
+              func_fin(data.actual_func->identifier);
+              hej();
+            }else{      
+              main_func_end();
+              hej();
+            }
+
             bt_stack_pop(&data.BT_stack);
             data.actual_func = NULL;
             //printf("----------------VOLAM PROG- TYPE = %d -------------\n",data.token.type);
@@ -348,7 +360,7 @@ int prog()
           return SYN_ERR;
         }
       }
-
+      printf("  tu1\n");
 	  if ((strcmp(data.actual_func->identifier, "main")) == 0){
 			
 			if (data.actual_func->func_params.top != NULL || data.actual_func->input_params.top != NULL){
@@ -365,10 +377,15 @@ int prog()
 
       return_included = false;
 
+      printf("  tu\n");
       //konci funkcia tak popnem stack frame
-	  if (strcmp(data.actual_func->identifier, "main") != 0){
+	  if (strcmp(data.actual_func->identifier, "main") != 0){      
 	  	func_fin(data.actual_func->identifier);
-	  }
+      hej();
+	  }else{      
+      main_func_end();
+      hej();
+    }
       bt_stack_pop(&data.BT_stack);
       data.actual_func = NULL;
 
@@ -889,6 +906,8 @@ int body()
             return result_exp_if;
         }
         data.set_type_id = false;
+        make_var(top_queue_def->id.str, "TF");
+        pop_value(top_queue_def->id.str);
 
         //popnem id z queue pretoze uz som nastavil jeho typ v expression
         id_queue_pop(&data.ID_queue);

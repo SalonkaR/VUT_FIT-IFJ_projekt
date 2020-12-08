@@ -18,10 +18,10 @@ void gen_code_start()
 
 	str_add_const_str(&code20, "#Zacatek programu\n");
 	str_add_const_str(&code20, ".IFJcode20\n");
-	str_add_const_str(&code20, "DEFVAR GF@y");
-	str_add_const_str(&code20, "DEFVAR GF@strA");
-    str_add_const_str(&code20, "DEFVAR GF@strB");
-    str_add_const_str(&code20, "DEFVAR GF@strC");
+	str_add_const_str(&code20, "DEFVAR GF@res\n");
+	str_add_const_str(&code20, "DEFVAR GF@strA\n");
+    str_add_const_str(&code20, "DEFVAR GF@strB\n");
+    str_add_const_str(&code20, "DEFVAR GF@strC\n");
 	str_add_const_str(&code20, "JUMP main\n");
 
 }
@@ -67,6 +67,16 @@ void gen_value(struct token *token)
 	str_free(&h_str);
 }
 
+
+void pop_value(char var_name[])
+{
+	str_add_const_str(&code20, "POPS GF@res\n");	
+
+	str_add_const_str(&code20, "MOVE TF@");
+	str_add_const_str(&code20, var_name);
+	str_add_const_str(&code20, " ");
+	str_add_const_str(&code20, "GF@res\n");	
+}
 
 void main_func()
 {
@@ -178,9 +188,14 @@ void retval_to_y(int index)
 }
 
 //loc = TF nebo LF
-void make_var(char var_name[], char loc[], int depth)
+void make_var(char var_name[], char loc[])
 {
-	printf("DEFVAR %s@%s$%d\n", loc, var_name, depth);
+	str_add_const_str(&code20, "DEFVAR");
+	str_add_const_str(&code20, " ");	
+	str_add_const_str(&code20, loc);
+	str_add_const_str(&code20, "@");
+	str_add_const_str(&code20, var_name);
+	str_add_const_str(&code20, "\n");	
 }
 
 
@@ -356,7 +371,7 @@ void gen_arithmetic(Prec_rules symb)
 
 void push_value(struct token *token)
 {
-    str_add_const_str(&code20, "PUSHS\n");
+    str_add_const_str(&code20, "PUSHS");
     str_add_const_str(&code20, " ");    
     gen_value(token);
     str_add_const_str(&code20, "\n");
@@ -374,6 +389,11 @@ void concat_strings()
 void print_ifjcode20(){
 	printf("%s", code20.str);
 	str_free(&code20);
+}
+
+void hej()
+{
+	str_add_const_str(&code20, "hej\n");
 }
 
 
