@@ -241,6 +241,7 @@ int prog()
         //printf("VOLAM PARAMS -----------\n");
         set_param_type = true;
         int exit_params = params();
+        data.argument_counter = 0;
         set_param_type = false;
         if (exit_params != SYN_OK){ 
           return exit_params;
@@ -1561,7 +1562,7 @@ int params()
         return SEM_ERR_OTHER;
     }
     actual_parameter = BT_insert(&top_of_the_stack->local_bt, data.token.attribute.string->str, &internal_error);
-    
+    after_func_beg_params(data.token.attribute.string->str);
     if (check_token() == LEX_ERR){
       return LEX_ERR;
     }
@@ -1607,6 +1608,7 @@ int params_n()
     if (str_cmp_const_str(data.token.attribute.string, tmp) == 0){
         return SEM_ERR_OTHER;
     }
+    after_func_beg_params(data.token.attribute.string->str);
 
     tBT_stack_item* top_of_the_stack = bt_stack_top(&data.BT_stack);
     //kontrola ci IDcka vstupnych parametrov nie su rovnake
@@ -1742,7 +1744,7 @@ int type()
       
       //anastavim si typy vstupnych parametrov v aktualnom stacku
       //tu si ukladam do fronty k aktualnej funkcii, typy parametrov danej funkcie
-      if (set_param_type == true){
+      if (set_param_type == true){        
         if (data.token.type == T_TYPE_KEYWORD && data.token.attribute.keyword == KWORD_INT){
 
             tID_queue_item *pushnuta = id_queue_push(&data.actual_func->input_params);
@@ -1893,8 +1895,7 @@ int value()
 		if (saving_arguments == true){
 			
 			
-			before_call_func_params(&data.token, data.argument_counter);
-			data.argument_counter++;
+			before_call_func_params(&data.token);			
 
 			if (data.token.type == T_TYPE_INTEGER){
 				tID_queue_item *pushnuta = id_queue_push(&data.check_func_calls->rs);

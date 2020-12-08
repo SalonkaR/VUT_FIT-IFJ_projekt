@@ -17,9 +17,9 @@ void func_fin(char func_name[]);
 
 void call_func(char func_name[]);
 
-void before_call_func_params(struct token *token, int index);
+void before_call_func_params(struct token *token);
 
-void after_func_beg_params(int index);
+void after_func_beg_params(char value[]);
 
 void func_retval(char value[], int index);
 

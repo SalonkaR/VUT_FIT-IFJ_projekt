@@ -11,10 +11,12 @@
 
 
 struct str_struct code20;
+struct str_struct tmp;
 
 void gen_code_start()
 {
 	str_init(&code20);
+	str_init(&tmp);
 
 	str_add_const_str(&code20, "#Zacatek programu\n");
 	str_add_const_str(&code20, ".IFJcode20\n");
@@ -130,37 +132,22 @@ void call_func(char func_name[])
 }
 
 
-void before_call_func_params(struct token *token, int index)
+void before_call_func_params(struct token *token)
 {
-	char tmp[LENGTH];
-
-	str_add_const_str(&code20, "DEFVAR TF@%");
-	sprintf(tmp, "%d", index);
-	str_add_const_str(&code20, tmp);
-	str_add_const_str(&code20, "\n");
-
-	str_add_const_str(&code20, "MOVE TF@%");	
-	str_add_const_str(&code20, tmp);	
-	str_add_const_str(&code20, " ");	
+	str_add_const_str(&code20, "PUSHS TF@");
 	gen_value(token);
-	str_add_const_str(&code20, "\n");	
+	str_add_const_str(&code20, "\n");
 }
 
 
-void after_func_beg_params(int index)
-{
-	char tmp[LENGTH];
-
-	str_add_const_str(&code20, "DEFVAR LF@param");
-	sprintf(tmp, "%d", index);
-	str_add_const_str(&code20, tmp);	
+void after_func_beg_params(char value[])
+{	
+	str_add_const_str(&code20, "DEFVAR LF@");
+	str_add_const_str(&code20, value);	
 	str_add_const_str(&code20, "\n");	
 
-	str_add_const_str(&code20, "MOVE LF@param");
-	str_add_const_str(&code20, tmp);	
-	str_add_const_str(&code20, " ");
-	str_add_const_str(&code20, "LF@%");
-	str_add_const_str(&code20, tmp);	
+	str_add_const_str(&code20, "POPS LF@");
+	str_add_const_str(&code20, value);		
 	str_add_const_str(&code20, "\n");	
 }
 

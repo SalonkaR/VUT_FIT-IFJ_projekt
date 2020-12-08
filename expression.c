@@ -444,13 +444,7 @@ int expression(struct parser_data* data, bool *nondetermism){
                 if(!stack_push(&stack, actual_symbol, get_data_type(data))){
                     free_resources();
                     return ERROR_INTERNAL;
-                }
-
-                if (actual_symbol == IDENTIFIER || actual_symbol == INT_NUMBER 
-                    || actual_symbol == DOUBLE_NUMBER || actual_symbol == STRING){
-                    
-                    push_value(&data->token);
-                }
+                }   
 
 
                 if (last4_c == 3){
@@ -471,7 +465,13 @@ int expression(struct parser_data* data, bool *nondetermism){
                     }
                 }
 
-                
+                if (actual_symbol == IDENTIFIER || actual_symbol == INT_NUMBER 
+                    || actual_symbol == DOUBLE_NUMBER || actual_symbol == STRING){
+                    
+                    push_value(&data->token);
+                }
+
+
                 if ((result_exp)){
                     free_resources();
                     return result_exp;
