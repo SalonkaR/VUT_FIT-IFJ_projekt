@@ -591,8 +591,8 @@ int expression(struct parser_data* data, bool *nondetermism){
             free_resources();
             return SEM_ERR_OTHER;
         }
+        pop_value(top_queue_def->id.str);
     }
-    pop_value(top_queue_def->id.str);
     else if (data->check_returns == true){
         if (expression_result->data_type == TYPE_BOOL){
             free_resources();
