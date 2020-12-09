@@ -1,3 +1,11 @@
+/*
+//IFJ20 - projekt(varianta I.)
+//gen_code.c
+//Ivo Prochazka, xproch0h
+//Matej Hornik, xhorni20
+*/
+
+
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
@@ -179,7 +187,7 @@ void func_retval(char value[], int index)
 
 void retval_to_y(int index)
 {
-	printf("MOVE GF@y TF@%cretval%d\n", '%', index);	
+	//printf("MOVE GF@y TF@%cretval%d\n", '%', index);	
 }
 
 //loc = TF nebo LF

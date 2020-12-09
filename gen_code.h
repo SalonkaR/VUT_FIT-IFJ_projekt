@@ -1,4 +1,12 @@
+/*
+//IFJ20 - projekt(varianta I.)
+//gen_code.h -> hlavickovy subor pre generovanie kodu
+//Ivo Prochazka, xproch0h
+//Matej Hornik, xhorni20
+*/
+
 #ifndef gen_code_h
+
 #define gen_code_h
 
 #include <stdio.h>

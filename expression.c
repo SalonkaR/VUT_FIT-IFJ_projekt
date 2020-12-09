@@ -50,24 +50,6 @@ int prec_table[TABLE_SIZE][TABLE_SIZE] = {
 	{ S , S , S , S ,  S ,  S ,  S,  S,  S,   S,  S,  N,  S,   S,  S,  S,  N}  // $
 };
 
-// //TODO VYMAZAT DO PICE
-// void print_token_exp(struct token *t, int ret_val, int no_token){
-//     printf("%d token ->Prijaty token je typu: \"%d\"\n",no_token, t->type);
-//     if (t->type == T_TYPE_INTEGER){
-//         printf("%d token ->Atributy token: int= \"%d\"\n",no_token, t->attribute.int_literal);
-//     }
-//     else if (t->type == T_TYPE_DOUBLE){
-//         printf("%d token ->Atributy token: double= \"%lf\"\n",no_token, t->attribute.double_literal);
-//     }
-//     else if (t->type == T_TYPE_IDENTIFIER){
-//         printf("%d token ->Atributy token: string= \"%s\"\n",no_token, t->attribute.string->str);
-//     }
-//     else if (t->type == T_TYPE_STRING){
-//         printf("%d token ->Atributy token: string= \"%s\"\n",no_token, t->attribute.string->str);
-//     }
-
-//     printf("%d token ->Prijaty token vracia: \"%d\"\n",no_token, ret_val);
-// }
 
 static void free_resources(){
     stack_free(&stack);
@@ -283,16 +265,7 @@ static int check_sem(Prec_rules rule, tStack_item* op1, tStack_item* op2, tStack
     return SYN_OK;
 }
 
-// static void print_stack(){
-//     tStack_item *tmp = stack_top(&stack);
-//     printf("TOP->");
-//     while (tmp != NULL) {
-//         printf(" %d,",tmp->symbol);
-//         tmp = tmp->next;
-//     }
-//     printf("\n");
 
-// }
 
 static int reduce(){
 	int result;
@@ -315,8 +288,6 @@ static int reduce(){
         }
         count++;
     }
-    // printf("STACK BEFORE REDUCE\n");
-    // print_stack();
 
 	if (count == 1 && found){
 		op1 = stack.top;
@@ -355,9 +326,6 @@ static int reduce(){
         }
 		stack_push(&stack, NON_TERM, type_after_reduce);
 	}
-
-    // printf("STACK AFTER REDUCE\n");
-    // print_stack();
     
 	return SYN_OK;
 }
@@ -437,7 +405,6 @@ int expression(struct parser_data* data, bool *nondetermism){
                     free_resources();
                     return ERROR_INTERNAL;
                 }
-                //printf("SHIFTUJEM NA STACK->typ=%d\n", get_data_type(data));
                 if(!stack_push(&stack, actual_symbol, get_data_type(data))){
                     free_resources();
                     return ERROR_INTERNAL;
