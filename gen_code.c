@@ -389,9 +389,9 @@ void pop_return(char var_name[])
 }
 
 
-void print(struct token *token)
+void print_gencode(struct token *token)
 {
-	str_add_const_str(&tmp, "WRITE TF@");
+	str_add_const_str(&code20, "WRITE TF@");
 	gen_value(token, &code20);	
 	str_add_const_str(&code20, "\n");
 }
@@ -424,6 +424,8 @@ void init_params(){
         after_func_beg_params(tmp->id.str);
         tmp = tmp->next;
     }
+	// id_queue_free(&parameter_stack);
+	// id_queue_init(&parameter_stack);
 }
 
 
@@ -437,4 +439,6 @@ void pop_returned_values(){
         pop_return(tmp->id.str);
         tmp = tmp->next;
     }
+	// id_queue_free(&assign_stack);
+	// id_queue_init(&assign_stack);
 }

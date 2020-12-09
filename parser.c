@@ -840,16 +840,20 @@ int body()
           return LEX_ERR;
         }
         if (check_type(T_TYPE_RIGHT_BRACKET) == SYN_ERR ){
+			if (strcmp("print",top_queue->id.str) == 0){
+				data.print_call = true;
+			}
 			saving_arguments = true;
 			int exit_argument = argument();
-
 			saving_arguments = false;
 			if (exit_argument != SYN_OK){ 
 			return exit_argument;
 			}
         }
 
-		call_func(top_queue->id.str);
+		if (data.print_call == false) call_func(top_queue->id.str);
+		data.print_call = false;
+
 		//popnem z queue pretoze tento id je volanie funkcie
         id_queue_pop(&data.ID_queue);
 
@@ -1901,9 +1905,12 @@ int value()
 
 		if (saving_arguments == true){
 			
-			
-			before_call_func_params(&data.token);			
-
+			if (data.print_call == true){
+				print_gencode(&data.token);
+			}
+			else {
+				before_call_func_params(&data.token);			
+			}
 			if (data.token.type == T_TYPE_INTEGER){
 				tID_queue_item *pushnuta = id_queue_push(&data.check_func_calls->rs);
           
@@ -2036,6 +2043,7 @@ bool init_variables()
     data.set_type_id = false;
     data.check_type = false;
     data.check_returns = false;
+	data.print_call = false;
     data.checked_returns = 0;
     data.actual_func = NULL;
     data.check_func_calls = NULL;

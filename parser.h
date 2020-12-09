@@ -39,6 +39,7 @@ struct parser_data
     unsigned int argument_counter;
     unsigned int no_ifs;
     Data_t *actual_func;
+    bool print_call;
 
     tFunc_calls *check_func_calls; //pre konotrlovanie volani funckii, linked list
 };

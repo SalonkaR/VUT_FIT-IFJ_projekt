@@ -67,4 +67,6 @@ void copy_ids_on_stack(tID_queue* src);
 
 void pop_returned_values();
 
+void print_gencode(struct token *token);
+
 #endif 
