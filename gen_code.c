@@ -405,6 +405,14 @@ void pop_return(char var_name[])
 }
 
 
+void print(struct token *token)
+{
+	str_add_const_str(&tmp, "WRITE TF@");
+	gen_value(token, &code20);	
+	str_add_const_str(&code20, "\n");
+}
+
+
 void print_ifjcode20(){
 	printf("%s", code20.str);
 	str_free(&tmp);
