@@ -241,6 +241,7 @@ int prog()
         //printf("VOLAM PARAMS -----------\n");
         set_param_type = true;
         int exit_params = params();
+		init_params();
         data.argument_counter = 0;
         set_param_type = false;
         if (exit_params != SYN_OK){ 
@@ -1562,7 +1563,7 @@ int params()
         return SEM_ERR_OTHER;
     }
     actual_parameter = BT_insert(&top_of_the_stack->local_bt, data.token.attribute.string->str, &internal_error);
-    after_func_beg_params(data.token.attribute.string->str);
+    save_params_to_stack(data.token.attribute.string->str);
     if (check_token() == LEX_ERR){
       return LEX_ERR;
     }
@@ -1608,7 +1609,7 @@ int params_n()
     if (str_cmp_const_str(data.token.attribute.string, tmp) == 0){
         return SEM_ERR_OTHER;
     }
-    after_func_beg_params(data.token.attribute.string->str);
+    save_params_to_stack(data.token.attribute.string->str);
 
     tBT_stack_item* top_of_the_stack = bt_stack_top(&data.BT_stack);
     //kontrola ci IDcka vstupnych parametrov nie su rovnake
