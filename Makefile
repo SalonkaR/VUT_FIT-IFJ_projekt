@@ -85,7 +85,7 @@ test-sem.o: tests/test-sem.c parser.h symtable.h str.h error.h scanner.h
 .PHONY: clean clean-all
 
 zip:
-	zip xhorni20.zip *.c *.h Makefile
+	zip xhorni20.zip *.c *.h Makefile rozdeleni
 
 clean:
 	rm -f *.o
