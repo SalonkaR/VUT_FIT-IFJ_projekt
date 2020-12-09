@@ -13,6 +13,7 @@
 #include "error.h"
 #include "bt_stack.h"
 #include "parser.h"
+#include "gen_code.h"
 
 
 #define TABLE_SIZE 17
@@ -340,6 +341,14 @@ static int reduce(){
 			return result;
         }
 
+        //generovanie kodu
+        if (rule == E_PLUS_E && type_after_reduce == TYPE_STRING){
+            concat_strings();
+		}
+		else {
+            gen_arithmetic(rule);
+        }
+
         //popnem count+1 znakov
         for (int i = 0; i < count + 1; i++){
             stack_pop(&stack);
@@ -432,7 +441,8 @@ int expression(struct parser_data* data, bool *nondetermism){
                 if(!stack_push(&stack, actual_symbol, get_data_type(data))){
                     free_resources();
                     return ERROR_INTERNAL;
-                }
+                }   
+
 
                 if (last4_c == 3){
                     last4_c = 0;
@@ -440,6 +450,14 @@ int expression(struct parser_data* data, bool *nondetermism){
                 else {
                     last4_c++;
                 }
+
+                if (actual_symbol == IDENTIFIER || actual_symbol == INT_NUMBER 
+                    || actual_symbol == DOUBLE_NUMBER || actual_symbol == STRING){
+                
+                    push_value(&data->token);
+                }
+
+
                 //TU POSLAT INFO PARSERU 
                 result_exp = get_token(&data->token);
                 last4[last4_c] = get_symbol_from_token(&data->token);
@@ -452,7 +470,13 @@ int expression(struct parser_data* data, bool *nondetermism){
                     }
                 }
 
+                if (actual_symbol == IDENTIFIER || actual_symbol == INT_NUMBER 
+                    || actual_symbol == DOUBLE_NUMBER || actual_symbol == STRING){
                 
+                    push_confirm();
+                }
+                
+
                 if ((result_exp)){
                     free_resources();
                     return result_exp;
@@ -572,6 +596,7 @@ int expression(struct parser_data* data, bool *nondetermism){
             free_resources();
             return SEM_ERR_OTHER;
         }
+        pop_value(top_queue_def->id.str);
     }
     else if (data->check_returns == true){
         if (expression_result->data_type == TYPE_BOOL){

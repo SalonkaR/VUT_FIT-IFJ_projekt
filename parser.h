@@ -36,7 +36,10 @@ struct parser_data
 
     int checked_returns; //pomocne pocitadlo pre expression pri checkovani return values
     tID_queue ID_queue;
+    unsigned int argument_counter;
+    unsigned int no_ifs;
     Data_t *actual_func;
+    bool print_call;
 
     tFunc_calls *check_func_calls; //pre konotrlovanie volani funckii, linked list
 };

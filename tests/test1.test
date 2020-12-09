@@ -1,0 +1,12 @@
+package main
+
+func f(x int, y int)(int, int){
+    return x+y, x-y
+}
+
+func main(){
+    x := 10
+    y := 5
+    x, y = f(x, y)
+    print(x, " ", y, "\n")
+}

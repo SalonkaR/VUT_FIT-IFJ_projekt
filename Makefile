@@ -20,7 +20,7 @@ test_parser: test-parser
 test_sem: test-sem
 
 #preklad hlavneho compilatoru
-ifj20: ifj20proj.o parser.o str.o scanner.o expression.o symtable.o stack.o bt_stack.o id_queue.o
+ifj20: ifj20proj.o parser.o str.o scanner.o expression.o symtable.o stack.o bt_stack.o id_queue.o gen_code.o
 	$(CC) $(CFLAGS) -o $@ $^
 
 
@@ -31,10 +31,10 @@ test-lex: test-lex.o str.o scanner.o
 test-symtable: test-symtable.o symtable.o str.o scanner.o id_queue.o
 	$(CC) $(CFLAGS) -g -o $@ $^
 
-test-parser: test-parser.o parser.o str.o scanner.o expression.o symtable.o stack.o bt_stack.o id_queue.o
+test-parser: test-parser.o parser.o str.o scanner.o expression.o symtable.o stack.o bt_stack.o id_queue.o gen_code.o
 	$(CC) $(CFLAGS) -g -o $@ $^
 
-test-sem: test-sem.o parser.o str.o scanner.o expression.o symtable.o stack.o bt_stack.o id_queue.o
+test-sem: test-sem.o parser.o str.o scanner.o expression.o symtable.o stack.o bt_stack.o id_queue.o gen_code.o
 	$(CC) $(CFLAGS) -g -o $@ $^
 #--------------------------------------
 #objektove subory
@@ -66,10 +66,13 @@ bt_stack.o: bt_stack.c bt_stack.h symtable.h
 id_queue.o: id_queue.c id_queue.h str.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
+gen_code.o: gen_code.c symtable.h expression.h scanner.h str.h id_queue.h
+	$(CC) $(CFLAGS) -o $@ -c $<
+
 test-symtable.o: tests/test-symtable.c symtable.h str.h error.h scanner.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-parser.o: parser.c parser.h expression.h symtable.h str.h error.h scanner.h bt_stack.h id_queue.h
+parser.o: parser.c parser.h expression.h symtable.h str.h error.h scanner.h bt_stack.h id_queue.h gen_code.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 test-parser.o: tests/test-parser.c parser.h symtable.h str.h error.h scanner.h
@@ -82,7 +85,7 @@ test-sem.o: tests/test-sem.c parser.h symtable.h str.h error.h scanner.h
 .PHONY: clean clean-all
 
 zip:
-	zip xhorni20.zip *.c *.h Makefile
+	zip xhorni20.zip *.c *.h Makefile rozdeleni
 
 clean:
 	rm -f *.o
