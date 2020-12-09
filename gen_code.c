@@ -424,8 +424,8 @@ void init_params(){
         after_func_beg_params(tmp->id.str);
         tmp = tmp->next;
     }
-	// id_queue_free(&parameter_stack);
-	// id_queue_init(&parameter_stack);
+	id_queue_free(&parameter_stack);
+	id_queue_init(&parameter_stack);
 }
 
 
@@ -434,11 +434,11 @@ void copy_ids_on_stack(tID_queue* src){
 }
 
 void pop_returned_values(){
-	tID_queue_item* tmp = id_queue_top(&parameter_stack);
+	tID_queue_item* tmp = id_queue_top(&assign_stack);
 	while (tmp != NULL){
         pop_return(tmp->id.str);
         tmp = tmp->next;
     }
-	// id_queue_free(&assign_stack);
-	// id_queue_init(&assign_stack);
+	id_queue_free(&assign_stack);
+	id_queue_init(&assign_stack);
 }
