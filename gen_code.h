@@ -63,4 +63,8 @@ void save_params_to_stack(char value[]);
 
 void init_params();
 
+void copy_ids_on_stack(tID_queue* src);
+
+void pop_returned_values();
+
 #endif 

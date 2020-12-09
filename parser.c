@@ -1042,6 +1042,9 @@ int body()
 				tmp = tmp->next;
 			}
 
+
+			//nakop[irujem si na stack do akych premien mam popovat
+			copy_ids_on_stack(&data.ID_queue);
 			
 
 
@@ -1080,6 +1083,9 @@ int body()
             }
 
 			call_func(called_func.str);
+
+			//tu bude popovanie
+			pop_returned_values();
 
             id_queue_free(&data.ID_queue);
             id_queue_init(&data.ID_queue);

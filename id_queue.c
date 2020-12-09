@@ -121,6 +121,38 @@ void id_queue_copy(tID_queue* src, tID_queue* dst){
     }
 }
 
+void id_queue_copy_reverse(tID_queue* src, tID_queue* dst){
+    id_queue_free(dst);
+    id_queue_init(dst);
+    
+    tID_queue_item *tmp = src->top;
+    while (tmp != NULL){
+        tID_queue_item *new_item = id_stack_push(dst);
+        str_copy(&tmp->id, &new_item->id);
+
+        tmp = tmp->next;
+    }
+}
+
+tID_queue_item *id_stack_push(tID_queue* queue){
+    
+	tID_queue_item* new_item = malloc(sizeof(struct id_queue_item));
+	
+	if (new_item == NULL){
+		return NULL;
+	}
+	new_item->next = queue->top;
+	bool str_init_res = str_init(&new_item->id);
+	if (str_init_res == false){
+		free(new_item);
+		return NULL;
+	}
+	queue->top = new_item;
+	
+	return new_item;
+}
+
+
 
 //used for debug
 void print_queue(tID_queue* queue){

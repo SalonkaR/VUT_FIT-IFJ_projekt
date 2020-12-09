@@ -66,7 +66,7 @@ bt_stack.o: bt_stack.c bt_stack.h symtable.h
 id_queue.o: id_queue.c id_queue.h str.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-gen_code.o: gen_code.c symtable.h expression.h scanner.h str.h
+gen_code.o: gen_code.c symtable.h expression.h scanner.h str.h id_queue.h
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 test-symtable.o: tests/test-symtable.c symtable.h str.h error.h scanner.h
