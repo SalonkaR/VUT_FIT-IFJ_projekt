@@ -39,6 +39,10 @@ tID_queue_item *n_item(tID_queue* queue, int n);
 
 void id_queue_copy(tID_queue* src, tID_queue* dst);
 
+void id_queue_copy_reverse(tID_queue* src, tID_queue* dst);
+
+tID_queue_item *id_stack_push(tID_queue* queue);
+
 void print_queue(tID_queue* queue);
 
 #endif

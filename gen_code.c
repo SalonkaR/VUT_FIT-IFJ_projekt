@@ -16,24 +16,8 @@
 struct str_struct code20;
 struct str_struct tmp;
 tID_queue parameter_stack;
+tID_queue assign_stack;
 
-tID_queue_item *id_stack_push(tID_queue* queue){
-    
-	tID_queue_item* new_item = malloc(sizeof(struct id_queue_item));
-	
-	if (new_item == NULL){
-		return NULL;
-	}
-	new_item->next = queue->top;
-	bool str_init_res = str_init(&new_item->id);
-	if (str_init_res == false){
-		free(new_item);
-		return NULL;
-	}
-	queue->top = new_item;
-	
-	return new_item;
-}
 
 void gen_code_start()
 {
@@ -443,3 +427,14 @@ void init_params(){
 }
 
 
+void copy_ids_on_stack(tID_queue* src){
+	id_queue_copy_reverse(src, &assign_stack);
+}
+
+void pop_returned_values(){
+	tID_queue_item* tmp = id_queue_top(&parameter_stack);
+	while (tmp != NULL){
+        pop_return(tmp->id.str);
+        tmp = tmp->next;
+    }
+}
