@@ -55,6 +55,12 @@ void pop_value(char var_name[]);
 
 void main_func_end();
 
+void push_value(struct token *token);
+
 void push_confirm();
+
+void save_params_to_stack(char value[]);
+
+void init_params();
 
 #endif 

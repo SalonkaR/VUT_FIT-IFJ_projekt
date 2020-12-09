@@ -1,10 +1,13 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "gen_code.h"
+#include "id_queue.h"
 #include "scanner.h"
 #include "str.h"
+
 
 
 #define LENGTH 50
@@ -12,11 +15,31 @@
 
 struct str_struct code20;
 struct str_struct tmp;
+tID_queue parameter_stack;
+
+tID_queue_item *id_stack_push(tID_queue* queue){
+    
+	tID_queue_item* new_item = malloc(sizeof(struct id_queue_item));
+	
+	if (new_item == NULL){
+		return NULL;
+	}
+	new_item->next = queue->top;
+	bool str_init_res = str_init(&new_item->id);
+	if (str_init_res == false){
+		free(new_item);
+		return NULL;
+	}
+	queue->top = new_item;
+	
+	return new_item;
+}
 
 void gen_code_start()
 {
 	str_init(&code20);
 	str_init(&tmp);
+	id_queue_init(&parameter_stack);
 
 	str_add_const_str(&code20, "#Zacatek programu\n");
 	str_add_const_str(&code20, ".IFJcode20\n");
@@ -378,12 +401,29 @@ void print_ifjcode20(){
 	printf("%s", code20.str);
 	str_free(&tmp);
 	str_free(&code20);
+	id_queue_free(&parameter_stack);
 }
 
 
 void push_confirm(){
 	 str_add_const_str(&code20, tmp.str);
 	 str_clear(&tmp);
+}
+
+
+void save_params_to_stack(char value[]){
+	tID_queue_item *new_item = id_stack_push(&parameter_stack);
+	str_add_const_str(&new_item->id, value);	
+}
+
+
+void init_params(){
+	//prejdeme zasobnik a inicializujeme
+	tID_queue_item* tmp = id_queue_top(&parameter_stack);
+	while (tmp != NULL){
+        after_func_beg_params(tmp->id.str);
+        tmp = tmp->next;
+    }
 }
 
 
