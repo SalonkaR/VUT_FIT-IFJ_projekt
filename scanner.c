@@ -6,7 +6,6 @@
 //Filip Brna, xbrnaf00
 */
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -38,7 +37,7 @@
 #define STATE_LEFT_VINCULUM 119 //
 #define STATE_RIGHT_VINCULUM 120 //
 #define STATE_STRING 121 //
-#define STATE_STRING_BACKSLASH 122 //ocakavame bud x alebo ", n, t, "\"
+#define STATE_STRING_BACKSLASH 122 //
 #define STATE_STRING_HEXADECIMAL 123 //
 #define STATE_STRING_HEXADECIMAL_SECOND 124
 #define STATE_STRING_END 125 //F20 ... to be continue
@@ -62,7 +61,6 @@ struct str_struct *str;
 int cleaner(int exit_code, struct str_struct *s)
 {
 	str_free(s);
-	//printf("EXIT CODE JE ----> %d \n", exit_code);
 	return exit_code;
 }
 
@@ -111,11 +109,9 @@ static int hexadecimalToDecimal(char hexVal[])
     return dec_val; 
 } 
 
-
 //spracovanie stringu
 static int process_identifier(struct str_struct *str, struct token *token)
 {
-
 	if (!str_cmp_const_str(str, "package")) token->attribute.keyword = KWORD_PACKAGE;
 	else if (!str_cmp_const_str(str, "func")) token->attribute.keyword = KWORD_FUNC;
 	else if (!str_cmp_const_str(str, "return")) token->attribute.keyword = KWORD_RETURN;
@@ -127,13 +123,11 @@ static int process_identifier(struct str_struct *str, struct token *token)
 	else if (!str_cmp_const_str(str, "else")) token->attribute.keyword = KWORD_ELSE;
 	else token->type = T_TYPE_IDENTIFIER;
 
-	
 	if (token->type != T_TYPE_IDENTIFIER)
 	{
 		token->type = T_TYPE_KEYWORD;
 		return cleaner(LEX_TOKEN_OK, str);
 	}
-	//printf("tu som uz pici %s\n", str->str);		////!!!!! tu sa to jebe
 	if (!str_copy(str, token->attribute.string))
 	{
 		
@@ -143,8 +137,7 @@ static int process_identifier(struct str_struct *str, struct token *token)
 	return cleaner(LEX_TOKEN_OK, str);
 }
 
-
-
+//spracovanie integeru
 static int process_integer(struct str_struct *str, struct token *token)
 {
 	char *endptr;
@@ -161,8 +154,7 @@ static int process_integer(struct str_struct *str, struct token *token)
 	return cleaner(LEX_TOKEN_OK, str);
 }
 
-
-//spracovanie integeru
+//spracovanie floatu
 static int process_decimal(struct str_struct *str, struct token *token)
 {
 	char *endptr;
@@ -185,7 +177,7 @@ void setSourceFile(FILE *f)
 }
 
 int get_token(struct token *token)
-// hlavni funkce lexikalniho analyzatoru
+// hlavna funkcia lexikalneho analyzatoru
 {
 	
 	struct str_struct tmp;
@@ -215,7 +207,6 @@ int get_token(struct token *token)
 	while (true)
 	{
 		c = getc(source);
-		//printf("%c", c);
 		switch (state)
 		{
 			case (STATE_START):
@@ -328,16 +319,6 @@ int get_token(struct token *token)
 					return cleaner(LEX_ERR, str);
 				}
 				break;
-
-/*			case(STATE_EOL):
-				if (isspace(c))
-				{
-					break;
-				}
-				ungetc(c, source);
-				token->type = T_TYPE_EOL;
-				return cleaner(LEX_TOKEN_OK, str);  	*/
-
 			case(STATE_LESS_THAN):
 				if (c == '=')
 				{
@@ -413,8 +394,6 @@ int get_token(struct token *token)
 				}
 				else if (c == '"')
 				{
-					//ungetc(c, source);
-					//printf("--------UTNEM SA => %s-----------\n",str->str);
 					token->type = T_TYPE_STRING;
 					str_copy(str, token->attribute.string);
 					return cleaner(LEX_TOKEN_OK, str);
@@ -500,7 +479,6 @@ int get_token(struct token *token)
 				{
 					hexVal[1] = c;
 					int decimal = hexadecimalToDecimal(hexVal);
-					//printf("decimal = %d, hexVAl = %s\n", decimal, hexVal);
 					str_add_char(str, (char) decimal);
 					state = STATE_STRING;
 					break;
@@ -692,12 +670,20 @@ int get_token(struct token *token)
 				{
 					state = STATE_COMMENTARY_BLOCK_END;
 				}
+				else if (c == EOF)
+				{
+					return cleaner(LEX_ERR, str);
+				}
 				break;
 				
 			case(STATE_COMMENTARY_BLOCK_END):
 				if (c == '/')
 				{
 					state = STATE_START;
+				}
+				else if (c == EOF)
+				{
+					return cleaner(LEX_ERR, str);
 				}
 				else if (c != '*')
 				{
@@ -708,7 +694,6 @@ int get_token(struct token *token)
 					state = STATE_COMMENTARY_BLOCK_END;
 				}
 				break;
-
 		}
 	}
 }

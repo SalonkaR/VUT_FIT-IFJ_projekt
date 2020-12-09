@@ -402,7 +402,7 @@ void kontrola_scanner(){
                             "lex/comments/line_block.go",
                             "lex/comments/line_nested.go",
                             "lex/comments/multiline.go",
-                            //"lex/comments/unending.go",
+                            "lex/comments/unending.go",
                             "lex/ids/id_all.go",
                             "lex/ids/id_numbers.go",
                             "lex/ids/id_starting_underscore.go",

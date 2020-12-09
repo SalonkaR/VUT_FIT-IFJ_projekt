@@ -349,7 +349,7 @@ static int reduce(){
 
     // printf("STACK AFTER REDUCE\n");
     // print_stack();
-
+    
 	return SYN_OK;
 }
 
@@ -367,7 +367,6 @@ static int circle_number(int cislo){
     }
     return cislo;
 }
-
 
 int expression(struct parser_data* data, bool *nondetermism){
 
@@ -418,8 +417,6 @@ int expression(struct parser_data* data, bool *nondetermism){
             free_resources();
             return SEM_ERR_ZERO_DIV;
         }
-
-
 
 		if (top_stack_terminal == NULL){
 			free_resources();

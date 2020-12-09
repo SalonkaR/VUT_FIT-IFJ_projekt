@@ -956,12 +956,12 @@ int body()
 			tID_queue_item *tmp = data.ID_queue.top;
 			while (tmp != NULL){
 				tID_queue_item *new_item = id_queue_push(&new_item_ll->ls);
-
+        
 				if (str_cmp_const_str(&tmp->id, "_") == 0){
 					str_add_const_str(&new_item->id, "_");
 					break;
 				}
-
+        
 				Data_t *found = bt_stack_search(&data.BT_stack, tmp->id.str, &internal_error);
 				if (found == NULL){
 					return SEM_ERR_UNDEFINED_VAR;
@@ -1504,7 +1504,7 @@ int params()
     }
     //printf("----------------1. TOKEN PARAMS TYPE = %d -------------\n",data.token.type);
     int exit_type = type();
-    if (exit_type != SYN_OK){ 
+    if (exit_type != SYN_OK){
       return exit_type;
     }
     //printf("----------------2. TOKEN PARAMS TYPE = %d -------------\n",data.token.type);
