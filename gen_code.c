@@ -134,7 +134,8 @@ void call_func(char func_name[])
 
 void before_call_func_params(struct token *token)
 {
-	str_add_const_str(&code20, "PUSHS TF@");
+	str_add_const_str(&code20, "PUSHS");
+	str_add_const_str(&code20, " ");
 	gen_value(token, &code20);
 	str_add_const_str(&code20, "\n");
 }
@@ -371,6 +372,13 @@ void concat_strings()
 	str_add_const_str(&code20, "POPS GF@strB\n");
 	str_add_const_str(&code20, "CONCAT GF@strA GF@strB GF@strC\n");
 	str_add_const_str(&code20, "PUSHS GF@strA\n");	
+}
+
+void pop_return(char var_name[])
+{
+	str_add_const_str(&code20, "POPS TF@");
+	str_add_const_str(&code20, var_name);
+	str_add_const_str(&code20, "\n");
 }
 
 
