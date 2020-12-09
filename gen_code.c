@@ -402,6 +402,7 @@ void print_ifjcode20(){
 	str_free(&tmp);
 	str_free(&code20);
 	id_queue_free(&parameter_stack);
+	id_queue_free(&assign_stack);
 }
 
 
