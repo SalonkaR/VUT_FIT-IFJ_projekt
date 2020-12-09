@@ -10,7 +10,7 @@ func kkt (ab string,bc int)(int){
 
 func tmp (ab string,bc int) (string){
     al := 0
-    al = jozko()
+    al = jozko(al)
     if al != 1{
 
     }else {
@@ -39,7 +39,7 @@ func jozko(b int)(int){
         b = 1 +2 * (4+9/1)
     }
     for as := 1; as < 190; as = as + 1{
-        jebem = kkt("choddpc", kkt)
+        jebem = kkt("choddpc", 88)
     }
     ahoj, mnam, tri = 1, 2, 3
     return 5
